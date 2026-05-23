@@ -8,147 +8,72 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; min-height: 100vh; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f1f5f9;
-            min-height: 100vh;
-        }
-
+        /* Layout */
         .top-bar {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0 24px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: white; border-bottom: 1px solid #e2e8f0; padding: 0 24px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
         }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 36px; height: 36px; background: #2563eb; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
+        .logo h1 { font-size: 1.2rem; font-weight: 600; color: #1e293b; }
+        .logo p { font-size: 0.7rem; color: #64748b; }
+        .user-menu { display: flex; align-items: center; gap: 16px; }
+        .user-email { font-size: 0.85rem; color: #334155; background: #f1f5f9; padding: 6px 14px; border-radius: 40px; }
+        .logout-btn { background: #ef4444; border: none; padding: 6px 16px; border-radius: 40px; color: white; font-weight: 500; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .logout-btn:hover { background: #dc2626; }
+        .main-content { padding: 24px; max-width: 1400px; margin: 0 auto; }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: #2563eb;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .logo h1 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .logo p {
-            font-size: 0.7rem;
-            color: #64748b;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .user-email {
-            font-size: 0.85rem;
-            color: #334155;
-            background: #f1f5f9;
-            padding: 6px 14px;
-            border-radius: 40px;
-        }
-
-        .logout-btn {
-            background: #ef4444;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 500;
-            font-size: 0.8rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: #dc2626;
-        }
-
-        .main-content {
-            padding: 24px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
+        /* Stats - Compact */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 16px;
             margin-bottom: 24px;
         }
-
         .stat-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
+            transition: all 0.2s;
         }
-
         .stat-info h3 {
-            font-size: 0.75rem;
-            font-weight: 500;
+            font-size: 0.7rem;
+            font-weight: 600;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
         .stat-number {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #0f172a;
+            line-height: 1.2;
             margin-top: 4px;
         }
-
         .stat-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: #eef2ff;
-            border-radius: 14px;
+            border-radius: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #2563eb;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
         }
 
-        .action-bar {
+        /* Action & Filters */
+        .action-bar, .filter-bar {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 12px 20px;
             margin-bottom: 20px;
             display: flex;
@@ -158,13 +83,7 @@
             gap: 12px;
             border: 1px solid #e2e8f0;
         }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
         .btn {
             padding: 8px 16px;
             border-radius: 40px;
@@ -177,7 +96,6 @@
             transition: all 0.2s;
             border: none;
         }
-
         .btn-primary { background: #2563eb; color: white; }
         .btn-primary:hover { background: #1d4ed8; }
         .btn-success { background: #10b981; color: white; }
@@ -188,60 +106,22 @@
         .btn-warning:hover { background: #d97706; }
         .btn-outline { background: #f1f5f9; color: #475569; }
         .btn-outline:hover { background: #e2e8f0; }
+        
+        .filter-bar { gap: 12px; align-items: flex-end; }
+        .filter-group { flex: 1; min-width: 200px; }
+        .filter-group label { display: block; font-size: 0.7rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
+        .filter-group input, .filter-group select { width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-family: inherit; font-size: 0.85rem; background: white; }
+        .filter-group input:focus, .filter-group select:focus { outline: none; border-color: #2563eb; }
 
-        .filter-bar {
-            background: white;
-            border-radius: 16px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            border: 1px solid #e2e8f0;
-        }
-
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .filter-group label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #64748b;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
-        .filter-group input, .filter-group select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 0.85rem;
-            background: white;
-        }
-
-        .filter-group input:focus, .filter-group select:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
-
+        /* Table */
         .table-wrapper {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
-
-        .members-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        .members-table { width: 100%; border-collapse: collapse; }
         .members-table th {
             background: #f8fafc;
             padding: 12px 16px;
@@ -252,183 +132,64 @@
             text-transform: uppercase;
             border-bottom: 1px solid #e2e8f0;
         }
-
-        .members-table td {
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .members-table tr:hover {
-            background: #faf5ff;
-        }
-
-        .member-name {
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            background: #e0f2fe;
-            color: #0369a1;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 6px;
-        }
-
-        .action-btn {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-
+        .members-table td { padding: 12px 16px; font-size: 0.85rem; border-bottom: 1px solid #f1f5f9; }
+        .members-table tr:hover { background: #faf5ff; }
+        .member-name { font-weight: 600; color: #1e293b; }
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 30px; font-size: 0.7rem; font-weight: 500; background: #e0f2fe; color: #0369a1; }
+        .action-buttons { display: flex; gap: 6px; }
+        .action-btn { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
         .action-view { background: #e0f2fe; color: #0284c7; }
         .action-view:hover { background: #bae6fd; }
         .action-edit { background: #fef3c7; color: #d97706; }
         .action-edit:hover { background: #fde68a; }
         .action-delete { background: #fee2e2; color: #dc2626; }
         .action-delete:hover { background: #fecaca; }
+        .empty-row td { text-align: center; padding: 48px; color: #94a3b8; }
 
-        .empty-row td {
-            text-align: center;
-            padding: 48px;
-            color: #94a3b8;
-        }
-
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
-
         .modal-content {
             background: white;
-            border-radius: 20px;
+            border-radius: 24px;
             width: 90%;
             max-width: 500px;
             max-height: 80vh;
             overflow-y: auto;
             padding: 24px;
         }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .modal-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            color: #94a3b8;
-        }
-
-        .detail-info p {
-            margin: 8px 0;
-            padding: 8px 12px;
-            background: #f8fafc;
-            border-radius: 10px;
-            font-size: 0.85rem;
-        }
-
-        .detail-info strong {
-            color: #475569;
-            width: 130px;
-            display: inline-block;
-        }
-
-        .btn-cancel {
-            background: #f1f5f9;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 16px;
-        }
-
-        .progress-modal {
-            text-align: center;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 2px;
-            overflow: hidden;
-            margin: 16px 0;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: #2563eb;
-            transition: width 0.3s;
-        }
-
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
+        .modal-header h2 { font-size: 1.2rem; font-weight: 600; color: #1e293b; }
+        .close-modal { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #94a3b8; }
+        .detail-info p { margin: 8px 0; padding: 8px 12px; background: #f8fafc; border-radius: 12px; font-size: 0.85rem; }
+        .detail-info strong { color: #475569; width: 130px; display: inline-block; }
+        .btn-cancel { background: #f1f5f9; border: none; padding: 8px 20px; border-radius: 40px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 16px; }
+        .progress-modal { text-align: center; }
+        .progress-bar { height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 16px 0; }
+        .progress-fill { width: 0%; height: 100%; background: #2563eb; transition: width 0.3s; }
         #fileInput { display: none; }
-
+        
+        /* Message */
         .message {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 10px 20px;
-            border-radius: 40px;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            animation: slideIn 0.3s ease;
+            position: fixed; bottom: 24px; right: 24px; padding: 10px 20px; border-radius: 40px;
+            background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;
+            display: none; align-items: center; gap: 8px; font-size: 0.85rem; animation: slideIn 0.3s ease;
         }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .message.success { border-left: 3px solid #22c55e; }
         .message.error { border-left: 3px solid #ef4444; }
-
-        .date-value {
-            font-family: monospace;
-            font-size: 0.8rem;
-        }
+        .date-value { font-family: monospace; font-size: 0.8rem; }
 
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: 1fr; gap: 12px; }
             .top-bar { padding: 0 16px; }
             .main-content { padding: 16px; }
             .action-bar { flex-direction: column; align-items: stretch; }
@@ -440,10 +201,7 @@
     <div class="top-bar">
         <div class="logo">
             <div class="logo-icon"><i class="fas fa-users"></i></div>
-            <div>
-                <h1>Hội CCB</h1>
-                <p>Quản lý hội viên</p>
-            </div>
+            <div><h1>Hội CCB</h1><p>Quản lý hội viên</p></div>
         </div>
         <div class="user-menu">
             <span class="user-email" id="userEmail">Đang tải...</span>
@@ -452,34 +210,18 @@
     </div>
 
     <div class="main-content">
-        <!-- Stats -->
+        <!-- Compact Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Tổng hội viên</h3>
-                    <div class="stat-number" id="totalMembers">0</div>
-                </div>
+                <div class="stat-info"><h3>Tổng hội viên</h3><div class="stat-number" id="totalMembers">0</div></div>
                 <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
             </div>
             <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Khu vực</h3>
-                    <div class="stat-number" id="totalAreas">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Nam</h3>
-                    <div class="stat-number" id="totalMale">0</div>
-                </div>
+                <div class="stat-info"><h3>Nam</h3><div class="stat-number" id="totalMale">0</div></div>
                 <div class="stat-icon"><i class="fas fa-mars"></i></div>
             </div>
             <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Nữ</h3>
-                    <div class="stat-number" id="totalFemale">0</div>
-                </div>
+                <div class="stat-info"><h3>Nữ</h3><div class="stat-number" id="totalFemale">0</div></div>
                 <div class="stat-icon"><i class="fas fa-venus"></i></div>
             </div>
         </div>
@@ -498,13 +240,11 @@
         <div class="filter-bar">
             <div class="filter-group">
                 <label><i class="fas fa-search"></i> Tìm kiếm</label>
-                <input type="text" id="searchKeyword" placeholder="Họ tên hoặc số thẻ hội viên...">
+                <input type="text" id="searchKeyword" placeholder="Họ tên hoặc số thẻ...">
             </div>
             <div class="filter-group">
                 <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
-                <select id="searchArea">
-                    <option value="">Tất cả</option>
-                </select>
+                <select id="searchArea"><option value="">Tất cả</option></select>
             </div>
             <button class="btn btn-outline" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Reset</button>
         </div>
@@ -512,48 +252,15 @@
         <!-- Table -->
         <div class="table-wrapper">
             <table class="members-table">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Họ và tên</th>
-                        <th>Năm sinh</th>
-                        <th>Khu vực</th>
-                        <th>Số thẻ HV</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody id="membersList">
-                    <tr class="empty-row">
-                        <td colspan="6">Đang tải...</td>
-                    </tr>
-                </tbody>
+                <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Thao tác</th></tr></thead>
+                <tbody id="membersList"><tr class="empty-row"><td colspan="6">Đang tải...</td></tr></tbody>
             </table>
         </div>
     </div>
 
-    <!-- Modal Detail -->
-    <div id="detailModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2>
-                <button class="close-modal" id="closeDetailModalBtn">&times;</button>
-            </div>
-            <div id="detailContent" class="detail-info"></div>
-            <button class="btn-cancel" id="closeDetailBtn">Đóng</button>
-        </div>
-    </div>
-
-    <!-- Progress Modal -->
-    <div id="importProgress" class="modal">
-        <div class="modal-content progress-modal">
-            <h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <p id="progressText">Đang xử lý...</p>
-        </div>
-    </div>
-
+    <!-- Modals -->
+    <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2><button class="close-modal" id="closeDetailModalBtn">&times;</button></div><div id="detailContent" class="detail-info"></div><button class="btn-cancel" id="closeDetailBtn">Đóng</button></div></div>
+    <div id="importProgress" class="modal"><div class="modal-content progress-modal"><h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><p id="progressText">Đang xử lý...</p></div></div>
     <div id="messageBox" class="message"></div>
     <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
 
@@ -587,7 +294,6 @@
             searchKeyword: document.getElementById('searchKeyword'),
             searchArea: document.getElementById('searchArea'),
             totalMembers: document.getElementById('totalMembers'),
-            totalAreas: document.getElementById('totalAreas'),
             totalMale: document.getElementById('totalMale'),
             totalFemale: document.getElementById('totalFemale')
         };
@@ -604,9 +310,7 @@
             if (!dateString || dateString === '') return '---';
             if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
             const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-            if (match) {
-                return `${match[3]}/${match[2]}/${match[1]}`;
-            }
+            if (match) return `${match[3]}/${match[2]}/${match[1]}`;
             return dateString;
         }
 
@@ -614,14 +318,12 @@
             if (!dateString || dateString === '') return '';
             dateString = String(dateString).trim();
             if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
-            
             const patterns = [
                 /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
                 /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
                 /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/,
                 /^(\d{4})-(\d{1,2})-(\d{1,2})$/
             ];
-            
             for (const pattern of patterns) {
                 const match = dateString.match(pattern);
                 if (match) {
@@ -645,7 +347,6 @@
             if (!currentUser) return;
             const snapshot = await get(ref(database, `users/${currentUser.uid}/custom_data/areas`));
             customAreas = snapshot.exists() ? Object.values(snapshot.val()) : [];
-            
             elements.searchArea.innerHTML = '<option value="">Tất cả</option>';
             customAreas.forEach(area => {
                 const option = document.createElement('option');
@@ -653,7 +354,6 @@
                 option.textContent = area;
                 elements.searchArea.appendChild(option);
             });
-            elements.totalAreas.textContent = customAreas.length;
         }
 
         async function loadMembers() {
@@ -673,7 +373,6 @@
         function renderMembersList() {
             const keyword = elements.searchKeyword.value.toLowerCase().trim();
             const area = elements.searchArea.value;
-            
             let filtered = allMembers.filter(m => {
                 if (keyword) {
                     const matchName = m.fullName?.toLowerCase().includes(keyword);
@@ -783,39 +482,19 @@
 
         function downloadSample() {
             const sample = [{ 
-                'Họ và tên': 'Nguyễn Văn A',
-                'Bí danh': 'Ba A',
-                'Dân tộc': 'Kinh',
-                'Tôn giáo': 'Không',
-                'Năm sinh': '15/05/1960',
-                'Trình độ văn hóa': '12/12',
-                'Chuyên môn': 'Kỹ sư',
-                'Giới tính': 'Nam',
-                'CCCD/CMND': '012345678912',
-                'Trình độ LLCT': 'Cao cấp',
-                'Ngoại ngữ': 'Anh',
-                'Ngày cấp CCCD': '01/01/2020',
-                'Nơi cấp': 'Công an TP.HCM',
-                'Tin học': 'Cơ bản',
-                'Khu vực': 'Quận 1',
-                'Quê quán': 'Hà Nội',
-                'Địa chỉ': '123 Đường ABC, Phường XYZ, Quận 1',
-                'Chức vụ': 'Chủ tịch Hội',
-                'Ngày tham gia CM': '30/04/1975',
-                'Ngày nhập ngũ': '01/01/1978',
-                'Ngày xuất ngũ': '31/12/1982',
-                'Dự bị': '01/01/1983',
-                'Chính thức': '01/06/1983',
-                'Ngày kết nạp Hội': '01/01/1990',
-                'Số thẻ Hội viên': 'HV001',
-                'Chuyên ngành': 'Cơ khí',
-                'Điện thoại': '0901234567',
-                'Ghi chú': 'Ghi chú mẫu - Có thể nhập năm sinh dạng dd/mm/yyyy hoặc chỉ năm (1960)'
+                'Họ và tên': 'Nguyễn Văn A', 'Bí danh': 'Ba A', 'Dân tộc': 'Kinh', 'Tôn giáo': 'Không',
+                'Năm sinh': '15/05/1960', 'Trình độ văn hóa': '12/12', 'Chuyên môn': 'Kỹ sư', 'Giới tính': 'Nam',
+                'CCCD/CMND': '012345678912', 'Trình độ LLCT': 'Cao cấp', 'Ngoại ngữ': 'Anh', 'Ngày cấp CCCD': '01/01/2020',
+                'Nơi cấp': 'Công an TP.HCM', 'Tin học': 'Cơ bản', 'Khu vực': 'Quận 1', 'Quê quán': 'Hà Nội',
+                'Địa chỉ': '123 Đường ABC', 'Chức vụ': 'Chủ tịch Hội', 'Ngày tham gia CM': '30/04/1975',
+                'Ngày nhập ngũ': '01/01/1978', 'Ngày xuất ngũ': '31/12/1982', 'Dự bị': '01/01/1983',
+                'Chính thức': '01/06/1983', 'Ngày kết nạp Hội': '01/01/1990', 'Số thẻ Hội viên': 'HV001',
+                'Chuyên ngành': 'Cơ khí', 'Điện thoại': '0901234567', 'Ghi chú': 'Ghi chú mẫu'
             }];
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sample), 'Mau');
             XLSX.writeFile(wb, 'file_mau_hoi_vien.xlsx');
-            showMessage('Đã tải file mẫu đầy đủ các cột!');
+            showMessage('Đã tải file mẫu!');
         }
 
         async function importExcel(file) {
@@ -834,50 +513,33 @@
             const fill = document.getElementById('progressFill');
             const text = document.getElementById('progressText');
             progress.style.display = 'flex';
-            
             let success = 0, fail = 0;
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 fill.style.width = `${((i + 1) / rows.length) * 100}%`;
                 text.textContent = `${i + 1}/${rows.length}`;
-                
                 if (!row['Họ và tên']) { fail++; continue; }
-                
                 const data = {
-                    fullName: row['Họ và tên'],
-                    alias: row['Bí danh'] || '',
-                    ethnicity: row['Dân tộc'] || '',
-                    religion: row['Tôn giáo'] || '',
-                    birthYear: formatDateToISO(row['Năm sinh'] || ''),
-                    educationLevel: row['Trình độ văn hóa'] || '',
-                    specialization: row['Chuyên môn'] || '',
-                    gender: row['Giới tính'] || '',
-                    cccd: row['CCCD/CMND'] || row['CCCD'] || '',
-                    politicalTheory: row['Trình độ LLCT'] || '',
-                    foreignLanguage: row['Ngoại ngữ'] || '',
-                    issueDate: formatDateToISO(row['Ngày cấp CCCD'] || ''),
-                    issuePlace: row['Nơi cấp'] || '',
-                    itSkill: row['Tin học'] || '',
-                    area: row['Khu vực'] || '',
-                    hometown: row['Quê quán'] || '',
-                    address: row['Địa chỉ'] || '',
-                    position: row['Chức vụ'] || '',
+                    fullName: row['Họ và tên'], alias: row['Bí danh'] || '', ethnicity: row['Dân tộc'] || '',
+                    religion: row['Tôn giáo'] || '', birthYear: formatDateToISO(row['Năm sinh'] || ''),
+                    educationLevel: row['Trình độ văn hóa'] || '', specialization: row['Chuyên môn'] || '',
+                    gender: row['Giới tính'] || '', cccd: row['CCCD/CMND'] || row['CCCD'] || '',
+                    politicalTheory: row['Trình độ LLCT'] || '', foreignLanguage: row['Ngoại ngữ'] || '',
+                    issueDate: formatDateToISO(row['Ngày cấp CCCD'] || ''), issuePlace: row['Nơi cấp'] || '',
+                    itSkill: row['Tin học'] || '', area: row['Khu vực'] || '', hometown: row['Quê quán'] || '',
+                    address: row['Địa chỉ'] || '', position: row['Chức vụ'] || '',
                     revolutionDate: formatDateToISO(row['Ngày tham gia CM'] || ''),
                     militaryJoinDate: formatDateToISO(row['Ngày nhập ngũ'] || ''),
                     militaryReleaseDate: formatDateToISO(row['Ngày xuất ngũ'] || ''),
                     reserveStatus: formatDateToISO(row['Dự bị'] || ''),
                     officialStatus: formatDateToISO(row['Chính thức'] || ''),
                     associationJoinDate: formatDateToISO(row['Ngày kết nạp Hội'] || ''),
-                    memberCardNumber: row['Số thẻ Hội viên'] || '',
-                    trainingMajor: row['Chuyên ngành'] || '',
-                    phone: row['Điện thoại'] || '',
-                    note: row['Ghi chú'] || '',
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
+                    memberCardNumber: row['Số thẻ Hội viên'] || '', trainingMajor: row['Chuyên ngành'] || '',
+                    phone: row['Điện thoại'] || '', note: row['Ghi chú'] || '',
+                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
                 };
                 const newRef = push(ref(database, `users/${currentUser.uid}/members`));
                 data.id = newRef.key;
-                data.memberId = `HV-${Date.now()}-${i}`;
                 await set(newRef, data);
                 success++;
                 await new Promise(r => setTimeout(r, 20));
@@ -898,14 +560,9 @@
         document.getElementById('exportBtn').onclick = exportToExcel;
         document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
         document.getElementById('downloadSampleBtn').onclick = downloadSample;
-        document.getElementById('resetFilterBtn').onclick = () => { 
-            elements.searchKeyword.value = ''; 
-            elements.searchArea.value = ''; 
-            renderMembersList(); 
-        };
+        document.getElementById('resetFilterBtn').onclick = () => { elements.searchKeyword.value = ''; elements.searchArea.value = ''; renderMembersList(); };
         elements.searchKeyword.oninput = () => renderMembersList();
         elements.searchArea.onchange = () => renderMembersList();
-        
         document.getElementById('closeDetailModalBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
         document.getElementById('closeDetailBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
         document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); window.location.href = 'index.html'; };
