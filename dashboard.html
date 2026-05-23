@@ -20,7 +20,6 @@
             min-height: 100vh;
         }
 
-        /* Header */
         .top-bar {
             background: white;
             border-bottom: 1px solid #e2e8f0;
@@ -96,14 +95,12 @@
             background: #dc2626;
         }
 
-        /* Main Content */
         .main-content {
             padding: 24px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -149,7 +146,6 @@
             font-size: 1.4rem;
         }
 
-        /* Action Buttons */
         .action-bar {
             background: white;
             border-radius: 16px;
@@ -182,52 +178,17 @@
             border: none;
         }
 
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-purple { background: #8b5cf6; color: white; }
+        .btn-purple:hover { background: #7c3aed; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-warning:hover { background: #d97706; }
+        .btn-outline { background: #f1f5f9; color: #475569; }
+        .btn-outline:hover { background: #e2e8f0; }
 
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-        }
-
-        .btn-purple {
-            background: #8b5cf6;
-            color: white;
-        }
-
-        .btn-purple:hover {
-            background: #7c3aed;
-        }
-
-        .btn-warning {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: #d97706;
-        }
-
-        .btn-outline {
-            background: #f1f5f9;
-            color: #475569;
-        }
-
-        .btn-outline:hover {
-            background: #e2e8f0;
-        }
-
-        /* Filter Bar */
         .filter-bar {
             background: white;
             border-radius: 16px;
@@ -242,7 +203,7 @@
 
         .filter-group {
             flex: 1;
-            min-width: 180px;
+            min-width: 200px;
         }
 
         .filter-group label {
@@ -269,7 +230,6 @@
             border-color: #2563eb;
         }
 
-        /* Table */
         .table-wrapper {
             background: white;
             border-radius: 16px;
@@ -333,22 +293,11 @@
             transition: all 0.2s;
         }
 
-        .action-view {
-            background: #e0f2fe;
-            color: #0284c7;
-        }
+        .action-view { background: #e0f2fe; color: #0284c7; }
         .action-view:hover { background: #bae6fd; }
-
-        .action-edit {
-            background: #fef3c7;
-            color: #d97706;
-        }
+        .action-edit { background: #fef3c7; color: #d97706; }
         .action-edit:hover { background: #fde68a; }
-
-        .action-delete {
-            background: #fee2e2;
-            color: #dc2626;
-        }
+        .action-delete { background: #fee2e2; color: #dc2626; }
         .action-delete:hover { background: #fecaca; }
 
         .empty-row td {
@@ -357,7 +306,6 @@
             color: #94a3b8;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -414,7 +362,7 @@
 
         .detail-info strong {
             color: #475569;
-            width: 120px;
+            width: 130px;
             display: inline-block;
         }
 
@@ -448,9 +396,7 @@
             transition: width 0.3s;
         }
 
-        #fileInput {
-            display: none;
-        }
+        #fileInput { display: none; }
 
         .message {
             position: fixed;
@@ -475,6 +421,12 @@
 
         .message.success { border-left: 3px solid #22c55e; }
         .message.error { border-left: 3px solid #ef4444; }
+
+        /* Hàm format date */
+        .date-value {
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
 
         @media (max-width: 768px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -547,7 +499,7 @@
         <div class="filter-bar">
             <div class="filter-group">
                 <label><i class="fas fa-search"></i> Tìm kiếm</label>
-                <input type="text" id="searchName" placeholder="Họ tên, số điện thoại...">
+                <input type="text" id="searchKeyword" placeholder="Họ tên hoặc số thẻ hội viên...">
             </div>
             <div class="filter-group">
                 <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
@@ -567,7 +519,7 @@
                         <th>Họ và tên</th>
                         <th>Năm sinh</th>
                         <th>Khu vực</th>
-                        <th>Điện thoại</th>
+                        <th>Số thẻ HV</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -633,7 +585,7 @@
             membersList: document.getElementById('membersList'),
             userEmail: document.getElementById('userEmail'),
             messageBox: document.getElementById('messageBox'),
-            searchName: document.getElementById('searchName'),
+            searchKeyword: document.getElementById('searchKeyword'),
             searchArea: document.getElementById('searchArea'),
             totalMembers: document.getElementById('totalMembers'),
             totalAreas: document.getElementById('totalAreas'),
@@ -647,6 +599,19 @@
             msg.className = `message ${type}`;
             msg.style.display = 'flex';
             setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+
+        // Format date từ yyyy-mm-dd sang dd/mm/yyyy
+        function formatDateToDMY(dateString) {
+            if (!dateString || dateString === '') return '---';
+            // Nếu đã có định dạng dd/mm/yyyy thì giữ nguyên
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+            // Chuyển từ yyyy-mm-dd sang dd/mm/yyyy
+            const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (match) {
+                return `${match[3]}/${match[2]}/${match[1]}`;
+            }
+            return dateString;
         }
 
         function formatDateToISO(dateString) {
@@ -710,10 +675,16 @@
         }
 
         function renderMembersList() {
-            const keyword = elements.searchName.value.toLowerCase().trim();
+            const keyword = elements.searchKeyword.value.toLowerCase().trim();
             const area = elements.searchArea.value;
+            
             let filtered = allMembers.filter(m => {
-                if (keyword && !(m.fullName?.toLowerCase().includes(keyword) || m.phone?.includes(keyword))) return false;
+                // Tìm theo tên hoặc số thẻ hội viên
+                if (keyword) {
+                    const matchName = m.fullName?.toLowerCase().includes(keyword);
+                    const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
+                    if (!matchName && !matchCard) return false;
+                }
                 if (area && m.area !== area) return false;
                 return true;
             });
@@ -727,9 +698,9 @@
                 <tr>
                     <td>${i + 1}</td>
                     <td><span class="member-name">${m.fullName || '---'}</span></td>
-                    <td>${m.birthYear?.slice(0,4) || '---'}</td>
+                    <td class="date-value">${formatDateToDMY(m.birthYear) || '---'}</td>
                     <td><span class="badge">${m.area || '---'}</span></td>
-                    <td>${m.phone || '---'}</td>
+                    <td>${m.memberCardNumber || '---'}</td>
                     <td class="action-buttons">
                         <button class="action-btn action-view" onclick="window.viewDetail('${m.id}')"><i class="fas fa-eye"></i></button>
                         <button class="action-btn action-edit" onclick="window.editMember('${m.id}')"><i class="fas fa-pen"></i></button>
@@ -744,7 +715,8 @@
             if (!m) return;
             document.getElementById('detailContent').innerHTML = `
                 <p><strong>👤 Họ tên:</strong> ${m.fullName || '---'}</p>
-                <p><strong>📅 Năm sinh:</strong> ${m.birthYear?.slice(0,4) || '---'}</p>
+                <p><strong>🆔 Số thẻ HV:</strong> ${m.memberCardNumber || '---'}</p>
+                <p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear) || '---'}</p>
                 <p><strong>📍 Khu vực:</strong> ${m.area || '---'}</p>
                 <p><strong>📞 Điện thoại:</strong> ${m.phone || '---'}</p>
                 <p><strong>🏠 Địa chỉ:</strong> ${m.address || '---'}</p>
@@ -764,18 +736,28 @@
         };
 
         function exportToExcel() {
-            const keyword = elements.searchName.value.toLowerCase().trim();
+            const keyword = elements.searchKeyword.value.toLowerCase().trim();
             const area = elements.searchArea.value;
             let filtered = allMembers.filter(m => {
-                if (keyword && !(m.fullName?.toLowerCase().includes(keyword) || m.phone?.includes(keyword))) return false;
+                if (keyword) {
+                    const matchName = m.fullName?.toLowerCase().includes(keyword);
+                    const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
+                    if (!matchName && !matchCard) return false;
+                }
                 if (area && m.area !== area) return false;
                 return true;
             });
             if (!filtered.length) return showMessage('Không có dữ liệu!', 'error');
             
             const data = filtered.map((m, i) => ({
-                'STT': i + 1, 'Họ và tên': m.fullName, 'Năm sinh': m.birthYear?.slice(0,4), 'Khu vực': m.area,
-                'Điện thoại': m.phone, 'Địa chỉ': m.address, 'Ghi chú': m.note
+                'STT': i + 1,
+                'Họ và tên': m.fullName,
+                'Năm sinh': formatDateToDMY(m.birthYear),
+                'Khu vực': m.area,
+                'Số thẻ HV': m.memberCardNumber,
+                'Điện thoại': m.phone,
+                'Địa chỉ': m.address,
+                'Ghi chú': m.note
             }));
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Hoi_vien');
@@ -784,7 +766,15 @@
         }
 
         function downloadSample() {
-            const sample = [{ 'Họ và tên': 'Nguyễn Văn A', 'Năm sinh': '15/05/1960', 'Khu vực': 'Quận 1', 'Điện thoại': '0901234567', 'Địa chỉ': '123 Đường ABC', 'Ghi chú': '' }];
+            const sample = [{ 
+                'Họ và tên': 'Nguyễn Văn A', 
+                'Năm sinh': '15/05/1960', 
+                'Khu vực': 'Quận 1', 
+                'Số thẻ HV': 'HV001',
+                'Điện thoại': '0901234567', 
+                'Địa chỉ': '123 Đường ABC', 
+                'Ghi chú': '' 
+            }];
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sample), 'Mau');
             XLSX.writeFile(wb, 'file_mau_hoi_vien.xlsx');
@@ -817,10 +807,15 @@
                 if (!row['Họ và tên']) { fail++; continue; }
                 
                 const data = {
-                    fullName: row['Họ và tên'], birthYear: formatDateToISO(row['Năm sinh']),
-                    area: row['Khu vực'] || '', phone: row['Điện thoại'] || '',
-                    address: row['Địa chỉ'] || '', note: row['Ghi chú'] || '',
-                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+                    fullName: row['Họ và tên'],
+                    birthYear: formatDateToISO(row['Năm sinh'] || ''),
+                    area: row['Khu vực'] || '',
+                    memberCardNumber: row['Số thẻ HV'] || '',
+                    phone: row['Điện thoại'] || '',
+                    address: row['Địa chỉ'] || '',
+                    note: row['Ghi chú'] || '',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 };
                 const newRef = push(ref(database, `users/${currentUser.uid}/members`));
                 data.id = newRef.key;
@@ -845,8 +840,12 @@
         document.getElementById('exportBtn').onclick = exportToExcel;
         document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
         document.getElementById('downloadSampleBtn').onclick = downloadSample;
-        document.getElementById('resetFilterBtn').onclick = () => { elements.searchName.value = ''; elements.searchArea.value = ''; renderMembersList(); };
-        elements.searchName.oninput = () => renderMembersList();
+        document.getElementById('resetFilterBtn').onclick = () => { 
+            elements.searchKeyword.value = ''; 
+            elements.searchArea.value = ''; 
+            renderMembersList(); 
+        };
+        elements.searchKeyword.oninput = () => renderMembersList();
         elements.searchArea.onchange = () => renderMembersList();
         
         document.getElementById('closeDetailModalBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
