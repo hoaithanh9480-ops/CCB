@@ -422,7 +422,6 @@
         .message.success { border-left: 3px solid #22c55e; }
         .message.error { border-left: 3px solid #ef4444; }
 
-        /* Hàm format date */
         .date-value {
             font-family: monospace;
             font-size: 0.8rem;
@@ -601,12 +600,9 @@
             setTimeout(() => { msg.style.display = 'none'; }, 3000);
         }
 
-        // Format date từ yyyy-mm-dd sang dd/mm/yyyy
         function formatDateToDMY(dateString) {
             if (!dateString || dateString === '') return '---';
-            // Nếu đã có định dạng dd/mm/yyyy thì giữ nguyên
             if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
-            // Chuyển từ yyyy-mm-dd sang dd/mm/yyyy
             const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
             if (match) {
                 return `${match[3]}/${match[2]}/${match[1]}`;
@@ -679,7 +675,6 @@
             const area = elements.searchArea.value;
             
             let filtered = allMembers.filter(m => {
-                // Tìm theo tên hoặc số thẻ hội viên
                 if (keyword) {
                     const matchName = m.fullName?.toLowerCase().includes(keyword);
                     const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
@@ -752,12 +747,33 @@
             const data = filtered.map((m, i) => ({
                 'STT': i + 1,
                 'Họ và tên': m.fullName,
+                'Bí danh': m.alias || '',
+                'Dân tộc': m.ethnicity || '',
+                'Tôn giáo': m.religion || '',
                 'Năm sinh': formatDateToDMY(m.birthYear),
-                'Khu vực': m.area,
-                'Số thẻ HV': m.memberCardNumber,
-                'Điện thoại': m.phone,
-                'Địa chỉ': m.address,
-                'Ghi chú': m.note
+                'Trình độ văn hóa': m.educationLevel || '',
+                'Chuyên môn': m.specialization || '',
+                'Giới tính': m.gender || '',
+                'CCCD/CMND': m.cccd || '',
+                'Trình độ LLCT': m.politicalTheory || '',
+                'Ngoại ngữ': m.foreignLanguage || '',
+                'Ngày cấp CCCD': formatDateToDMY(m.issueDate),
+                'Nơi cấp': m.issuePlace || '',
+                'Tin học': m.itSkill || '',
+                'Khu vực': m.area || '',
+                'Quê quán': m.hometown || '',
+                'Địa chỉ': m.address || '',
+                'Chức vụ': m.position || '',
+                'Ngày tham gia CM': formatDateToDMY(m.revolutionDate),
+                'Ngày nhập ngũ': formatDateToDMY(m.militaryJoinDate),
+                'Ngày xuất ngũ': formatDateToDMY(m.militaryReleaseDate),
+                'Dự bị': formatDateToDMY(m.reserveStatus),
+                'Chính thức': formatDateToDMY(m.officialStatus),
+                'Ngày kết nạp Hội': formatDateToDMY(m.associationJoinDate),
+                'Số thẻ Hội viên': m.memberCardNumber || '',
+                'Chuyên ngành': m.trainingMajor || '',
+                'Điện thoại': m.phone || '',
+                'Ghi chú': m.note || ''
             }));
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Hoi_vien');
@@ -767,18 +783,39 @@
 
         function downloadSample() {
             const sample = [{ 
-                'Họ và tên': 'Nguyễn Văn A', 
-                'Năm sinh': '15/05/1960', 
-                'Khu vực': 'Quận 1', 
-                'Số thẻ HV': 'HV001',
-                'Điện thoại': '0901234567', 
-                'Địa chỉ': '123 Đường ABC', 
-                'Ghi chú': '' 
+                'Họ và tên': 'Nguyễn Văn A',
+                'Bí danh': 'Ba A',
+                'Dân tộc': 'Kinh',
+                'Tôn giáo': 'Không',
+                'Năm sinh': '15/05/1960',
+                'Trình độ văn hóa': '12/12',
+                'Chuyên môn': 'Kỹ sư',
+                'Giới tính': 'Nam',
+                'CCCD/CMND': '012345678912',
+                'Trình độ LLCT': 'Cao cấp',
+                'Ngoại ngữ': 'Anh',
+                'Ngày cấp CCCD': '01/01/2020',
+                'Nơi cấp': 'Công an TP.HCM',
+                'Tin học': 'Cơ bản',
+                'Khu vực': 'Quận 1',
+                'Quê quán': 'Hà Nội',
+                'Địa chỉ': '123 Đường ABC, Phường XYZ, Quận 1',
+                'Chức vụ': 'Chủ tịch Hội',
+                'Ngày tham gia CM': '30/04/1975',
+                'Ngày nhập ngũ': '01/01/1978',
+                'Ngày xuất ngũ': '31/12/1982',
+                'Dự bị': '01/01/1983',
+                'Chính thức': '01/06/1983',
+                'Ngày kết nạp Hội': '01/01/1990',
+                'Số thẻ Hội viên': 'HV001',
+                'Chuyên ngành': 'Cơ khí',
+                'Điện thoại': '0901234567',
+                'Ghi chú': 'Ghi chú mẫu - Có thể nhập năm sinh dạng dd/mm/yyyy hoặc chỉ năm (1960)'
             }];
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sample), 'Mau');
             XLSX.writeFile(wb, 'file_mau_hoi_vien.xlsx');
-            showMessage('Đã tải file mẫu!');
+            showMessage('Đã tải file mẫu đầy đủ các cột!');
         }
 
         async function importExcel(file) {
@@ -808,11 +845,32 @@
                 
                 const data = {
                     fullName: row['Họ và tên'],
+                    alias: row['Bí danh'] || '',
+                    ethnicity: row['Dân tộc'] || '',
+                    religion: row['Tôn giáo'] || '',
                     birthYear: formatDateToISO(row['Năm sinh'] || ''),
+                    educationLevel: row['Trình độ văn hóa'] || '',
+                    specialization: row['Chuyên môn'] || '',
+                    gender: row['Giới tính'] || '',
+                    cccd: row['CCCD/CMND'] || row['CCCD'] || '',
+                    politicalTheory: row['Trình độ LLCT'] || '',
+                    foreignLanguage: row['Ngoại ngữ'] || '',
+                    issueDate: formatDateToISO(row['Ngày cấp CCCD'] || ''),
+                    issuePlace: row['Nơi cấp'] || '',
+                    itSkill: row['Tin học'] || '',
                     area: row['Khu vực'] || '',
-                    memberCardNumber: row['Số thẻ HV'] || '',
-                    phone: row['Điện thoại'] || '',
+                    hometown: row['Quê quán'] || '',
                     address: row['Địa chỉ'] || '',
+                    position: row['Chức vụ'] || '',
+                    revolutionDate: formatDateToISO(row['Ngày tham gia CM'] || ''),
+                    militaryJoinDate: formatDateToISO(row['Ngày nhập ngũ'] || ''),
+                    militaryReleaseDate: formatDateToISO(row['Ngày xuất ngũ'] || ''),
+                    reserveStatus: formatDateToISO(row['Dự bị'] || ''),
+                    officialStatus: formatDateToISO(row['Chính thức'] || ''),
+                    associationJoinDate: formatDateToISO(row['Ngày kết nạp Hội'] || ''),
+                    memberCardNumber: row['Số thẻ Hội viên'] || '',
+                    trainingMajor: row['Chuyên ngành'] || '',
+                    phone: row['Điện thoại'] || '',
                     note: row['Ghi chú'] || '',
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
@@ -826,7 +884,7 @@
             }
             progress.style.display = 'none';
             await loadMembers();
-            showMessage(`Hoàn tất! +${success}, lỗi ${fail}`);
+            showMessage(`Import hoàn tất! Thành công: ${success}, Lỗi: ${fail}`);
         }
 
         document.getElementById('fileInput').addEventListener('change', async (e) => {
