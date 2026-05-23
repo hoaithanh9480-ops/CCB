@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Dashboard - Hội CCB</title>
+    <title>Thêm/Sửa Hội Viên - Hội CCB</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -18,905 +17,858 @@
             font-family: 'Inter', sans-serif;
             background: #f1f5f9;
             min-height: 100vh;
+            padding: 20px;
         }
 
-        .top-bar {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0 24px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: #2563eb;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .logo h1 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .logo p {
-            font-size: 0.7rem;
-            color: #64748b;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .user-email {
-            font-size: 0.85rem;
-            color: #334155;
-            background: #f1f5f9;
-            padding: 6px 14px;
-            border-radius: 40px;
-        }
-
-        .logout-btn {
-            background: #ef4444;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 500;
-            font-size: 0.8rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: #dc2626;
-        }
-
-        .main-content {
-            padding: 24px;
+        .form-container {
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
+        .form-header {
             background: white;
             border-radius: 16px;
-            padding: 16px 20px;
+            padding: 16px 24px;
+            margin-bottom: 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
             border: 1px solid #e2e8f0;
         }
 
-        .stat-info h3 {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .header-title h1 {
+            font-size: 1.3rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1e293b;
+        .header-title p {
+            color: #64748b;
+            font-size: 0.75rem;
             margin-top: 4px;
         }
 
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            background: #eef2ff;
-            border-radius: 14px;
+        .header-actions {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2563eb;
-            font-size: 1.4rem;
+            gap: 10px;
         }
 
-        .action-bar {
-            background: white;
-            border-radius: 16px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 8px 16px;
+        .btn-back, .btn-submit {
+            padding: 8px 20px;
             border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
+            gap: 8px;
+            transition: 0.2s;
             border: none;
+            font-size: 0.85rem;
         }
 
-        .btn-primary { background: #2563eb; color: white; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-success { background: #10b981; color: white; }
-        .btn-success:hover { background: #059669; }
-        .btn-purple { background: #8b5cf6; color: white; }
-        .btn-purple:hover { background: #7c3aed; }
-        .btn-warning { background: #f59e0b; color: white; }
-        .btn-warning:hover { background: #d97706; }
-        .btn-outline { background: #f1f5f9; color: #475569; }
-        .btn-outline:hover { background: #e2e8f0; }
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
+        }
 
-        .filter-bar {
+        .btn-back:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-submit {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #1d4ed8;
+        }
+
+        .form-card {
             background: white;
-            border-radius: 16px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: flex-end;
+            border-radius: 20px;
+            padding: 24px;
             border: 1px solid #e2e8f0;
         }
 
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px 20px;
         }
 
-        .filter-group label {
-            display: block;
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 4;
+        }
+
+        .form-group.half-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
             font-size: 0.7rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
             color: #64748b;
             margin-bottom: 4px;
-            text-transform: uppercase;
         }
 
-        .filter-group input, .filter-group select {
+        .form-group label i {
+            margin-right: 4px;
+            width: 14px;
+            color: #3b82f6;
+            font-size: 0.7rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .input-wrapper input,
+        .input-wrapper select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             font-size: 0.85rem;
+            transition: all 0.2s;
             background: white;
         }
 
-        .filter-group input:focus, .filter-group select:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus,
+        .input-wrapper input:focus,
+        .input-wrapper select:focus {
             outline: none;
             border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
         }
 
-        .table-wrapper {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-
-        .members-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .members-table th {
-            background: #f8fafc;
-            padding: 12px 16px;
-            text-align: left;
+        .form-group input::placeholder,
+        .input-wrapper input::placeholder {
+            color: #cbd5e1;
             font-size: 0.75rem;
-            font-weight: 600;
-            color: #64748b;
-            text-transform: uppercase;
+        }
+
+        .small-add-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            color: #475569;
+            font-size: 0.8rem;
+        }
+
+        .small-add-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            height: 36px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+            text-transform: none;
+            font-size: 0.8rem;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        .section-divider {
+            grid-column: span 4;
+            margin: 8px 0 4px 0;
+            padding-bottom: 6px;
             border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .members-table td {
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #f1f5f9;
+        .section-divider i {
+            font-size: 0.9rem;
+            color: #2563eb;
         }
 
-        .members-table tr:hover {
-            background: #faf5ff;
-        }
-
-        .member-name {
+        .section-divider span {
             font-weight: 600;
+            font-size: 0.85rem;
             color: #1e293b;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            background: #e0f2fe;
-            color: #0369a1;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 6px;
-        }
-
-        .action-btn {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-
-        .action-view { background: #e0f2fe; color: #0284c7; }
-        .action-view:hover { background: #bae6fd; }
-        .action-edit { background: #fef3c7; color: #d97706; }
-        .action-edit:hover { background: #fde68a; }
-        .action-delete { background: #fee2e2; color: #dc2626; }
-        .action-delete:hover { background: #fecaca; }
-
-        .empty-row td {
-            text-align: center;
-            padding: 48px;
+        .section-divider small {
+            font-weight: normal;
+            font-size: 0.65rem;
             color: #94a3b8;
+            margin-left: 6px;
         }
 
-        .modal {
-            display: none;
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 40px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .message.show {
+            transform: translateX(0);
+        }
+
+        .message.success {
+            border-left: 3px solid #22c55e;
+        }
+
+        .message.error {
+            border-left: 3px solid #ef4444;
+        }
+
+        .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 24px;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .modal-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            color: #94a3b8;
-        }
-
-        .detail-info p {
-            margin: 8px 0;
-            padding: 8px 12px;
-            background: #f8fafc;
-            border-radius: 10px;
-            font-size: 0.85rem;
-        }
-
-        .detail-info strong {
-            color: #475569;
-            width: 130px;
-            display: inline-block;
-        }
-
-        .btn-cancel {
-            background: #f1f5f9;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 16px;
-        }
-
-        .progress-modal {
-            text-align: center;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 2px;
-            overflow: hidden;
-            margin: 16px 0;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: #2563eb;
-            transition: width 0.3s;
-        }
-
-        #fileInput { display: none; }
-
-        .message {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 10px 20px;
-            border-radius: 40px;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
+            z-index: 2000;
             display: none;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            animation: slideIn 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
 
-        .message.success { border-left: 3px solid #22c55e; }
-        .message.error { border-left: 3px solid #ef4444; }
-
-        .date-value {
-            font-family: monospace;
-            font-size: 0.8rem;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .top-bar { padding: 0 16px; }
-            .main-content { padding: 16px; }
-            .action-bar { flex-direction: column; align-items: stretch; }
-            .btn-group { justify-content: center; }
+        .required:after {
+            content: " *";
+            color: #ef4444;
+        }
+
+        @media (max-width: 1100px) {
+            .form-grid { grid-template-columns: repeat(3, 1fr); }
+            .section-divider { grid-column: span 3; }
+        }
+
+        @media (max-width: 800px) {
+            .form-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-divider { grid-column: span 2; }
+        }
+
+        @media (max-width: 550px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .section-divider { grid-column: span 1; }
+            .form-card { padding: 16px; }
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div class="logo">
-            <div class="logo-icon"><i class="fas fa-users"></i></div>
-            <div>
-                <h1>Hội CCB</h1>
-                <p>Quản lý hội viên</p>
-            </div>
+<div class="form-container">
+    <div class="form-header">
+        <div class="header-title">
+            <h1><i class="fas fa-user-plus"></i> Quản lý hội viên</h1>
+            <p>Nhập đầy đủ thông tin hội viên Hội Cựu Chiến Binh</p>
         </div>
-        <div class="user-menu">
-            <span class="user-email" id="userEmail">Đang tải...</span>
-            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Thoát</button>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Tổng hội viên</h3>
-                    <div class="stat-number" id="totalMembers">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Khu vực</h3>
-                    <div class="stat-number" id="totalAreas">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Nam</h3>
-                    <div class="stat-number" id="totalMale">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-mars"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Nữ</h3>
-                    <div class="stat-number" id="totalFemale">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-venus"></i></div>
-            </div>
-        </div>
-
-        <!-- Action Bar -->
-        <div class="action-bar">
-            <div class="btn-group">
-                <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Thêm</button>
-                <button class="btn btn-success" id="exportBtn"><i class="fas fa-file-excel"></i> Xuất</button>
-                <button class="btn btn-purple" id="importBtn"><i class="fas fa-file-import"></i> Import</button>
-                <button class="btn btn-warning" id="downloadSampleBtn"><i class="fas fa-download"></i> Mẫu</button>
-            </div>
-        </div>
-
-        <!-- Filter Bar -->
-        <div class="filter-bar">
-            <div class="filter-group">
-                <label><i class="fas fa-search"></i> Tìm kiếm</label>
-                <input type="text" id="searchKeyword" placeholder="Họ tên hoặc số thẻ hội viên...">
-            </div>
-            <div class="filter-group">
-                <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
-                <select id="searchArea">
-                    <option value="">Tất cả</option>
-                </select>
-            </div>
-            <button class="btn btn-outline" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Reset</button>
-        </div>
-
-        <!-- Table -->
-        <div class="table-wrapper">
-            <table class="members-table">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Họ và tên</th>
-                        <th>Năm sinh</th>
-                        <th>Khu vực</th>
-                        <th>Số thẻ HV</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody id="membersList">
-                    <tr class="empty-row">
-                        <td colspan="6">Đang tải...</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="header-actions">
+            <button type="button" class="btn-back" id="backBtn">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <button type="button" class="btn-submit" id="saveBtn">
+                <i class="fas fa-save"></i> Lưu hội viên
+            </button>
         </div>
     </div>
 
-    <!-- Modal Detail -->
-    <div id="detailModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2>
-                <button class="close-modal" id="closeDetailModalBtn">&times;</button>
+    <div class="form-card">
+        <form id="memberForm">
+            <div class="form-grid">
+                <!-- === Thông tin cơ bản === -->
+                <div class="section-divider">
+                    <i class="fas fa-id-card"></i>
+                    <span>Thông tin cơ bản</span>
+                    <small>Thông tin cá nhân hội viên</small>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-hashtag"></i> ID hội viên</label>
+                    <input type="text" id="memberId" readonly style="background:#f1f5f9;">
+                </div>
+
+                <div class="form-group">
+                    <label class="required"><i class="fas fa-user"></i> Họ và tên</label>
+                    <input type="text" id="fullName" placeholder="Nguyễn Văn A" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-feather-alt"></i> Bí danh</label>
+                    <input type="text" id="alias" placeholder="Bí danh / Tên thường gọi">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-flag"></i> Dân tộc</label>
+                    <input type="text" id="ethnicity" placeholder="Kinh, Tày, Thái, ...">
+                </div>
+
+                <!-- === Hàng 2 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-church"></i> Tôn giáo</label>
+                    <input type="text" id="religion" placeholder="Phật giáo, Công giáo, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Năm sinh</label>
+                    <input type="date" id="birthYear" placeholder="dd/mm/yyyy">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-graduation-cap"></i> Trình độ văn hóa</label>
+                    <div class="input-wrapper">
+                        <select id="educationLevel">
+                            <option value="">-- Chọn hoặc thêm mới --</option>
+                        </select>
+                        <button type="button" class="small-add-btn" id="addEducationBtn" title="Thêm trình độ mới">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-stethoscope"></i> Chuyên môn</label>
+                    <input type="text" id="specialization" placeholder="Bác sĩ, Kỹ sư, ...">
+                </div>
+
+                <!-- === Hàng 3 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Giới tính</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="Nam"> Nam</label>
+                        <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> CCCD/CMND</label>
+                    <input type="text" id="cccd" placeholder="Số căn cước công dân">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-landmark"></i> Trình độ LLCT</label>
+                    <input type="text" id="politicalTheory" placeholder="Cao cấp, Trung cấp, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-language"></i> Ngoại ngữ</label>
+                    <input type="text" id="foreignLanguage" placeholder="Anh, Trung, Nga, ...">
+                </div>
+
+                <!-- === Hàng 4 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-day"></i> Ngày cấp CCCD</label>
+                    <input type="date" id="issueDate" placeholder="dd/mm/yyyy">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Nơi cấp</label>
+                    <input type="text" id="issuePlace" placeholder="Công an nơi cấp">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-laptop-code"></i> Tin học</label>
+                    <input type="text" id="itSkill" placeholder="Cơ bản, Văn bằng B, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-map-pin"></i> Khu vực</label>
+                    <div class="input-wrapper">
+                        <select id="area">
+                            <option value="">-- Chọn hoặc thêm mới --</option>
+                        </select>
+                        <button type="button" class="small-add-btn" id="addAreaBtn" title="Thêm khu vực mới">+</button>
+                    </div>
+                </div>
+
+                <!-- === Địa chỉ & Quê quán === -->
+                <div class="section-divider">
+                    <i class="fas fa-home"></i>
+                    <span>Địa chỉ & Quê quán</span>
+                    <small>Thông tin nơi ở và nơi sinh</small>
+                </div>
+
+                <div class="form-group half-width">
+                    <label><i class="fas fa-tree"></i> Quê quán</label>
+                    <input type="text" id="hometown" placeholder="Tỉnh/Thành phố quê quán">
+                </div>
+
+                <div class="form-group half-width">
+                    <label><i class="fas fa-address-card"></i> Địa chỉ thường trú</label>
+                    <input type="text" id="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành">
+                </div>
+
+                <!-- === Thông tin tổ chức Hội === -->
+                <div class="section-divider">
+                    <i class="fas fa-users"></i>
+                    <span>Thông tin tổ chức Hội</span>
+                    <small>Thông tin về Đảng, Hội và quân đội</small>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-user-tie"></i> Chức vụ trong Hội</label>
+                    <input type="text" id="position" placeholder="Chủ tịch, Phó chủ tịch, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-check"></i> Ngày tham gia CM</label>
+                    <input type="date" id="revolutionDate" placeholder="dd/mm/yyyy">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Ngày nhập ngũ</label>
+                    <input type="date" id="militaryJoinDate" placeholder="dd/mm/yyyy">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Ngày xuất ngũ</label>
+                    <input type="date" id="militaryReleaseDate" placeholder="dd/mm/yyyy">
+                </div>
+
+                <!-- === Hàng 7 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Dự bị</label>
+                    <input type="date" id="reserveStatus" placeholder="dd/mm/yyyy">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-check-circle"></i> Chính thức</label>
+                    <input type="date" id="officialStatus" placeholder="dd/mm/yyyy">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-handshake"></i> Ngày kết nạp Hội</label>
+                    <input type="date" id="associationJoinDate" placeholder="dd/mm/yyyy">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-id-badge"></i> Số thẻ Hội viên</label>
+                    <input type="text" id="memberCardNumber" placeholder="Số thẻ hội viên">
+                </div>
+
+                <!-- === Hàng 8 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-microscope"></i> Chuyên ngành đào tạo</label>
+                    <input type="text" id="trainingMajor" placeholder="Chuyên ngành được đào tạo">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Số điện thoại</label>
+                    <input type="text" id="phone" placeholder="Số điện thoại liên hệ">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-sticky-note"></i> Ghi chú</label>
+                    <textarea id="note" rows="2" placeholder="Ghi chú thêm về hội viên..."></textarea>
+                </div>
             </div>
-            <div id="detailContent" class="detail-info"></div>
-            <button class="btn-cancel" id="closeDetailBtn">Đóng</button>
-        </div>
+        </form>
     </div>
+</div>
 
-    <!-- Progress Modal -->
-    <div id="importProgress" class="modal">
-        <div class="modal-content progress-modal">
-            <h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <p id="progressText">Đang xử lý...</p>
-        </div>
-    </div>
+<div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+</div>
 
-    <div id="messageBox" class="message"></div>
-    <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get, remove, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
+        authDomain: "hoi-ccb.firebaseapp.com",
+        databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "hoi-ccb",
+        storageBucket: "hoi-ccb.firebasestorage.app",
+        messagingSenderId: "344971473549",
+        appId: "1:344971473549:web:7d4db3d5d328401164e8c4"
+    };
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
-            authDomain: "hoi-ccb.firebaseapp.com",
-            databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "hoi-ccb",
-            storageBucket: "hoi-ccb.firebasestorage.app",
-            messagingSenderId: "344971473549",
-            appId: "1:344971473549:web:7d4db3d5d328401164e8c4"
-        };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const database = getDatabase(app);
+    let currentUser = null;
+    let editMemberId = null;
+    let customAreas = [];
+    let customEducations = [];
 
-        let currentUser = null;
-        let allMembers = [];
-        let customAreas = [];
+    // DOM Elements
+    const form = document.getElementById('memberForm');
+    const saveBtn = document.getElementById('saveBtn');
+    const backBtn = document.getElementById('backBtn');
+    const loading = document.getElementById('loading');
+    const areaSelect = document.getElementById('area');
+    const educationSelect = document.getElementById('educationLevel');
+    const addAreaBtn = document.getElementById('addAreaBtn');
+    const addEducationBtn = document.getElementById('addEducationBtn');
 
-        const elements = {
-            membersList: document.getElementById('membersList'),
-            userEmail: document.getElementById('userEmail'),
-            messageBox: document.getElementById('messageBox'),
-            searchKeyword: document.getElementById('searchKeyword'),
-            searchArea: document.getElementById('searchArea'),
-            totalMembers: document.getElementById('totalMembers'),
-            totalAreas: document.getElementById('totalAreas'),
-            totalMale: document.getElementById('totalMale'),
-            totalFemale: document.getElementById('totalFemale')
-        };
-
-        function showMessage(text, type = 'success') {
-            const msg = elements.messageBox;
-            msg.textContent = text;
-            msg.className = `message ${type}`;
-            msg.style.display = 'flex';
-            setTimeout(() => { msg.style.display = 'none'; }, 3000);
-        }
-
-        function formatDateToDMY(dateString) {
-            if (!dateString || dateString === '') return '---';
-            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
-            const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-            if (match) {
-                return `${match[3]}/${match[2]}/${match[1]}`;
-            }
-            return dateString;
-        }
-
-        function formatDateToISO(dateString) {
-            if (!dateString || dateString === '') return '';
-            dateString = String(dateString).trim();
-            if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
-            
-            const patterns = [
-                /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
-                /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
-                /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/,
-                /^(\d{4})-(\d{1,2})-(\d{1,2})$/
-            ];
-            
-            for (const pattern of patterns) {
-                const match = dateString.match(pattern);
-                if (match) {
-                    let day, month, year;
-                    if (pattern.source.includes('dd/mm') || pattern.source.includes('dd-mm')) {
-                        day = match[1].padStart(2, '0');
-                        month = match[2].padStart(2, '0');
-                        year = match[3];
-                    } else {
-                        year = match[1];
-                        month = match[2].padStart(2, '0');
-                        day = match[3].padStart(2, '0');
-                    }
-                    return `${year}-${month}-${day}`;
-                }
-            }
-            return dateString;
-        }
-
-        async function loadAreas() {
-            if (!currentUser) return;
-            const snapshot = await get(ref(database, `users/${currentUser.uid}/custom_data/areas`));
-            customAreas = snapshot.exists() ? Object.values(snapshot.val()) : [];
-            
-            elements.searchArea.innerHTML = '<option value="">Tất cả</option>';
-            customAreas.forEach(area => {
-                const option = document.createElement('option');
-                option.value = area;
-                option.textContent = area;
-                elements.searchArea.appendChild(option);
-            });
-            elements.totalAreas.textContent = customAreas.length;
-        }
-
-        async function loadMembers() {
-            if (!currentUser) return;
-            const snapshot = await get(ref(database, `users/${currentUser.uid}/members`));
-            allMembers = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, m]) => ({ id, ...m })) : [];
-            renderMembersList();
-            updateStats();
-        }
-
-        function updateStats() {
-            elements.totalMembers.textContent = allMembers.length;
-            elements.totalMale.textContent = allMembers.filter(m => m.gender === 'Nam').length;
-            elements.totalFemale.textContent = allMembers.filter(m => m.gender === 'Nữ').length;
-        }
-
-        function renderMembersList() {
-            const keyword = elements.searchKeyword.value.toLowerCase().trim();
-            const area = elements.searchArea.value;
-            
-            let filtered = allMembers.filter(m => {
-                if (keyword) {
-                    const matchName = m.fullName?.toLowerCase().includes(keyword);
-                    const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
-                    if (!matchName && !matchCard) return false;
-                }
-                if (area && m.area !== area) return false;
-                return true;
-            });
-
-            if (filtered.length === 0) {
-                elements.membersList.innerHTML = '<tr class="empty-row"><td colspan="6">Không có dữ liệu</td></tr>';
-                return;
-            }
-
-            elements.membersList.innerHTML = filtered.map((m, i) => `
-                <tr>
-                    <td>${i + 1}</td>
-                    <td><span class="member-name">${m.fullName || '---'}</span></td>
-                    <td class="date-value">${formatDateToDMY(m.birthYear) || '---'}</td>
-                    <td><span class="badge">${m.area || '---'}</span></td>
-                    <td>${m.memberCardNumber || '---'}</td>
-                    <td class="action-buttons">
-                        <button class="action-btn action-view" onclick="window.viewDetail('${m.id}')"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn action-edit" onclick="window.editMember('${m.id}')"><i class="fas fa-pen"></i></button>
-                        <button class="action-btn action-delete" onclick="window.deleteMember('${m.id}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        window.viewDetail = function(id) {
-            const m = allMembers.find(x => x.id === id);
-            if (!m) return;
-            document.getElementById('detailContent').innerHTML = `
-                <p><strong>👤 Họ tên:</strong> ${m.fullName || '---'}</p>
-                <p><strong>🆔 Số thẻ HV:</strong> ${m.memberCardNumber || '---'}</p>
-                <p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear) || '---'}</p>
-                <p><strong>📍 Khu vực:</strong> ${m.area || '---'}</p>
-                <p><strong>📞 Điện thoại:</strong> ${m.phone || '---'}</p>
-                <p><strong>🏠 Địa chỉ:</strong> ${m.address || '---'}</p>
-                <p><strong>📝 Ghi chú:</strong> ${m.note || '---'}</p>
-                <p><strong>🕒 Cập nhật:</strong> ${m.updatedAt ? new Date(m.updatedAt).toLocaleString() : '---'}</p>
-            `;
-            document.getElementById('detailModal').style.display = 'flex';
-        };
-
-        window.editMember = (id) => window.location.href = `hoivien.html?id=${id}`;
+    async function loadCustomData() {
+        if (!currentUser) return;
         
-        window.deleteMember = async (id) => {
-            if (!confirm('Xóa hội viên này?')) return;
-            await remove(ref(database, `users/${currentUser.uid}/members/${id}`));
-            showMessage('Đã xóa!', 'success');
-            await loadMembers();
-        };
-
-        function exportToExcel() {
-            const keyword = elements.searchKeyword.value.toLowerCase().trim();
-            const area = elements.searchArea.value;
-            let filtered = allMembers.filter(m => {
-                if (keyword) {
-                    const matchName = m.fullName?.toLowerCase().includes(keyword);
-                    const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
-                    if (!matchName && !matchCard) return false;
-                }
-                if (area && m.area !== area) return false;
-                return true;
-            });
-            if (!filtered.length) return showMessage('Không có dữ liệu!', 'error');
+        try {
+            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
+            const areaSnapshot = await get(areaRef);
+            customAreas = areaSnapshot.exists() ? Object.values(areaSnapshot.val()) : [];
             
-            const data = filtered.map((m, i) => ({
-                'STT': i + 1,
-                'Họ và tên': m.fullName,
-                'Bí danh': m.alias || '',
-                'Dân tộc': m.ethnicity || '',
-                'Tôn giáo': m.religion || '',
-                'Năm sinh': formatDateToDMY(m.birthYear),
-                'Trình độ văn hóa': m.educationLevel || '',
-                'Chuyên môn': m.specialization || '',
-                'Giới tính': m.gender || '',
-                'CCCD/CMND': m.cccd || '',
-                'Trình độ LLCT': m.politicalTheory || '',
-                'Ngoại ngữ': m.foreignLanguage || '',
-                'Ngày cấp CCCD': formatDateToDMY(m.issueDate),
-                'Nơi cấp': m.issuePlace || '',
-                'Tin học': m.itSkill || '',
-                'Khu vực': m.area || '',
-                'Quê quán': m.hometown || '',
-                'Địa chỉ': m.address || '',
-                'Chức vụ': m.position || '',
-                'Ngày tham gia CM': formatDateToDMY(m.revolutionDate),
-                'Ngày nhập ngũ': formatDateToDMY(m.militaryJoinDate),
-                'Ngày xuất ngũ': formatDateToDMY(m.militaryReleaseDate),
-                'Dự bị': formatDateToDMY(m.reserveStatus),
-                'Chính thức': formatDateToDMY(m.officialStatus),
-                'Ngày kết nạp Hội': formatDateToDMY(m.associationJoinDate),
-                'Số thẻ Hội viên': m.memberCardNumber || '',
-                'Chuyên ngành': m.trainingMajor || '',
-                'Điện thoại': m.phone || '',
-                'Ghi chú': m.note || ''
-            }));
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Hoi_vien');
-            XLSX.writeFile(wb, `hoi_vien_${new Date().toISOString().slice(0,10)}.xlsx`);
-            showMessage(`Xuất ${filtered.length} hội viên!`);
-        }
-
-        function downloadSample() {
-            const sample = [{ 
-                'Họ và tên': 'Nguyễn Văn A',
-                'Bí danh': 'Ba A',
-                'Dân tộc': 'Kinh',
-                'Tôn giáo': 'Không',
-                'Năm sinh': '15/05/1960',
-                'Trình độ văn hóa': '12/12',
-                'Chuyên môn': 'Kỹ sư',
-                'Giới tính': 'Nam',
-                'CCCD/CMND': '012345678912',
-                'Trình độ LLCT': 'Cao cấp',
-                'Ngoại ngữ': 'Anh',
-                'Ngày cấp CCCD': '01/01/2020',
-                'Nơi cấp': 'Công an TP.HCM',
-                'Tin học': 'Cơ bản',
-                'Khu vực': 'Quận 1',
-                'Quê quán': 'Hà Nội',
-                'Địa chỉ': '123 Đường ABC, Phường XYZ, Quận 1',
-                'Chức vụ': 'Chủ tịch Hội',
-                'Ngày tham gia CM': '30/04/1975',
-                'Ngày nhập ngũ': '01/01/1978',
-                'Ngày xuất ngũ': '31/12/1982',
-                'Dự bị': '01/01/1983',
-                'Chính thức': '01/06/1983',
-                'Ngày kết nạp Hội': '01/01/1990',
-                'Số thẻ Hội viên': 'HV001',
-                'Chuyên ngành': 'Cơ khí',
-                'Điện thoại': '0901234567',
-                'Ghi chú': 'Ghi chú mẫu - Có thể nhập năm sinh dạng dd/mm/yyyy hoặc chỉ năm (1960)'
-            }];
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sample), 'Mau');
-            XLSX.writeFile(wb, 'file_mau_hoi_vien.xlsx');
-            showMessage('Đã tải file mẫu đầy đủ các cột!');
-        }
-
-        async function importExcel(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-                    resolve(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]));
-                };
-                reader.readAsArrayBuffer(file);
-            });
-        }
-
-        async function processImport(rows) {
-            const progress = document.getElementById('importProgress');
-            const fill = document.getElementById('progressFill');
-            const text = document.getElementById('progressText');
-            progress.style.display = 'flex';
+            const eduRef = ref(database, `users/${currentUser.uid}/custom_data/educations`);
+            const eduSnapshot = await get(eduRef);
+            customEducations = eduSnapshot.exists() ? Object.values(eduSnapshot.val()) : [];
             
-            let success = 0, fail = 0;
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                fill.style.width = `${((i + 1) / rows.length) * 100}%`;
-                text.textContent = `${i + 1}/${rows.length}`;
-                
-                if (!row['Họ và tên']) { fail++; continue; }
-                
-                const data = {
-                    fullName: row['Họ và tên'],
-                    alias: row['Bí danh'] || '',
-                    ethnicity: row['Dân tộc'] || '',
-                    religion: row['Tôn giáo'] || '',
-                    birthYear: formatDateToISO(row['Năm sinh'] || ''),
-                    educationLevel: row['Trình độ văn hóa'] || '',
-                    specialization: row['Chuyên môn'] || '',
-                    gender: row['Giới tính'] || '',
-                    cccd: row['CCCD/CMND'] || row['CCCD'] || '',
-                    politicalTheory: row['Trình độ LLCT'] || '',
-                    foreignLanguage: row['Ngoại ngữ'] || '',
-                    issueDate: formatDateToISO(row['Ngày cấp CCCD'] || ''),
-                    issuePlace: row['Nơi cấp'] || '',
-                    itSkill: row['Tin học'] || '',
-                    area: row['Khu vực'] || '',
-                    hometown: row['Quê quán'] || '',
-                    address: row['Địa chỉ'] || '',
-                    position: row['Chức vụ'] || '',
-                    revolutionDate: formatDateToISO(row['Ngày tham gia CM'] || ''),
-                    militaryJoinDate: formatDateToISO(row['Ngày nhập ngũ'] || ''),
-                    militaryReleaseDate: formatDateToISO(row['Ngày xuất ngũ'] || ''),
-                    reserveStatus: formatDateToISO(row['Dự bị'] || ''),
-                    officialStatus: formatDateToISO(row['Chính thức'] || ''),
-                    associationJoinDate: formatDateToISO(row['Ngày kết nạp Hội'] || ''),
-                    memberCardNumber: row['Số thẻ Hội viên'] || '',
-                    trainingMajor: row['Chuyên ngành'] || '',
-                    phone: row['Điện thoại'] || '',
-                    note: row['Ghi chú'] || '',
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                const newRef = push(ref(database, `users/${currentUser.uid}/members`));
-                data.id = newRef.key;
-                data.memberId = `HV-${Date.now()}-${i}`;
-                await set(newRef, data);
-                success++;
-                await new Promise(r => setTimeout(r, 20));
-            }
-            progress.style.display = 'none';
-            await loadMembers();
-            showMessage(`Import hoàn tất! Thành công: ${success}, Lỗi: ${fail}`);
+            updateAreaSelect();
+            updateEducationSelect();
+        } catch (error) {
+            console.error("Lỗi tải dữ liệu tùy chỉnh:", error);
         }
+    }
 
-        document.getElementById('fileInput').addEventListener('change', async (e) => {
-            if (!e.target.files[0]) return;
-            const rows = await importExcel(e.target.files[0]);
-            await processImport(rows);
-            e.target.value = '';
+    function updateAreaSelect() {
+        const currentValue = areaSelect.value;
+        areaSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
+        customAreas.forEach(area => {
+            const option = document.createElement('option');
+            option.value = area;
+            option.textContent = area;
+            if (currentValue === area) option.selected = true;
+            areaSelect.appendChild(option);
         });
+    }
 
-        document.getElementById('addMemberBtn').onclick = () => window.location.href = 'hoivien.html';
-        document.getElementById('exportBtn').onclick = exportToExcel;
-        document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
-        document.getElementById('downloadSampleBtn').onclick = downloadSample;
-        document.getElementById('resetFilterBtn').onclick = () => { 
-            elements.searchKeyword.value = ''; 
-            elements.searchArea.value = ''; 
-            renderMembersList(); 
+    function updateEducationSelect() {
+        const currentValue = educationSelect.value;
+        educationSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
+        customEducations.forEach(edu => {
+            const option = document.createElement('option');
+            option.value = edu;
+            option.textContent = edu;
+            if (currentValue === edu) option.selected = true;
+            educationSelect.appendChild(option);
+        });
+    }
+
+    async function addNewArea() {
+        const newArea = prompt("Nhập tên khu vực mới:", "");
+        if (!newArea || !newArea.trim()) return;
+        
+        const areaName = newArea.trim();
+        if (customAreas.includes(areaName)) {
+            alert("Khu vực này đã tồn tại!");
+            return;
+        }
+        
+        loading.style.display = 'flex';
+        try {
+            customAreas.push(areaName);
+            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
+            await set(areaRef, customAreas);
+            updateAreaSelect();
+            areaSelect.value = areaName;
+            showMessage("Đã thêm khu vực mới!", "success");
+        } catch (error) {
+            showMessage("Lỗi: " + error.message, "error");
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    async function addNewEducation() {
+        const newEdu = prompt("Nhập trình độ văn hóa mới:", "");
+        if (!newEdu || !newEdu.trim()) return;
+        
+        const eduName = newEdu.trim();
+        if (customEducations.includes(eduName)) {
+            alert("Trình độ này đã tồn tại!");
+            return;
+        }
+        
+        loading.style.display = 'flex';
+        try {
+            customEducations.push(eduName);
+            const eduRef = ref(database, `users/${currentUser.uid}/custom_data/educations`);
+            await set(eduRef, customEducations);
+            updateEducationSelect();
+            educationSelect.value = eduName;
+            showMessage("Đã thêm trình độ mới!", "success");
+        } catch (error) {
+            showMessage("Lỗi: " + error.message, "error");
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    function showMessage(text, type = 'success') {
+        const existingMsg = document.querySelector('.message');
+        if (existingMsg) existingMsg.remove();
+        
+        const msg = document.createElement('div');
+        msg.className = `message ${type}`;
+        msg.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${text}`;
+        document.body.appendChild(msg);
+        setTimeout(() => msg.classList.add('show'), 10);
+        setTimeout(() => {
+            msg.classList.remove('show');
+            setTimeout(() => msg.remove(), 300);
+        }, 3000);
+    }
+
+    // Format date từ yyyy-mm-dd sang input date
+    function formatDateForInput(dateString) {
+        if (!dateString || dateString === '') return '';
+        // Nếu đã đúng định dạng yyyy-mm-dd thì giữ nguyên
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
+        // Nếu là dd/mm/yyyy thì chuyển sang yyyy-mm-dd
+        const match = dateString.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (match) {
+            return `${match[3]}-${match[2]}-${match[1]}`;
+        }
+        return dateString;
+    }
+
+    function getFormData() {
+        const genderRadio = document.querySelector('input[name="gender"]:checked');
+        return {
+            memberId: document.getElementById('memberId').value,
+            fullName: document.getElementById('fullName').value.trim(),
+            alias: document.getElementById('alias').value.trim(),
+            ethnicity: document.getElementById('ethnicity').value.trim(),
+            religion: document.getElementById('religion').value.trim(),
+            birthYear: document.getElementById('birthYear').value,
+            educationLevel: educationSelect.value,
+            specialization: document.getElementById('specialization').value.trim(),
+            gender: genderRadio ? genderRadio.value : '',
+            cccd: document.getElementById('cccd').value.trim(),
+            politicalTheory: document.getElementById('politicalTheory').value.trim(),
+            foreignLanguage: document.getElementById('foreignLanguage').value.trim(),
+            issueDate: document.getElementById('issueDate').value,
+            issuePlace: document.getElementById('issuePlace').value.trim(),
+            itSkill: document.getElementById('itSkill').value.trim(),
+            area: areaSelect.value,
+            hometown: document.getElementById('hometown').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            position: document.getElementById('position').value.trim(),
+            revolutionDate: document.getElementById('revolutionDate').value,
+            militaryJoinDate: document.getElementById('militaryJoinDate').value,
+            militaryReleaseDate: document.getElementById('militaryReleaseDate').value,
+            reserveStatus: document.getElementById('reserveStatus').value,
+            officialStatus: document.getElementById('officialStatus').value,
+            associationJoinDate: document.getElementById('associationJoinDate').value,
+            memberCardNumber: document.getElementById('memberCardNumber').value.trim(),
+            trainingMajor: document.getElementById('trainingMajor').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            note: document.getElementById('note').value.trim(),
+            updatedAt: new Date().toISOString()
         };
-        elements.searchKeyword.oninput = () => renderMembersList();
-        elements.searchArea.onchange = () => renderMembersList();
+    }
+
+    // Đổ dữ liệu vào form (khi sửa) - LOAD TẤT CẢ CÁC TRƯỜNG
+    function setFormData(data) {
+        console.log("Loading data:", data);
         
-        document.getElementById('closeDetailModalBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
-        document.getElementById('closeDetailBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
-        document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); window.location.href = 'index.html'; };
+        document.getElementById('memberId').value = data.memberId || '';
+        document.getElementById('fullName').value = data.fullName || '';
+        document.getElementById('alias').value = data.alias || '';
+        document.getElementById('ethnicity').value = data.ethnicity || '';
+        document.getElementById('religion').value = data.religion || '';
+        document.getElementById('birthYear').value = formatDateForInput(data.birthYear) || '';
+        document.getElementById('specialization').value = data.specialization || '';
+        document.getElementById('cccd').value = data.cccd || '';
+        document.getElementById('politicalTheory').value = data.politicalTheory || '';
+        document.getElementById('foreignLanguage').value = data.foreignLanguage || '';
+        document.getElementById('issueDate').value = formatDateForInput(data.issueDate) || '';
+        document.getElementById('issuePlace').value = data.issuePlace || '';
+        document.getElementById('itSkill').value = data.itSkill || '';
+        document.getElementById('hometown').value = data.hometown || '';
+        document.getElementById('address').value = data.address || '';
+        document.getElementById('position').value = data.position || '';
+        document.getElementById('revolutionDate').value = formatDateForInput(data.revolutionDate) || '';
+        document.getElementById('militaryJoinDate').value = formatDateForInput(data.militaryJoinDate) || '';
+        document.getElementById('militaryReleaseDate').value = formatDateForInput(data.militaryReleaseDate) || '';
+        document.getElementById('reserveStatus').value = formatDateForInput(data.reserveStatus) || '';
+        document.getElementById('officialStatus').value = formatDateForInput(data.officialStatus) || '';
+        document.getElementById('associationJoinDate').value = formatDateForInput(data.associationJoinDate) || '';
+        document.getElementById('memberCardNumber').value = data.memberCardNumber || '';
+        document.getElementById('trainingMajor').value = data.trainingMajor || '';
+        document.getElementById('phone').value = data.phone || '';
+        document.getElementById('note').value = data.note || '';
         
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) return window.location.href = 'index.html';
+        // Xử lý giá trị cho select
+        if (data.educationLevel) {
+            educationSelect.value = data.educationLevel;
+        }
+        if (data.area) {
+            areaSelect.value = data.area;
+        }
+        
+        // Xử lý radio giới tính
+        if (data.gender) {
+            const radio = document.querySelector(`input[name="gender"][value="${data.gender}"]`);
+            if (radio) radio.checked = true;
+        }
+    }
+
+    async function saveMember() {
+        const fullName = document.getElementById('fullName').value.trim();
+        if (!fullName) {
+            showMessage('Vui lòng nhập họ và tên hội viên', 'error');
+            return;
+        }
+
+        if (!currentUser) {
+            showMessage('Vui lòng đăng nhập lại', 'error');
+            return;
+        }
+
+        loading.style.display = 'flex';
+        
+        try {
+            const memberData = getFormData();
+            const membersRef = ref(database, `users/${currentUser.uid}/members`);
+            
+            if (editMemberId) {
+                await update(ref(database, `users/${currentUser.uid}/members/${editMemberId}`), memberData);
+                showMessage('Cập nhật hội viên thành công!', 'success');
+            } else {
+                const newRef = push(membersRef);
+                memberData.createdAt = new Date().toISOString();
+                memberData.id = newRef.key;
+                await set(newRef, memberData);
+                showMessage('Thêm hội viên thành công!', 'success');
+            }
+            
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+            
+        } catch (error) {
+            console.error('Lỗi:', error);
+            showMessage('Lỗi: ' + error.message, 'error');
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id) {
+            editMemberId = id;
+            document.querySelector('.header-title h1').innerHTML = '<i class="fas fa-user-edit"></i> Sửa hội viên';
+            loadMemberData(id);
+        } else {
+            editMemberId = null;
+            document.querySelector('.header-title h1').innerHTML = '<i class="fas fa-user-plus"></i> Thêm hội viên mới';
+            document.getElementById('memberId').value = 'HV-' + new Date().getTime().toString().slice(-8);
+        }
+    }
+
+    async function loadMemberData(id) {
+        if (!currentUser) return;
+        
+        loading.style.display = 'flex';
+        try {
+            const memberRef = ref(database, `users/${currentUser.uid}/members/${id}`);
+            const snapshot = await get(memberRef);
+            if (snapshot.exists()) {
+                setFormData(snapshot.val());
+            } else {
+                showMessage('Không tìm thấy dữ liệu hội viên', 'error');
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+            }
+        } catch (error) {
+            console.error('Lỗi:', error);
+            showMessage('Lỗi tải dữ liệu: ' + error.message, 'error');
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    // Event listeners
+    saveBtn.addEventListener('click', saveMember);
+    backBtn.addEventListener('click', () => {
+        window.location.href = 'dashboard.html';
+    });
+    addAreaBtn.addEventListener('click', addNewArea);
+    addEducationBtn.addEventListener('click', addNewEducation);
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
             currentUser = user;
-            elements.userEmail.textContent = user.email;
-            await loadAreas();
-            await loadMembers();
-        });
-    </script>
+            await loadCustomData();
+            getUrlParams();
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+</script>
 </body>
 </html>
