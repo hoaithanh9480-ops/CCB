@@ -7,345 +7,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #e9f0fc 0%, #d9e4f5 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .form-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .form-header {
-            background: white;
-            border-radius: 20px;
-            padding: 15px 25px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-
-        .header-title h1 {
-            font-size: 1.4rem;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .header-title p {
-            color: #64748b;
-            font-size: 0.75rem;
-            margin-top: 4px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-back, .btn-submit {
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-            border: none;
-            font-size: 0.85rem;
-        }
-
-        .btn-back {
-            background: #f1f5f9;
-            color: #475569;
-        }
-
-        .btn-back:hover {
-            background: #e2e8f0;
-        }
-
-        .btn-submit {
-            background: #2563eb;
-            color: white;
-        }
-
-        .btn-submit:hover {
-            background: #1d4ed8;
-            transform: scale(0.98);
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: span 4;
-        }
-
-        .form-group.half-width {
-            grid-column: span 2;
-        }
-
-        .form-group label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            color: #64748b;
-            margin-bottom: 4px;
-        }
-
-        .form-group label i {
-            margin-right: 4px;
-            width: 14px;
-            color: #3b82f6;
-            font-size: 0.7rem;
-        }
-
-        .input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .input-wrapper input,
-        .input-wrapper select {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            background: #fafcff;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            background: #fafcff;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus,
-        .input-wrapper input:focus,
-        .input-wrapper select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
-            background: white;
-        }
-
-        .form-group input::placeholder,
-        .input-wrapper input::placeholder {
-            color: #cbd5e1;
-            font-size: 0.75rem;
-        }
-
-        .small-add-btn {
-            background: #e2e8f0;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            color: #475569;
-            font-size: 0.8rem;
-        }
-
-        .small-add-btn:hover {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            height: 36px;
-        }
-
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: normal;
-            text-transform: none;
-            font-size: 0.8rem;
-            color: #334155;
-            cursor: pointer;
-        }
-
-        .radio-group input[type="radio"] {
-            width: 14px;
-            height: 14px;
-            cursor: pointer;
-        }
-
-        .section-divider {
-            grid-column: span 4;
-            margin: 10px 0 5px 0;
-            padding-bottom: 6px;
-            border-bottom: 1.5px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-divider i {
-            font-size: 0.9rem;
-            color: #2563eb;
-        }
-
-        .section-divider span {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #1e293b;
-        }
-
-        .section-divider small {
-            font-weight: normal;
-            font-size: 0.65rem;
-            color: #94a3b8;
-            margin-left: 6px;
-        }
-
-        .message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            border-radius: 40px;
-            background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 1000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            font-size: 0.85rem;
-        }
-
-        .message.show {
-            transform: translateX(0);
-        }
-
-        .message.success {
-            border-left: 3px solid #22c55e;
-        }
-
-        .message.error {
-            border-left: 3px solid #ef4444;
-        }
-
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            display: none;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #2563eb;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .required:after {
-            content: " *";
-            color: #ef4444;
-        }
-
-        input::placeholder, select:invalid {
-            color: #cbd5e1;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 1100px) {
-            .form-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .section-divider {
-                grid-column: span 3;
-            }
-        }
-
-        @media (max-width: 800px) {
-            .form-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .section-divider {
-                grid-column: span 2;
-            }
-        }
-
-        @media (max-width: 550px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .section-divider {
-                grid-column: span 1;
-            }
-            .form-card {
-                padding: 15px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; min-height: 100vh; padding: 20px; }
+        .form-container { max-width: 1400px; margin: 0 auto; }
+        .form-header { background: white; border-radius: 20px; padding: 15px 25px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .header-title h1 { font-size: 1.4rem; color: #1e293b; display: flex; align-items: center; gap: 8px; }
+        .header-title p { color: #64748b; font-size: 0.75rem; margin-top: 4px; }
+        .header-actions { display: flex; gap: 10px; }
+        .btn-back, .btn-submit { padding: 8px 20px; border-radius: 40px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; border: none; font-size: 0.85rem; }
+        .btn-back { background: #f1f5f9; color: #475569; }
+        .btn-back:hover { background: #e2e8f0; }
+        .btn-submit { background: #2563eb; color: white; }
+        .btn-submit:hover { background: #1d4ed8; transform: scale(0.98); }
+        .form-card { background: white; border-radius: 24px; padding: 20px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: span 4; }
+        .form-group.half-width { grid-column: span 2; }
+        .form-group label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: #64748b; margin-bottom: 4px; }
+        .form-group label i { margin-right: 4px; width: 14px; color: #3b82f6; font-size: 0.7rem; }
+        .input-wrapper { display: flex; align-items: center; gap: 6px; }
+        .input-wrapper input, .input-wrapper select { flex: 1; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.85rem; transition: all 0.2s; background: #fafcff; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.85rem; transition: all 0.2s; background: #fafcff; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus, .input-wrapper input:focus, .input-wrapper select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); background: white; }
+        .small-add-btn { background: #e2e8f0; border: none; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; color: #475569; font-size: 0.8rem; }
+        .small-add-btn:hover { background: #3b82f6; color: white; }
+        .radio-group { display: flex; gap: 15px; align-items: center; height: 36px; }
+        .radio-group label { display: flex; align-items: center; gap: 5px; font-weight: normal; text-transform: none; font-size: 0.8rem; color: #334155; cursor: pointer; }
+        .radio-group input[type="radio"] { width: 14px; height: 14px; cursor: pointer; }
+        .section-divider { grid-column: span 4; margin: 10px 0 5px 0; padding-bottom: 6px; border-bottom: 1.5px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
+        .section-divider i { font-size: 0.9rem; color: #2563eb; }
+        .section-divider span { font-weight: 600; font-size: 0.85rem; color: #1e293b; }
+        .section-divider small { font-weight: normal; font-size: 0.65rem; color: #94a3b8; margin-left: 6px; }
+        .message { position: fixed; top: 20px; right: 20px; padding: 10px 20px; border-radius: 40px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; z-index: 1000; transform: translateX(400px); transition: transform 0.3s ease; font-size: 0.85rem; }
+        .message.show { transform: translateX(0); }
+        .message.success { border-left: 3px solid #22c55e; }
+        .message.error { border-left: 3px solid #ef4444; }
+        .loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; display: none; }
+        .loading-spinner { width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .required:after { content: " *"; color: #ef4444; }
+        @media (max-width: 1100px) { .form-grid { grid-template-columns: repeat(3, 1fr); } .section-divider { grid-column: span 3; } }
+        @media (max-width: 800px) { .form-grid { grid-template-columns: repeat(2, 1fr); } .section-divider { grid-column: span 2; } }
+        @media (max-width: 550px) { .form-grid { grid-template-columns: 1fr; } .section-divider { grid-column: span 1; } .form-card { padding: 15px; } }
     </style>
 </head>
 <body>
@@ -356,204 +60,53 @@
             <p>Nhập đầy đủ thông tin hội viên Hội Cựu Chiến Binh</p>
         </div>
         <div class="header-actions">
-            <button type="button" class="btn-back" id="backBtn">
-                <i class="fas fa-arrow-left"></i> Quay lại
-            </button>
-            <button type="button" class="btn-submit" id="saveBtn">
-                <i class="fas fa-save"></i> Lưu hội viên
-            </button>
+            <button type="button" class="btn-back" id="backBtn"><i class="fas fa-arrow-left"></i> Quay lại</button>
+            <button type="button" class="btn-submit" id="saveBtn"><i class="fas fa-save"></i> Lưu hội viên</button>
         </div>
     </div>
 
     <div class="form-card">
         <form id="memberForm">
             <div class="form-grid">
-                <!-- === HÀNG 1: Thông tin cơ bản === -->
-                <div class="section-divider">
-                    <i class="fas fa-id-card"></i>
-                    <span>Thông tin cơ bản</span>
-                    <small>Thông tin cá nhân hội viên</small>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-hashtag"></i> ID hội viên</label>
-                    <input type="text" id="memberId" placeholder="HV-2024-001" readonly style="background:#f1f5f9;">
-                </div>
-
-                <div class="form-group">
-                    <label class="required"><i class="fas fa-user"></i> Họ và tên</label>
-                    <input type="text" id="fullName" placeholder="Nguyễn Văn A" required>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-feather-alt"></i> Bí danh</label>
-                    <input type="text" id="alias" placeholder="Bí danh / Tên thường gọi">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-flag"></i> Dân tộc</label>
-                    <input type="text" id="ethnicity" placeholder="Kinh, Tày, Thái, ...">
-                </div>
-
-                <!-- === HÀNG 2 === -->
-                <div class="form-group">
-                    <label><i class="fas fa-church"></i> Tôn giáo</label>
-                    <input type="text" id="religion" placeholder="Phật giáo, Công giáo, ...">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-calendar-alt"></i> Năm sinh</label>
-                    <input type="date" id="birthYear" placeholder="dd/mm/yyyy">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-graduation-cap"></i> Trình độ văn hóa</label>
-                    <div class="input-wrapper">
-                        <select id="educationLevel">
-                            <option value="">-- Chọn hoặc thêm mới --</option>
-                        </select>
-                        <button type="button" class="small-add-btn" id="addEducationBtn" title="Thêm trình độ mới">+</button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-stethoscope"></i> Chuyên môn</label>
-                    <input type="text" id="specialization" placeholder="Bác sĩ, Kỹ sư, ...">
-                </div>
-
-                <!-- === HÀNG 3 === -->
-                <div class="form-group">
-                    <label><i class="fas fa-venus-mars"></i> Giới tính</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="gender" value="Nam"> Nam</label>
-                        <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-id-card"></i> CCCD/CMND</label>
-                    <input type="text" id="cccd" placeholder="Số căn cước công dân">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-landmark"></i> Trình độ LLCT</label>
-                    <input type="text" id="politicalTheory" placeholder="Cao cấp, Trung cấp, ...">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-language"></i> Ngoại ngữ</label>
-                    <input type="text" id="foreignLanguage" placeholder="Anh, Trung, Nga, ...">
-                </div>
-
-                <!-- === HÀNG 4 === -->
-                <div class="form-group">
-                    <label><i class="fas fa-calendar-day"></i> Ngày cấp CCCD</label>
-                    <input type="date" id="issueDate" placeholder="dd/mm/yyyy">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-map-marker-alt"></i> Nơi cấp</label>
-                    <input type="text" id="issuePlace" placeholder="Công an nơi cấp">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-laptop-code"></i> Tin học</label>
-                    <input type="text" id="itSkill" placeholder="Cơ bản, Văn bằng B, ...">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-map-pin"></i> Khu vực</label>
-                    <div class="input-wrapper">
-                        <select id="area">
-                            <option value="">-- Chọn hoặc thêm mới --</option>
-                        </select>
-                        <button type="button" class="small-add-btn" id="addAreaBtn" title="Thêm khu vực mới">+</button>
-                    </div>
-                </div>
-
-                <!-- === HÀNG 5: Quê quán và địa chỉ === -->
-                <div class="section-divider">
-                    <i class="fas fa-home"></i>
-                    <span>Địa chỉ & Quê quán</span>
-                    <small>Thông tin nơi ở và nơi sinh</small>
-                </div>
-
-                <div class="form-group half-width">
-                    <label><i class="fas fa-tree"></i> Quê quán</label>
-                    <input type="text" id="hometown" placeholder="Tỉnh/Thành phố quê quán">
-                </div>
-
-                <div class="form-group half-width">
-                    <label><i class="fas fa-address-card"></i> Địa chỉ thường trú</label>
-                    <input type="text" id="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành">
-                </div>
-
-                <!-- === HÀNG 6: Thông tin tổ chức === -->
-                <div class="section-divider">
-                    <i class="fas fa-users"></i>
-                    <span>Thông tin tổ chức Hội</span>
-                    <small>Thông tin về Đảng, Hội và quân đội</small>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-user-tie"></i> Chức vụ trong Hội</label>
-                    <input type="text" id="position" placeholder="Chủ tịch, Phó chủ tịch, ...">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-calendar-check"></i> Ngày tham gia CM</label>
-                    <input type="date" id="revolutionDate" placeholder="dd/mm/yyyy">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-calendar-alt"></i> Ngày nhập ngũ</label>
-                    <input type="date" id="militaryJoinDate" placeholder="dd/mm/yyyy">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-calendar-alt"></i> Ngày xuất ngũ</label>
-                    <input type="date" id="militaryReleaseDate" placeholder="dd/mm/yyyy">
-                </div>
-
-                <!-- === HÀNG 7 === -->
-                <div class="form-group">
-                    <label><i class="fas fa-clock"></i> Dự bị</label>
-                    <input type="date" id="reserveStatus" placeholder="dd/mm/yyyy">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-check-circle"></i> Chính thức</label>
-                    <input type="date" id="officialStatus" placeholder="dd/mm/yyyy">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-handshake"></i> Ngày kết nạp Hội</label>
-                    <input type="date" id="associationJoinDate" placeholder="dd/mm/yyyy">
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-id-badge"></i> Số thẻ Hội viên</label>
-                    <input type="text" id="memberCardNumber" placeholder="Số thẻ hội viên">
-                </div>
-
-                <!-- === HÀNG 8 === -->
-                <div class="form-group">
-                    <label><i class="fas fa-microscope"></i> Chuyên ngành đào tạo</label>
-                    <input type="text" id="trainingMajor" placeholder="Chuyên ngành được đào tạo">
-                </div>
-
-                <div class="form-group full-width">
-                    <label><i class="fas fa-sticky-note"></i> Ghi chú</label>
-                    <textarea id="note" rows="2" placeholder="Ghi chú thêm về hội viên..."></textarea>
-                </div>
+                <div class="section-divider"><i class="fas fa-id-card"></i><span>Thông tin cơ bản</span><small>Thông tin cá nhân hội viên</small></div>
+                <div class="form-group"><label><i class="fas fa-hashtag"></i> ID hội viên</label><input type="text" id="memberId" readonly style="background:#f1f5f9;"></div>
+                <div class="form-group"><label class="required"><i class="fas fa-user"></i> Họ và tên</label><input type="text" id="fullName" placeholder="Nguyễn Văn A" required></div>
+                <div class="form-group"><label><i class="fas fa-feather-alt"></i> Bí danh</label><input type="text" id="alias" placeholder="Bí danh / Tên thường gọi"></div>
+                <div class="form-group"><label><i class="fas fa-flag"></i> Dân tộc</label><input type="text" id="ethnicity" placeholder="Kinh, Tày, Thái, ..."></div>
+                <div class="form-group"><label><i class="fas fa-church"></i> Tôn giáo</label><input type="text" id="religion" placeholder="Phật giáo, Công giáo, ..."></div>
+                <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Năm sinh</label><input type="date" id="birthYear"></div>
+                <div class="form-group"><label><i class="fas fa-graduation-cap"></i> Trình độ văn hóa</label><div class="input-wrapper"><select id="educationLevel"><option value="">-- Chọn hoặc thêm mới --</option></select><button type="button" class="small-add-btn" id="addEducationBtn" title="Thêm trình độ mới">+</button></div></div>
+                <div class="form-group"><label><i class="fas fa-stethoscope"></i> Chuyên môn</label><input type="text" id="specialization" placeholder="Bác sĩ, Kỹ sư, ..."></div>
+                <div class="form-group"><label><i class="fas fa-venus-mars"></i> Giới tính</label><div class="radio-group"><label><input type="radio" name="gender" value="Nam"> Nam</label><label><input type="radio" name="gender" value="Nữ"> Nữ</label></div></div>
+                <div class="form-group"><label><i class="fas fa-id-card"></i> CCCD/CMND</label><input type="text" id="cccd" placeholder="Số căn cước công dân"></div>
+                <div class="form-group"><label><i class="fas fa-landmark"></i> Trình độ LLCT</label><input type="text" id="politicalTheory" placeholder="Cao cấp, Trung cấp, ..."></div>
+                <div class="form-group"><label><i class="fas fa-language"></i> Ngoại ngữ</label><input type="text" id="foreignLanguage" placeholder="Anh, Trung, Nga, ..."></div>
+                <div class="form-group"><label><i class="fas fa-calendar-day"></i> Ngày cấp CCCD</label><input type="date" id="issueDate"></div>
+                <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Nơi cấp</label><input type="text" id="issuePlace" placeholder="Công an nơi cấp"></div>
+                <div class="form-group"><label><i class="fas fa-laptop-code"></i> Tin học</label><input type="text" id="itSkill" placeholder="Cơ bản, Văn bằng B, ..."></div>
+                <div class="form-group"><label><i class="fas fa-map-pin"></i> Khu vực</label><div class="input-wrapper"><select id="area"><option value="">-- Chọn hoặc thêm mới --</option></select><button type="button" class="small-add-btn" id="addAreaBtn" title="Thêm khu vực mới">+</button></div></div>
+                
+                <div class="section-divider"><i class="fas fa-home"></i><span>Địa chỉ & Quê quán</span><small>Thông tin nơi ở và nơi sinh</small></div>
+                <div class="form-group half-width"><label><i class="fas fa-tree"></i> Quê quán</label><input type="text" id="hometown" placeholder="Tỉnh/Thành phố quê quán"></div>
+                <div class="form-group half-width"><label><i class="fas fa-address-card"></i> Địa chỉ thường trú</label><input type="text" id="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"></div>
+                
+                <div class="section-divider"><i class="fas fa-users"></i><span>Thông tin tổ chức Hội</span><small>Thông tin về Đảng, Hội và quân đội</small></div>
+                <div class="form-group"><label><i class="fas fa-user-tie"></i> Chức vụ trong Hội</label><input type="text" id="position" placeholder="Chủ tịch, Phó chủ tịch, ..."></div>
+                <div class="form-group"><label><i class="fas fa-calendar-check"></i> Ngày tham gia CM</label><input type="date" id="revolutionDate"></div>
+                <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Ngày nhập ngũ</label><input type="date" id="militaryJoinDate"></div>
+                <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Ngày xuất ngũ</label><input type="date" id="militaryReleaseDate"></div>
+                <div class="form-group"><label><i class="fas fa-clock"></i> Dự bị</label><input type="date" id="reserveStatus"></div>
+                <div class="form-group"><label><i class="fas fa-check-circle"></i> Chính thức</label><input type="date" id="officialStatus"></div>
+                <div class="form-group"><label><i class="fas fa-handshake"></i> Ngày kết nạp Hội</label><input type="date" id="associationJoinDate"></div>
+                <div class="form-group"><label><i class="fas fa-id-badge"></i> Số thẻ Hội viên</label><input type="text" id="memberCardNumber" placeholder="Số thẻ hội viên"></div>
+                <div class="form-group"><label><i class="fas fa-microscope"></i> Chuyên ngành đào tạo</label><input type="text" id="trainingMajor" placeholder="Chuyên ngành được đào tạo"></div>
+                <div class="form-group full-width"><label><i class="fas fa-sticky-note"></i> Ghi chú</label><textarea id="note" rows="2" placeholder="Ghi chú thêm về hội viên..."></textarea></div>
             </div>
         </form>
     </div>
 </div>
 
-<div class="loading" id="loading">
-    <div class="loading-spinner"></div>
-</div>
+<div class="loading" id="loading"><div class="loading-spinner"></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -579,7 +132,6 @@
     let customAreas = [];
     let customEducations = [];
 
-    // DOM Elements
     const form = document.getElementById('memberForm');
     const saveBtn = document.getElementById('saveBtn');
     const backBtn = document.getElementById('backBtn');
@@ -591,118 +143,69 @@
 
     async function loadCustomData() {
         if (!currentUser) return;
-        
         try {
-            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
-            const areaSnapshot = await get(areaRef);
-            if (areaSnapshot.exists()) {
-                customAreas = Object.values(areaSnapshot.val());
-            } else {
-                customAreas = [];
-            }
-            
-            const eduRef = ref(database, `users/${currentUser.uid}/custom_data/educations`);
-            const eduSnapshot = await get(eduRef);
-            if (eduSnapshot.exists()) {
-                customEducations = Object.values(eduSnapshot.val());
-            } else {
-                customEducations = [];
-            }
-            
+            const areaSnapshot = await get(ref(database, `users/${currentUser.uid}/custom_data/areas`));
+            customAreas = areaSnapshot.exists() ? Object.values(areaSnapshot.val()) : [];
+            const eduSnapshot = await get(ref(database, `users/${currentUser.uid}/custom_data/educations`));
+            customEducations = eduSnapshot.exists() ? Object.values(eduSnapshot.val()) : [];
             updateAreaSelect();
             updateEducationSelect();
-        } catch (error) {
-            console.error("Lỗi tải dữ liệu tùy chỉnh:", error);
-        }
+        } catch (error) { console.error("Lỗi tải dữ liệu tùy chỉnh:", error); }
     }
 
     function updateAreaSelect() {
         const currentValue = areaSelect.value;
         areaSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
-        customAreas.forEach(area => {
-            const option = document.createElement('option');
-            option.value = area;
-            option.textContent = area;
-            if (currentValue === area) option.selected = true;
-            areaSelect.appendChild(option);
-        });
+        customAreas.forEach(area => { const option = document.createElement('option'); option.value = area; option.textContent = area; if (currentValue === area) option.selected = true; areaSelect.appendChild(option); });
     }
 
     function updateEducationSelect() {
         const currentValue = educationSelect.value;
         educationSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
-        customEducations.forEach(edu => {
-            const option = document.createElement('option');
-            option.value = edu;
-            option.textContent = edu;
-            if (currentValue === edu) option.selected = true;
-            educationSelect.appendChild(option);
-        });
+        customEducations.forEach(edu => { const option = document.createElement('option'); option.value = edu; option.textContent = edu; if (currentValue === edu) option.selected = true; educationSelect.appendChild(option); });
     }
 
     async function addNewArea() {
         const newArea = prompt("Nhập tên khu vực mới:", "");
         if (!newArea || !newArea.trim()) return;
-        
         const areaName = newArea.trim();
-        if (customAreas.includes(areaName)) {
-            alert("Khu vực này đã tồn tại!");
-            return;
-        }
-        
+        if (customAreas.includes(areaName)) { alert("Khu vực này đã tồn tại!"); return; }
         loading.style.display = 'flex';
         try {
             customAreas.push(areaName);
-            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
-            await set(areaRef, customAreas);
+            await set(ref(database, `users/${currentUser.uid}/custom_data/areas`), customAreas);
             updateAreaSelect();
             areaSelect.value = areaName;
             showMessage("Đã thêm khu vực mới!", "success");
-        } catch (error) {
-            showMessage("Lỗi: " + error.message, "error");
-        } finally {
-            loading.style.display = 'none';
-        }
+        } catch (error) { showMessage("Lỗi: " + error.message, "error"); } 
+        finally { loading.style.display = 'none'; }
     }
 
     async function addNewEducation() {
         const newEdu = prompt("Nhập trình độ văn hóa mới:", "");
         if (!newEdu || !newEdu.trim()) return;
-        
         const eduName = newEdu.trim();
-        if (customEducations.includes(eduName)) {
-            alert("Trình độ này đã tồn tại!");
-            return;
-        }
-        
+        if (customEducations.includes(eduName)) { alert("Trình độ này đã tồn tại!"); return; }
         loading.style.display = 'flex';
         try {
             customEducations.push(eduName);
-            const eduRef = ref(database, `users/${currentUser.uid}/custom_data/educations`);
-            await set(eduRef, customEducations);
+            await set(ref(database, `users/${currentUser.uid}/custom_data/educations`), customEducations);
             updateEducationSelect();
             educationSelect.value = eduName;
             showMessage("Đã thêm trình độ mới!", "success");
-        } catch (error) {
-            showMessage("Lỗi: " + error.message, "error");
-        } finally {
-            loading.style.display = 'none';
-        }
+        } catch (error) { showMessage("Lỗi: " + error.message, "error"); }
+        finally { loading.style.display = 'none'; }
     }
 
     function showMessage(text, type = 'success') {
         const existingMsg = document.querySelector('.message');
         if (existingMsg) existingMsg.remove();
-        
         const msg = document.createElement('div');
         msg.className = `message ${type}`;
         msg.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${text}`;
         document.body.appendChild(msg);
         setTimeout(() => msg.classList.add('show'), 10);
-        setTimeout(() => {
-            msg.classList.remove('show');
-            setTimeout(() => msg.remove(), 300);
-        }, 3000);
+        setTimeout(() => { msg.classList.remove('show'); setTimeout(() => msg.remove(), 300); }, 3000);
     }
 
     function getFormData() {
@@ -746,29 +249,29 @@
         document.getElementById('alias').value = data.alias || '';
         document.getElementById('ethnicity').value = data.ethnicity || '';
         document.getElementById('religion').value = data.religion || '';
+        
+        // Xử lý ngày tháng cho input type="date" (cần định dạng YYYY-MM-DD)
         document.getElementById('birthYear').value = data.birthYear || '';
-        if (data.educationLevel) educationSelect.value = data.educationLevel;
-        document.getElementById('specialization').value = data.specialization || '';
-        if (data.gender) {
-            const radio = document.querySelector(`input[name="gender"][value="${data.gender}"]`);
-            if (radio) radio.checked = true;
-        }
-        document.getElementById('cccd').value = data.cccd || '';
-        document.getElementById('politicalTheory').value = data.politicalTheory || '';
-        document.getElementById('foreignLanguage').value = data.foreignLanguage || '';
         document.getElementById('issueDate').value = data.issueDate || '';
-        document.getElementById('issuePlace').value = data.issuePlace || '';
-        document.getElementById('itSkill').value = data.itSkill || '';
-        if (data.area) areaSelect.value = data.area;
-        document.getElementById('hometown').value = data.hometown || '';
-        document.getElementById('address').value = data.address || '';
-        document.getElementById('position').value = data.position || '';
         document.getElementById('revolutionDate').value = data.revolutionDate || '';
         document.getElementById('militaryJoinDate').value = data.militaryJoinDate || '';
         document.getElementById('militaryReleaseDate').value = data.militaryReleaseDate || '';
         document.getElementById('reserveStatus').value = data.reserveStatus || '';
         document.getElementById('officialStatus').value = data.officialStatus || '';
         document.getElementById('associationJoinDate').value = data.associationJoinDate || '';
+        
+        if (data.educationLevel) educationSelect.value = data.educationLevel;
+        document.getElementById('specialization').value = data.specialization || '';
+        if (data.gender) { const radio = document.querySelector(`input[name="gender"][value="${data.gender}"]`); if (radio) radio.checked = true; }
+        document.getElementById('cccd').value = data.cccd || '';
+        document.getElementById('politicalTheory').value = data.politicalTheory || '';
+        document.getElementById('foreignLanguage').value = data.foreignLanguage || '';
+        document.getElementById('issuePlace').value = data.issuePlace || '';
+        document.getElementById('itSkill').value = data.itSkill || '';
+        if (data.area) areaSelect.value = data.area;
+        document.getElementById('hometown').value = data.hometown || '';
+        document.getElementById('address').value = data.address || '';
+        document.getElementById('position').value = data.position || '';
         document.getElementById('memberCardNumber').value = data.memberCardNumber || '';
         document.getElementById('trainingMajor').value = data.trainingMajor || '';
         document.getElementById('note').value = data.note || '';
@@ -776,22 +279,12 @@
 
     async function saveMember() {
         const fullName = document.getElementById('fullName').value.trim();
-        if (!fullName) {
-            showMessage('Vui lòng nhập họ và tên hội viên', 'error');
-            return;
-        }
-
-        if (!currentUser) {
-            showMessage('Vui lòng đăng nhập lại', 'error');
-            return;
-        }
-
+        if (!fullName) { showMessage('Vui lòng nhập họ và tên hội viên', 'error'); return; }
+        if (!currentUser) { showMessage('Vui lòng đăng nhập lại', 'error'); return; }
         loading.style.display = 'flex';
-        
         try {
             const memberData = getFormData();
             const membersRef = ref(database, `users/${currentUser.uid}/members`);
-            
             if (editMemberId) {
                 await update(ref(database, `users/${currentUser.uid}/members/${editMemberId}`), memberData);
                 showMessage('Cập nhật hội viên thành công!', 'success');
@@ -802,17 +295,9 @@
                 await set(newRef, memberData);
                 showMessage('Thêm hội viên thành công!', 'success');
             }
-            
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-            
-        } catch (error) {
-            console.error('Lỗi:', error);
-            showMessage('Lỗi: ' + error.message, 'error');
-        } finally {
-            loading.style.display = 'none';
-        }
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+        } catch (error) { console.error('Lỗi:', error); showMessage('Lỗi: ' + error.message, 'error'); } 
+        finally { loading.style.display = 'none'; }
     }
 
     function getUrlParams() {
@@ -831,30 +316,21 @@
 
     async function loadMemberData(id) {
         if (!currentUser) return;
-        
         loading.style.display = 'flex';
         try {
-            const memberRef = ref(database, `users/${currentUser.uid}/members/${id}`);
-            const snapshot = await get(memberRef);
+            const snapshot = await get(ref(database, `users/${currentUser.uid}/members/${id}`));
             if (snapshot.exists()) {
                 setFormData(snapshot.val());
             } else {
                 showMessage('Không tìm thấy dữ liệu hội viên', 'error');
                 setTimeout(() => window.location.href = 'dashboard.html', 1500);
             }
-        } catch (error) {
-            console.error('Lỗi:', error);
-            showMessage('Lỗi tải dữ liệu: ' + error.message, 'error');
-        } finally {
-            loading.style.display = 'none';
-        }
+        } catch (error) { console.error('Lỗi:', error); showMessage('Lỗi tải dữ liệu: ' + error.message, 'error'); } 
+        finally { loading.style.display = 'none'; }
     }
 
-    // Event listeners
     saveBtn.addEventListener('click', saveMember);
-    backBtn.addEventListener('click', () => {
-        window.location.href = 'dashboard.html';
-    });
+    backBtn.addEventListener('click', () => { window.location.href = 'dashboard.html'; });
     addAreaBtn.addEventListener('click', addNewArea);
     addEducationBtn.addEventListener('click', addNewEducation);
 
@@ -863,9 +339,7 @@
             currentUser = user;
             await loadCustomData();
             getUrlParams();
-        } else {
-            window.location.href = 'index.html';
-        }
+        } else { window.location.href = 'index.html'; }
     });
 </script>
 </body>
