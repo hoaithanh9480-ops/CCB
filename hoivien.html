@@ -738,7 +738,7 @@
             alias: document.getElementById('alias').value.trim(),
             ethnicity: document.getElementById('ethnicity').value.trim(),
             religion: document.getElementById('religion').value.trim(),
-            birthYear: document.getElementById('birthYear').value,
+            birthYear: document.getElementById('revolutionDate').value,
             educationLevel: educationSelect.value,
             specialization: document.getElementById('specialization').value.trim(),
             gender: genderRadio ? genderRadio.value : '',
@@ -772,7 +772,7 @@
         document.getElementById('alias').value = data.alias || '';
         document.getElementById('ethnicity').value = data.ethnicity || '';
         document.getElementById('religion').value = data.religion || '';
-        document.getElementById('birthYear').value = data.birthYear || '';
+        document.getElementById('revolutionDate').value = data.birthYear || '';
         if (data.educationLevel) educationSelect.value = data.educationLevel;
         document.getElementById('specialization').value = data.specialization || '';
         if (data.gender) {
