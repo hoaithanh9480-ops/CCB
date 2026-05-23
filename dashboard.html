@@ -6,6 +6,8 @@
     <title>Dashboard - Quản lý Hội viên</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- SheetJS để đọc/ghi Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -25,7 +27,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .dashboard-header {
             background: white;
             border-radius: 28px;
@@ -77,10 +78,8 @@
 
         .logout-btn:hover {
             background: #dc2626;
-            transform: scale(0.97);
         }
 
-        /* Thông báo */
         .message {
             padding: 12px 20px;
             border-radius: 12px;
@@ -102,39 +101,72 @@
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Nút thêm hội viên */
-        .add-member-btn {
-            background: #2563eb;
+        /* Button group */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .add-member-btn, .export-btn, .import-btn, .download-sample-btn {
             border: none;
-            padding: 14px 28px;
+            padding: 12px 24px;
             border-radius: 40px;
-            color: white;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
             transition: 0.2s;
+        }
+
+        .add-member-btn {
+            background: #2563eb;
+            color: white;
         }
 
         .add-member-btn:hover {
             background: #1d4ed8;
-            transform: scale(0.98);
         }
 
-        /* Bộ lọc tìm kiếm */
+        .export-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .export-btn:hover {
+            background: #059669;
+        }
+
+        .import-btn {
+            background: #8b5cf6;
+            color: white;
+            position: relative;
+        }
+
+        .import-btn:hover {
+            background: #7c3aed;
+        }
+
+        .download-sample-btn {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .download-sample-btn:hover {
+            background: #d97706;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
         .filters-card {
             background: white;
             border-radius: 24px;
@@ -167,7 +199,6 @@
             border-radius: 12px;
             font-family: inherit;
             font-size: 0.9rem;
-            transition: 0.2s;
         }
 
         .filter-group input:focus, .filter-group select:focus {
@@ -185,7 +216,6 @@
             align-self: flex-end;
         }
 
-        /* Bảng danh sách hội viên */
         .members-table-container {
             background: white;
             border-radius: 24px;
@@ -260,7 +290,6 @@
             color: #94a3b8;
         }
 
-        /* Modal xem chi tiết */
         .modal {
             display: none;
             position: fixed;
@@ -286,14 +315,8 @@
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .modal-header {
@@ -348,6 +371,22 @@
             cursor: pointer;
         }
 
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            transition: width 0.3s;
+        }
+
         footer {
             text-align: center;
             margin-top: 30px;
@@ -367,12 +406,14 @@
             .action-buttons {
                 flex-direction: column;
             }
+            .button-group {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 <div class="dashboard-wrapper">
-    <!-- Header Dashboard -->
     <div class="dashboard-header">
         <div class="logo-area">
             <h1><i class="fas fa-users"></i> Hội Cựu Chiến Binh</h1>
@@ -385,15 +426,25 @@
         </div>
     </div>
 
-    <!-- Thông báo -->
     <div id="messageBox" class="message"></div>
 
-    <!-- Nút thêm hội viên - Mở file hoivien.html -->
-    <button class="add-member-btn" id="addMemberBtn">
-        <i class="fas fa-plus-circle"></i> Thêm hội viên mới
-    </button>
+    <div class="button-group">
+        <button class="add-member-btn" id="addMemberBtn">
+            <i class="fas fa-plus-circle"></i> Thêm hội viên
+        </button>
+        <button class="export-btn" id="exportBtn">
+            <i class="fas fa-file-excel"></i> Xuất Excel
+        </button>
+        <button class="import-btn" id="importBtn">
+            <i class="fas fa-file-import"></i> Import Excel
+        </button>
+        <button class="download-sample-btn" id="downloadSampleBtn">
+            <i class="fas fa-download"></i> Tải file mẫu
+        </button>
+    </div>
 
-    <!-- Bộ lọc tìm kiếm -->
+    <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
+
     <div class="filters-card">
         <div class="filter-group">
             <label><i class="fas fa-search"></i> Tìm theo tên</label>
@@ -403,30 +454,11 @@
             <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
             <select id="searchArea">
                 <option value="">Tất cả khu vực</option>
-                <option value="Quận 1">Quận 1</option>
-                <option value="Quận 2">Quận 2</option>
-                <option value="Quận 3">Quận 3</option>
-                <option value="Quận 4">Quận 4</option>
-                <option value="Quận 5">Quận 5</option>
-                <option value="Quận 6">Quận 6</option>
-                <option value="Quận 7">Quận 7</option>
-                <option value="Quận 8">Quận 8</option>
-                <option value="Quận 9">Quận 9</option>
-                <option value="Quận 10">Quận 10</option>
-                <option value="Quận 11">Quận 11</option>
-                <option value="Quận 12">Quận 12</option>
-                <option value="Bình Thạnh">Bình Thạnh</option>
-                <option value="Tân Bình">Tân Bình</option>
-                <option value="Tân Phú">Tân Phú</option>
-                <option value="Gò Vấp">Gò Vấp</option>
-                <option value="Phú Nhuận">Phú Nhuận</option>
-                <option value="Thủ Đức">Thủ Đức</option>
             </select>
         </div>
         <button class="reset-filter" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Đặt lại</button>
     </div>
 
-    <!-- Bảng danh sách hội viên -->
     <div class="members-table-container">
         <table class="members-table">
             <thead>
@@ -451,7 +483,6 @@
     </footer>
 </div>
 
-<!-- Modal Xem Chi Tiết -->
 <div id="detailModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -465,10 +496,20 @@
     </div>
 </div>
 
+<div id="importProgress" class="modal" style="display: none;">
+    <div class="modal-content" style="text-align: center;">
+        <h3><i class="fas fa-spinner fa-pulse"></i> Đang import dữ liệu...</h3>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p id="progressText">Đang xử lý...</p>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get, remove, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
@@ -486,8 +527,8 @@
 
     let currentUser = null;
     let allMembers = [];
+    let customAreas = [];
 
-    // DOM elements
     const membersList = document.getElementById('membersList');
     const userEmailSpan = document.getElementById('userEmail');
     const messageBox = document.getElementById('messageBox');
@@ -496,7 +537,12 @@
     const resetFilterBtn = document.getElementById('resetFilterBtn');
     const addMemberBtn = document.getElementById('addMemberBtn');
     const logoutBtn = document.getElementById('logoutBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const importBtn = document.getElementById('importBtn');
+    const downloadSampleBtn = document.getElementById('downloadSampleBtn');
+    const fileInput = document.getElementById('fileInput');
     const detailModal = document.getElementById('detailModal');
+    const importProgress = document.getElementById('importProgress');
 
     function showMessage(text, type = 'success') {
         messageBox.textContent = text;
@@ -507,17 +553,35 @@
         }, 3000);
     }
 
-    // Lấy reference đến node members của user hiện tại
-    function getMembersRef() {
-        if (!currentUser) return null;
-        return ref(database, `users/${currentUser.uid}/members`);
+    // Tải danh sách khu vực từ Firebase
+    async function loadAreas() {
+        if (!currentUser) return;
+        try {
+            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
+            const snapshot = await get(areaRef);
+            if (snapshot.exists()) {
+                customAreas = Object.values(snapshot.val());
+            } else {
+                customAreas = [];
+            }
+            
+            // Cập nhật dropdown lọc khu vực
+            searchAreaSelect.innerHTML = '<option value="">Tất cả khu vực</option>';
+            customAreas.forEach(area => {
+                const option = document.createElement('option');
+                option.value = area;
+                option.textContent = area;
+                searchAreaSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Lỗi tải khu vực:", error);
+        }
     }
 
-    // Tải danh sách hội viên từ Firebase
     async function loadMembers() {
         if (!currentUser) return;
         try {
-            const membersRef = getMembersRef();
+            const membersRef = ref(database, `users/${currentUser.uid}/members`);
             const snapshot = await get(membersRef);
             if (snapshot.exists()) {
                 const data = snapshot.val();
@@ -535,7 +599,6 @@
         }
     }
 
-    // Hiển thị danh sách theo bộ lọc
     function renderMembersList() {
         const searchName = searchNameInput.value.toLowerCase().trim();
         const searchArea = searchAreaSelect.value;
@@ -568,7 +631,6 @@
         `).join('');
     }
 
-    // Xem chi tiết (giữ lại modal)
     window.viewMemberDetail = function(id) {
         const member = allMembers.find(m => m.id === id);
         if (!member) return;
@@ -586,12 +648,10 @@
         detailModal.style.display = 'flex';
     };
 
-    // Sửa hội viên - Mở file hoivien.html với id
     window.editMember = function(id) {
         window.location.href = `hoivien.html?id=${id}`;
     };
 
-    // Xóa hội viên
     window.deleteMember = async function(id) {
         if (!confirm("Bạn có chắc chắn muốn xóa hội viên này?")) return;
         try {
@@ -603,14 +663,216 @@
         }
     };
 
-    // Đóng modal
+    // Xuất Excel
+    function exportToExcel() {
+        const searchName = searchNameInput.value.toLowerCase().trim();
+        const searchArea = searchAreaSelect.value;
+        
+        let filtered = allMembers.filter(member => {
+            let match = true;
+            if (searchName && !member.fullName?.toLowerCase().includes(searchName)) match = false;
+            if (searchArea && member.area !== searchArea) match = false;
+            return match;
+        });
+
+        if (filtered.length === 0) {
+            showMessage("Không có dữ liệu để xuất!", 'error');
+            return;
+        }
+
+        const exportData = filtered.map((member, index) => ({
+            'STT': index + 1,
+            'ID hội viên': member.memberId || '',
+            'Họ và tên': member.fullName || '',
+            'Bí danh': member.alias || '',
+            'Dân tộc': member.ethnicity || '',
+            'Tôn giáo': member.religion || '',
+            'Năm sinh': member.birthYear || '',
+            'Trình độ văn hóa': member.educationLevel || '',
+            'Chuyên môn': member.specialization || '',
+            'Giới tính': member.gender || '',
+            'CCCD/CMND': member.cccd || '',
+            'Trình độ LLCT': member.politicalTheory || '',
+            'Ngoại ngữ': member.foreignLanguage || '',
+            'Ngày cấp CCCD': member.issueDate || '',
+            'Nơi cấp': member.issuePlace || '',
+            'Tin học': member.itSkill || '',
+            'Khu vực': member.area || '',
+            'Quê quán': member.hometown || '',
+            'Địa chỉ': member.address || '',
+            'Chức vụ': member.position || '',
+            'Ngày tham gia CM': member.revolutionDate || '',
+            'Ngày nhập ngũ': member.militaryJoinDate || '',
+            'Ngày xuất ngũ': member.militaryReleaseDate || '',
+            'Dự bị': member.reserveStatus || '',
+            'Chính thức': member.officialStatus || '',
+            'Ngày kết nạp Hội': member.associationJoinDate || '',
+            'Số thẻ Hội viên': member.memberCardNumber || '',
+            'Chuyên ngành': member.trainingMajor || '',
+            'Ghi chú': member.note || ''
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh_sach_hoi_vien');
+        
+        const fileName = `danh_sach_hoi_vien_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`;
+        XLSX.writeFile(wb, fileName);
+        showMessage(`Đã xuất ${filtered.length} hội viên thành công!`, 'success');
+    }
+
+    // Tải file mẫu
+    function downloadSampleFile() {
+        const sampleData = [{
+            'Họ và tên': 'Nguyễn Văn A',
+            'Bí danh': 'Ba A',
+            'Dân tộc': 'Kinh',
+            'Tôn giáo': 'Không',
+            'Năm sinh': '1960',
+            'Trình độ văn hóa': '12/12',
+            'Chuyên môn': 'Kỹ sư',
+            'Giới tính': 'Nam',
+            'CCCD/CMND': '012345678912',
+            'Trình độ LLCT': 'Cao cấp',
+            'Ngoại ngữ': 'Anh',
+            'Ngày cấp CCCD': '2020-01-01',
+            'Nơi cấp': 'Công an TP.HCM',
+            'Tin học': 'Cơ bản',
+            'Khu vực': 'Quận 1',
+            'Quê quán': 'Hà Nội',
+            'Địa chỉ': '123 Đường ABC, Phường XYZ, Quận 1',
+            'Chức vụ': 'Chủ tịch Hội',
+            'Ngày tham gia CM': '1975-04-30',
+            'Ngày nhập ngũ': '1978-01-01',
+            'Ngày xuất ngũ': '1982-12-31',
+            'Dự bị': '1983-01-01',
+            'Chính thức': '1983-06-01',
+            'Ngày kết nạp Hội': '1990-01-01',
+            'Số thẻ Hội viên': 'HV001',
+            'Chuyên ngành': 'Cơ khí',
+            'Ghi chú': 'Ghi chú mẫu'
+        }];
+
+        const ws = XLSX.utils.json_to_sheet(sampleData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'File_mau');
+        XLSX.writeFile(wb, 'file_mau_hoi_vien.xlsx');
+        showMessage('Đã tải file mẫu! Hãy điền dữ liệu theo mẫu này.', 'success');
+    }
+
+    // Import Excel
+    async function importExcel(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(firstSheet);
+                resolve(rows);
+            };
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    async function processImport(rows) {
+        importProgress.style.display = 'flex';
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        
+        let successCount = 0;
+        let errorCount = 0;
+        
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const percent = ((i + 1) / rows.length) * 100;
+            progressFill.style.width = `${percent}%`;
+            progressText.textContent = `Đang xử lý ${i + 1}/${rows.length}...`;
+            
+            try {
+                const memberData = {
+                    fullName: row['Họ và tên'] || row['Họ tên'] || '',
+                    alias: row['Bí danh'] || '',
+                    ethnicity: row['Dân tộc'] || '',
+                    religion: row['Tôn giáo'] || '',
+                    birthYear: row['Năm sinh'] || '',
+                    educationLevel: row['Trình độ văn hóa'] || '',
+                    specialization: row['Chuyên môn'] || '',
+                    gender: row['Giới tính'] || '',
+                    cccd: row['CCCD/CMND'] || row['CCCD'] || '',
+                    politicalTheory: row['Trình độ LLCT'] || '',
+                    foreignLanguage: row['Ngoại ngữ'] || '',
+                    issueDate: row['Ngày cấp CCCD'] || '',
+                    issuePlace: row['Nơi cấp'] || '',
+                    itSkill: row['Tin học'] || '',
+                    area: row['Khu vực'] || '',
+                    hometown: row['Quê quán'] || '',
+                    address: row['Địa chỉ'] || '',
+                    position: row['Chức vụ'] || '',
+                    revolutionDate: row['Ngày tham gia CM'] || '',
+                    militaryJoinDate: row['Ngày nhập ngũ'] || '',
+                    militaryReleaseDate: row['Ngày xuất ngũ'] || '',
+                    reserveStatus: row['Dự bị'] || '',
+                    officialStatus: row['Chính thức'] || '',
+                    associationJoinDate: row['Ngày kết nạp Hội'] || '',
+                    memberCardNumber: row['Số thẻ Hội viên'] || '',
+                    trainingMajor: row['Chuyên ngành'] || '',
+                    note: row['Ghi chú'] || '',
+                    memberId: `HV-${Date.now()}-${i}`,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                if (!memberData.fullName) {
+                    errorCount++;
+                    continue;
+                }
+                
+                const membersRef = ref(database, `users/${currentUser.uid}/members`);
+                const newRef = push(membersRef);
+                memberData.id = newRef.key;
+                await set(newRef, memberData);
+                successCount++;
+                
+                await new Promise(resolve => setTimeout(resolve, 50));
+            } catch (error) {
+                console.error('Lỗi import dòng:', error);
+                errorCount++;
+            }
+        }
+        
+        importProgress.style.display = 'none';
+        await loadMembers();
+        showMessage(`Import hoàn tất! Thành công: ${successCount}, Thất bại: ${errorCount}`, successCount > 0 ? 'success' : 'error');
+    }
+
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+            const rows = await importExcel(file);
+            await processImport(rows);
+        } catch (error) {
+            console.error('Lỗi import:', error);
+            showMessage('Lỗi import file: ' + error.message, 'error');
+        } finally {
+            fileInput.value = '';
+        }
+    });
+
+    importBtn.addEventListener('click', () => fileInput.click());
+    exportBtn.addEventListener('click', exportToExcel);
+    downloadSampleBtn.addEventListener('click', downloadSampleFile);
+
     document.getElementById('closeDetailModalBtn')?.addEventListener('click', () => detailModal.style.display = 'none');
     document.getElementById('closeDetailBtn')?.addEventListener('click', () => detailModal.style.display = 'none');
     window.onclick = (e) => {
         if (e.target === detailModal) detailModal.style.display = 'none';
+        if (e.target === importProgress) importProgress.style.display = 'none';
     };
 
-    // Lọc và reset
     searchNameInput.addEventListener('input', () => renderMembersList());
     searchAreaSelect.addEventListener('change', () => renderMembersList());
     resetFilterBtn.addEventListener('click', () => {
@@ -619,7 +881,6 @@
         renderMembersList();
     });
 
-    // Thêm hội viên - Mở file hoivien.html (không có id là thêm mới)
     addMemberBtn.addEventListener('click', () => {
         window.location.href = 'hoivien.html';
     });
@@ -633,6 +894,7 @@
         if (user) {
             currentUser = user;
             userEmailSpan.textContent = user.email;
+            await loadAreas();
             await loadMembers();
         } else {
             window.location.href = "index.html";
