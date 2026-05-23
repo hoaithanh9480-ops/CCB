@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Dashboard - Quản lý Hội viên</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #e9f0fc 0%, #d9e4f5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: white;
+            border-radius: 28px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .logo-area h1 {
+            font-size: 1.6rem;
+            color: #1e293b;
+        }
+
+        .logo-area p {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .user-info {
+            background: #f1f5f9;
+            padding: 12px 20px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .user-email {
+            font-weight: 500;
+            color: #2563eb;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: scale(0.97);
+        }
+
+        /* Thông báo */
+        .message {
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+            border-left: 4px solid #22c55e;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Nút thêm hội viên */
+        .add-member-btn {
+            background: #2563eb;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+
+        .add-member-btn:hover {
+            background: #1d4ed8;
+            transform: scale(0.98);
+        }
+
+        /* Bộ lọc tìm kiếm */
+        .filters-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .reset-filter {
+            background: #f1f5f9;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            align-self: flex-end;
+        }
+
+        /* Bảng danh sách hội viên */
+        .members-table-container {
+            background: white;
+            border-radius: 24px;
+            overflow-x: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .members-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        .members-table th {
+            background: #f8fafc;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .members-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .members-table tr:hover {
+            background: #faf5ff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-view {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .btn-edit {
+            background: #eab308;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .empty-row td {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 28px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.4rem;
+            color: #1e293b;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-submit {
+            background: #2563eb;
+            color: white;
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .detail-info {
+            line-height: 1.8;
+        }
+
+        .detail-info p {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .filters-card {
+                flex-direction: column;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <!-- Header Dashboard -->
+    <div class="dashboard-header">
+        <div class="logo-area">
+            <h1><i class="fas fa-users"></i> Hội Cựu Chiến Binh</h1>
+            <p>Quản lý danh sách hội viên</p>
+        </div>
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span class="user-email" id="userEmail">Đang tải...</span>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+        </div>
+    </div>
+
+    <!-- Thông báo -->
+    <div id="messageBox" class="message"></div>
+
+    <!-- Nút thêm hội viên -->
+    <button class="add-member-btn" id="addMemberBtn">
+        <i class="fas fa-plus-circle"></i> Thêm hội viên mới
+    </button>
+
+    <!-- Bộ lọc tìm kiếm -->
+    <div class="filters-card">
+        <div class="filter-group">
+            <label><i class="fas fa-search"></i> Tìm theo tên</label>
+            <input type="text" id="searchName" placeholder="Nhập tên hội viên...">
+        </div>
+        <div class="filter-group">
+            <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
+            <select id="searchArea">
+                <option value="">Tất cả khu vực</option>
+                <option value="Quận 1">Quận 1</option>
+                <option value="Quận 2">Quận 2</option>
+                <option value="Quận 3">Quận 3</option>
+                <option value="Quận 4">Quận 4</option>
+                <option value="Quận 5">Quận 5</option>
+                <option value="Quận 6">Quận 6</option>
+                <option value="Quận 7">Quận 7</option>
+                <option value="Quận 8">Quận 8</option>
+                <option value="Quận 9">Quận 9</option>
+                <option value="Quận 10">Quận 10</option>
+                <option value="Quận 11">Quận 11</option>
+                <option value="Quận 12">Quận 12</option>
+                <option value="Bình Thạnh">Bình Thạnh</option>
+                <option value="Tân Bình">Tân Bình</option>
+                <option value="Tân Phú">Tân Phú</option>
+                <option value="Gò Vấp">Gò Vấp</option>
+                <option value="Phú Nhuận">Phú Nhuận</option>
+                <option value="Thủ Đức">Thủ Đức</option>
+            </select>
+        </div>
+        <button class="reset-filter" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Đặt lại</button>
+    </div>
+
+    <!-- Bảng danh sách hội viên -->
+    <div class="members-table-container">
+        <table class="members-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ và tên</th>
+                    <th>Năm sinh</th>
+                    <th>Khu vực</th>
+                    <th>Số điện thoại</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="membersList">
+                <tr class="empty-row">
+                    <td colspan="6">Đang tải danh sách hội viên...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        <i class="fas fa-shield-alt"></i> Dữ liệu được bảo mật theo từng tài khoản
+    </footer>
+</div>
+
+<!-- Modal Thêm/Sửa Hội viên -->
+<div id="memberModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Thêm hội viên mới</h2>
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+        </div>
+        <form id="memberForm">
+            <input type="hidden" id="memberId" value="">
+            <div class="form-group">
+                <label>Họ và tên *</label>
+                <input type="text" id="fullName" required placeholder="Nguyễn Văn A">
+            </div>
+            <div class="form-group">
+                <label>Năm sinh</label>
+                <input type="number" id="birthYear" placeholder="VD: 1960">
+            </div>
+            <div class="form-group">
+                <label>Khu vực *</label>
+                <select id="area" required>
+                    <option value="">Chọn khu vực</option>
+                    <option value="Quận 1">Quận 1</option>
+                    <option value="Quận 2">Quận 2</option>
+                    <option value="Quận 3">Quận 3</option>
+                    <option value="Quận 4">Quận 4</option>
+                    <option value="Quận 5">Quận 5</option>
+                    <option value="Quận 6">Quận 6</option>
+                    <option value="Quận 7">Quận 7</option>
+                    <option value="Quận 8">Quận 8</option>
+                    <option value="Quận 9">Quận 9</option>
+                    <option value="Quận 10">Quận 10</option>
+                    <option value="Quận 11">Quận 11</option>
+                    <option value="Quận 12">Quận 12</option>
+                    <option value="Bình Thạnh">Bình Thạnh</option>
+                    <option value="Tân Bình">Tân Bình</option>
+                    <option value="Tân Phú">Tân Phú</option>
+                    <option value="Gò Vấp">Gò Vấp</option>
+                    <option value="Phú Nhuận">Phú Nhuận</option>
+                    <option value="Thủ Đức">Thủ Đức</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="tel" id="phone" placeholder="0901234567">
+            </div>
+            <div class="form-group">
+                <label>Địa chỉ chi tiết</label>
+                <textarea id="address" rows="2" placeholder="Số nhà, đường, phường/xã..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Ghi chú</label>
+                <textarea id="note" rows="2" placeholder="Thông tin thêm..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Lưu lại</button>
+                <button type="button" class="btn-cancel" id="cancelModalBtn">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Xem Chi Tiết -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Chi tiết hội viên</h2>
+            <button class="close-modal" id="closeDetailModalBtn">&times;</button>
+        </div>
+        <div id="detailContent" class="detail-info"></div>
+        <div class="modal-buttons">
+            <button type="button" class="btn-cancel" id="closeDetailBtn">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, remove, push, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
+        authDomain: "hoi-ccb.firebaseapp.com",
+        databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "hoi-ccb",
+        storageBucket: "hoi-ccb.firebasestorage.app",
+        messagingSenderId: "344971473549",
+        appId: "1:344971473549:web:7d4db3d5d328401164e8c4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    let currentUser = null;
+    let allMembers = [];
+
+    // DOM elements
+    const membersList = document.getElementById('membersList');
+    const userEmailSpan = document.getElementById('userEmail');
+    const messageBox = document.getElementById('messageBox');
+    const searchNameInput = document.getElementById('searchName');
+    const searchAreaSelect = document.getElementById('searchArea');
+    const resetFilterBtn = document.getElementById('resetFilterBtn');
+    const addMemberBtn = document.getElementById('addMemberBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Modal elements
+    const memberModal = document.getElementById('memberModal');
+    const detailModal = document.getElementById('detailModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const memberForm = document.getElementById('memberForm');
+    const memberId = document.getElementById('memberId');
+    const fullNameInput = document.getElementById('fullName');
+    const birthYearInput = document.getElementById('birthYear');
+    const areaSelect = document.getElementById('area');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+    const noteInput = document.getElementById('note');
+
+    function showMessage(text, type = 'success') {
+        messageBox.textContent = text;
+        messageBox.className = `message ${type}`;
+        messageBox.style.display = 'block';
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, 3000);
+    }
+
+    // Lấy reference đến node members của user hiện tại
+    function getMembersRef() {
+        if (!currentUser) return null;
+        return ref(database, `users/${currentUser.uid}/members`);
+    }
+
+    // Tải danh sách hội viên từ Firebase
+    async function loadMembers() {
+        if (!currentUser) return;
+        try {
+            const membersRef = getMembersRef();
+            const snapshot = await get(membersRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                allMembers = Object.entries(data).map(([id, member]) => ({
+                    id,
+                    ...member
+                }));
+            } else {
+                allMembers = [];
+            }
+            renderMembersList();
+        } catch (error) {
+            console.error("Lỗi tải danh sách:", error);
+            showMessage("Lỗi tải danh sách: " + error.message, 'error');
+        }
+    }
+
+    // Hiển thị danh sách theo bộ lọc
+    function renderMembersList() {
+        const searchName = searchNameInput.value.toLowerCase().trim();
+        const searchArea = searchAreaSelect.value;
+
+        let filtered = allMembers.filter(member => {
+            let match = true;
+            if (searchName && !member.fullName?.toLowerCase().includes(searchName)) match = false;
+            if (searchArea && member.area !== searchArea) match = false;
+            return match;
+        });
+
+        if (filtered.length === 0) {
+            membersList.innerHTML = '<tr class="empty-row"><td colspan="6">Không có hội viên nào. Hãy thêm mới!</td></tr>';
+            return;
+        }
+
+        membersList.innerHTML = filtered.map((member, index) => `
+            <tr>
+                <td>${index + 1}</td>
+                <td><strong>${member.fullName || 'Chưa có tên'}</strong></td>
+                <td>${member.birthYear || '---'}</td>
+                <td><span class="badge" style="background:#e0f2fe;">${member.area || '---'}</span></td>
+                <td>${member.phone || '---'}</td>
+                <td class="action-buttons">
+                    <button class="btn-view" onclick="window.viewMemberDetail('${member.id}')"><i class="fas fa-eye"></i> Xem</button>
+                    <button class="btn-edit" onclick="window.editMember('${member.id}')"><i class="fas fa-pen"></i> Sửa</button>
+                    <button class="btn-delete" onclick="window.deleteMember('${member.id}')"><i class="fas fa-trash"></i> Xóa</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Thêm / Cập nhật hội viên
+    window.submitMemberForm = async function(e) {
+        e.preventDefault();
+        if (!currentUser) return;
+
+        const id = memberId.value;
+        const memberData = {
+            fullName: fullNameInput.value.trim(),
+            birthYear: birthYearInput.value,
+            area: areaSelect.value,
+            phone: phoneInput.value.trim(),
+            address: addressInput.value.trim(),
+            note: noteInput.value.trim(),
+            updatedAt: new Date().toISOString()
+        };
+
+        if (!memberData.fullName || !memberData.area) {
+            showMessage("Vui lòng nhập Họ tên và Khu vực", 'error');
+            return;
+        }
+
+        try {
+            const membersRef = getMembersRef();
+            if (id) {
+                // Cập nhật
+                await set(ref(database, `users/${currentUser.uid}/members/${id}`), memberData);
+                showMessage("Cập nhật hội viên thành công!", 'success');
+            } else {
+                // Thêm mới
+                const newRef = push(membersRef);
+                memberData.createdAt = new Date().toISOString();
+                await set(newRef, memberData);
+                showMessage("Thêm hội viên thành công!", 'success');
+            }
+            closeModal();
+            await loadMembers();
+            memberForm.reset();
+            memberId.value = '';
+        } catch (error) {
+            showMessage("Lỗi: " + error.message, 'error');
+        }
+    };
+
+    // Xem chi tiết
+    window.viewMemberDetail = function(id) {
+        const member = allMembers.find(m => m.id === id);
+        if (!member) return;
+        const detailContent = document.getElementById('detailContent');
+        detailContent.innerHTML = `
+            <p><strong>👤 Họ tên:</strong> ${member.fullName || '---'}</p>
+            <p><strong>📅 Năm sinh:</strong> ${member.birthYear || '---'}</p>
+            <p><strong>📍 Khu vực:</strong> ${member.area || '---'}</p>
+            <p><strong>📞 Số điện thoại:</strong> ${member.phone || '---'}</p>
+            <p><strong>🏠 Địa chỉ:</strong> ${member.address || '---'}</p>
+            <p><strong>📝 Ghi chú:</strong> ${member.note || '---'}</p>
+            <p><strong>🕒 Ngày tạo:</strong> ${member.createdAt ? new Date(member.createdAt).toLocaleString() : '---'}</p>
+            <p><strong>🔄 Cập nhật:</strong> ${member.updatedAt ? new Date(member.updatedAt).toLocaleString() : '---'}</p>
+        `;
+        detailModal.style.display = 'flex';
+    };
+
+    // Sửa hội viên
+    window.editMember = function(id) {
+        const member = allMembers.find(m => m.id === id);
+        if (!member) return;
+        memberId.value = member.id;
+        fullNameInput.value = member.fullName || '';
+        birthYearInput.value = member.birthYear || '';
+        areaSelect.value = member.area || '';
+        phoneInput.value = member.phone || '';
+        addressInput.value = member.address || '';
+        noteInput.value = member.note || '';
+        modalTitle.innerText = 'Sửa thông tin hội viên';
+        memberModal.style.display = 'flex';
+    };
+
+    // Xóa hội viên
+    window.deleteMember = async function(id) {
+        if (!confirm("Bạn có chắc chắn muốn xóa hội viên này?")) return;
+        try {
+            await remove(ref(database, `users/${currentUser.uid}/members/${id}`));
+            showMessage("Đã xóa hội viên!", 'success');
+            await loadMembers();
+        } catch (error) {
+            showMessage("Lỗi xóa: " + error.message, 'error');
+        }
+    };
+
+    function closeModal() {
+        memberModal.style.display = 'none';
+        memberForm.reset();
+        memberId.value = '';
+        modalTitle.innerText = 'Thêm hội viên mới';
+    }
+
+    function openAddModal() {
+        modalTitle.innerText = 'Thêm hội viên mới';
+        memberId.value = '';
+        memberForm.reset();
+        memberModal.style.display = 'flex';
+    }
+
+    // Lọc và reset
+    searchNameInput.addEventListener('input', () => renderMembersList());
+    searchAreaSelect.addEventListener('change', () => renderMembersList());
+    resetFilterBtn.addEventListener('click', () => {
+        searchNameInput.value = '';
+        searchAreaSelect.value = '';
+        renderMembersList();
+    });
+
+    addMemberBtn.addEventListener('click', openAddModal);
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+    document.getElementById('closeDetailModalBtn').addEventListener('click', () => detailModal.style.display = 'none');
+    document.getElementById('closeDetailBtn').addEventListener('click', () => detailModal.style.display = 'none');
+    memberForm.addEventListener('submit', window.submitMemberForm);
+    window.onclick = (e) => {
+        if (e.target === memberModal) closeModal();
+        if (e.target === detailModal) detailModal.style.display = 'none';
+    };
+
+    logoutBtn.addEventListener('click', async () => {
+        await signOut(auth);
+        window.location.href = "index.html";
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            userEmailSpan.textContent = user.email;
+            await loadMembers();
+        } else {
+            window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
