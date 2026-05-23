@@ -25,7 +25,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .form-header {
             background: white;
             border-radius: 20px;
@@ -90,7 +89,6 @@
             transform: scale(0.98);
         }
 
-        /* Form Card */
         .form-card {
             background: white;
             border-radius: 24px;
@@ -98,7 +96,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
-        /* Grid 4 cột */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -182,7 +179,6 @@
             font-size: 0.75rem;
         }
 
-        /* Nút thêm + nhỏ */
         .small-add-btn {
             background: #e2e8f0;
             border: none;
@@ -203,7 +199,6 @@
             color: white;
         }
 
-        /* Radio group cho giới tính */
         .radio-group {
             display: flex;
             gap: 15px;
@@ -228,7 +223,6 @@
             cursor: pointer;
         }
 
-        /* Section Divider */
         .section-divider {
             grid-column: span 4;
             margin: 10px 0 5px 0;
@@ -257,7 +251,6 @@
             margin-left: 6px;
         }
 
-        /* Thông báo */
         .message {
             position: fixed;
             top: 20px;
@@ -287,7 +280,6 @@
             border-left: 3px solid #ef4444;
         }
 
-        /* Loading */
         .loading {
             position: fixed;
             top: 0;
@@ -315,19 +307,16 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Required star */
         .required:after {
             content: " *";
             color: #ef4444;
         }
 
-        /* Placeholder mờ */
         input::placeholder, select:invalid {
             color: #cbd5e1;
             opacity: 0.7;
         }
 
-        /* Responsive */
         @media (max-width: 1100px) {
             .form-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -600,12 +589,10 @@
     const addAreaBtn = document.getElementById('addAreaBtn');
     const addEducationBtn = document.getElementById('addEducationBtn');
 
-    // Tải danh sách khu vực và trình độ từ Firebase (không có mặc định)
     async function loadCustomData() {
         if (!currentUser) return;
         
         try {
-            // Tải khu vực tùy chỉnh
             const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
             const areaSnapshot = await get(areaRef);
             if (areaSnapshot.exists()) {
@@ -614,7 +601,6 @@
                 customAreas = [];
             }
             
-            // Tải trình độ văn hóa tùy chỉnh
             const eduRef = ref(database, `users/${currentUser.uid}/custom_data/educations`);
             const eduSnapshot = await get(eduRef);
             if (eduSnapshot.exists()) {
@@ -630,7 +616,6 @@
         }
     }
 
-    // Cập nhật dropdown khu vực
     function updateAreaSelect() {
         const currentValue = areaSelect.value;
         areaSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
@@ -643,7 +628,6 @@
         });
     }
 
-    // Cập nhật dropdown trình độ văn hóa
     function updateEducationSelect() {
         const currentValue = educationSelect.value;
         educationSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
@@ -656,7 +640,6 @@
         });
     }
 
-    // Thêm khu vực mới
     async function addNewArea() {
         const newArea = prompt("Nhập tên khu vực mới:", "");
         if (!newArea || !newArea.trim()) return;
@@ -682,7 +665,6 @@
         }
     }
 
-    // Thêm trình độ văn hóa mới
     async function addNewEducation() {
         const newEdu = prompt("Nhập trình độ văn hóa mới:", "");
         if (!newEdu || !newEdu.trim()) return;
@@ -708,7 +690,6 @@
         }
     }
 
-    // Helper hiển thị thông báo
     function showMessage(text, type = 'success') {
         const existingMsg = document.querySelector('.message');
         if (existingMsg) existingMsg.remove();
@@ -724,7 +705,6 @@
         }, 3000);
     }
 
-    // Lấy dữ liệu từ form
     function getFormData() {
         const genderRadio = document.querySelector('input[name="gender"]:checked');
         return {
@@ -760,7 +740,6 @@
         };
     }
 
-    // Đổ dữ liệu vào form (khi sửa)
     function setFormData(data) {
         document.getElementById('memberId').value = data.memberId || '';
         document.getElementById('fullName').value = data.fullName || '';
@@ -795,7 +774,6 @@
         document.getElementById('note').value = data.note || '';
     }
 
-    // Lưu hội viên
     async function saveMember() {
         const fullName = document.getElementById('fullName').value.trim();
         if (!fullName) {
@@ -837,7 +815,6 @@
         }
     }
 
-    // Kiểm tra URL params
     function getUrlParams() {
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
@@ -852,7 +829,6 @@
         }
     }
 
-    // Tải dữ liệu hội viên để sửa
     async function loadMemberData(id) {
         if (!currentUser) return;
         
@@ -882,7 +858,6 @@
     addAreaBtn.addEventListener('click', addNewArea);
     addEducationBtn.addEventListener('click', addNewEducation);
 
-    // Auth state
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
