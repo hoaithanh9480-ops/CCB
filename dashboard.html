@@ -260,7 +260,7 @@
             color: #94a3b8;
         }
 
-        /* Modal */
+        /* Modal xem chi tiết */
         .modal {
             display: none;
             position: fixed;
@@ -318,58 +318,6 @@
             color: #94a3b8;
         }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: #334155;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
-            font-family: inherit;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .btn-submit {
-            background: #2563eb;
-            color: white;
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-cancel {
-            background: #f1f5f9;
-            color: #475569;
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
         .detail-info {
             line-height: 1.8;
         }
@@ -387,6 +335,17 @@
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 500;
+        }
+
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
         }
 
         footer {
@@ -429,7 +388,7 @@
     <!-- Thông báo -->
     <div id="messageBox" class="message"></div>
 
-    <!-- Nút thêm hội viên -->
+    <!-- Nút thêm hội viên - Mở file hoivien.html -->
     <button class="add-member-btn" id="addMemberBtn">
         <i class="fas fa-plus-circle"></i> Thêm hội viên mới
     </button>
@@ -492,67 +451,6 @@
     </footer>
 </div>
 
-<!-- Modal Thêm/Sửa Hội viên -->
-<div id="memberModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="modalTitle">Thêm hội viên mới</h2>
-            <button class="close-modal" id="closeModalBtn">&times;</button>
-        </div>
-        <form id="memberForm">
-            <input type="hidden" id="memberId" value="">
-            <div class="form-group">
-                <label>Họ và tên *</label>
-                <input type="text" id="fullName" required placeholder="Nguyễn Văn A">
-            </div>
-            <div class="form-group">
-                <label>Năm sinh</label>
-                <input type="number" id="birthYear" placeholder="VD: 1960">
-            </div>
-            <div class="form-group">
-                <label>Khu vực *</label>
-                <select id="area" required>
-                    <option value="">Chọn khu vực</option>
-                    <option value="Quận 1">Quận 1</option>
-                    <option value="Quận 2">Quận 2</option>
-                    <option value="Quận 3">Quận 3</option>
-                    <option value="Quận 4">Quận 4</option>
-                    <option value="Quận 5">Quận 5</option>
-                    <option value="Quận 6">Quận 6</option>
-                    <option value="Quận 7">Quận 7</option>
-                    <option value="Quận 8">Quận 8</option>
-                    <option value="Quận 9">Quận 9</option>
-                    <option value="Quận 10">Quận 10</option>
-                    <option value="Quận 11">Quận 11</option>
-                    <option value="Quận 12">Quận 12</option>
-                    <option value="Bình Thạnh">Bình Thạnh</option>
-                    <option value="Tân Bình">Tân Bình</option>
-                    <option value="Tân Phú">Tân Phú</option>
-                    <option value="Gò Vấp">Gò Vấp</option>
-                    <option value="Phú Nhuận">Phú Nhuận</option>
-                    <option value="Thủ Đức">Thủ Đức</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Số điện thoại</label>
-                <input type="tel" id="phone" placeholder="0901234567">
-            </div>
-            <div class="form-group">
-                <label>Địa chỉ chi tiết</label>
-                <textarea id="address" rows="2" placeholder="Số nhà, đường, phường/xã..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Ghi chú</label>
-                <textarea id="note" rows="2" placeholder="Thông tin thêm..."></textarea>
-            </div>
-            <div class="modal-buttons">
-                <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Lưu lại</button>
-                <button type="button" class="btn-cancel" id="cancelModalBtn">Hủy</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 <!-- Modal Xem Chi Tiết -->
 <div id="detailModal" class="modal">
     <div class="modal-content">
@@ -561,7 +459,7 @@
             <button class="close-modal" id="closeDetailModalBtn">&times;</button>
         </div>
         <div id="detailContent" class="detail-info"></div>
-        <div class="modal-buttons">
+        <div class="modal-buttons" style="display: flex; gap: 12px; margin-top: 20px;">
             <button type="button" class="btn-cancel" id="closeDetailBtn">Đóng</button>
         </div>
     </div>
@@ -570,7 +468,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, set, get, remove, push, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
@@ -598,19 +496,7 @@
     const resetFilterBtn = document.getElementById('resetFilterBtn');
     const addMemberBtn = document.getElementById('addMemberBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-
-    // Modal elements
-    const memberModal = document.getElementById('memberModal');
     const detailModal = document.getElementById('detailModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const memberForm = document.getElementById('memberForm');
-    const memberId = document.getElementById('memberId');
-    const fullNameInput = document.getElementById('fullName');
-    const birthYearInput = document.getElementById('birthYear');
-    const areaSelect = document.getElementById('area');
-    const phoneInput = document.getElementById('phone');
-    const addressInput = document.getElementById('address');
-    const noteInput = document.getElementById('note');
 
     function showMessage(text, type = 'success') {
         messageBox.textContent = text;
@@ -682,50 +568,7 @@
         `).join('');
     }
 
-    // Thêm / Cập nhật hội viên
-    window.submitMemberForm = async function(e) {
-        e.preventDefault();
-        if (!currentUser) return;
-
-        const id = memberId.value;
-        const memberData = {
-            fullName: fullNameInput.value.trim(),
-            birthYear: birthYearInput.value,
-            area: areaSelect.value,
-            phone: phoneInput.value.trim(),
-            address: addressInput.value.trim(),
-            note: noteInput.value.trim(),
-            updatedAt: new Date().toISOString()
-        };
-
-        if (!memberData.fullName || !memberData.area) {
-            showMessage("Vui lòng nhập Họ tên và Khu vực", 'error');
-            return;
-        }
-
-        try {
-            const membersRef = getMembersRef();
-            if (id) {
-                // Cập nhật
-                await set(ref(database, `users/${currentUser.uid}/members/${id}`), memberData);
-                showMessage("Cập nhật hội viên thành công!", 'success');
-            } else {
-                // Thêm mới
-                const newRef = push(membersRef);
-                memberData.createdAt = new Date().toISOString();
-                await set(newRef, memberData);
-                showMessage("Thêm hội viên thành công!", 'success');
-            }
-            closeModal();
-            await loadMembers();
-            memberForm.reset();
-            memberId.value = '';
-        } catch (error) {
-            showMessage("Lỗi: " + error.message, 'error');
-        }
-    };
-
-    // Xem chi tiết
+    // Xem chi tiết (giữ lại modal)
     window.viewMemberDetail = function(id) {
         const member = allMembers.find(m => m.id === id);
         if (!member) return;
@@ -743,19 +586,9 @@
         detailModal.style.display = 'flex';
     };
 
-    // Sửa hội viên
+    // Sửa hội viên - Mở file hoivien.html với id
     window.editMember = function(id) {
-        const member = allMembers.find(m => m.id === id);
-        if (!member) return;
-        memberId.value = member.id;
-        fullNameInput.value = member.fullName || '';
-        birthYearInput.value = member.birthYear || '';
-        areaSelect.value = member.area || '';
-        phoneInput.value = member.phone || '';
-        addressInput.value = member.address || '';
-        noteInput.value = member.note || '';
-        modalTitle.innerText = 'Sửa thông tin hội viên';
-        memberModal.style.display = 'flex';
+        window.location.href = `hoivien.html?id=${id}`;
     };
 
     // Xóa hội viên
@@ -770,19 +603,12 @@
         }
     };
 
-    function closeModal() {
-        memberModal.style.display = 'none';
-        memberForm.reset();
-        memberId.value = '';
-        modalTitle.innerText = 'Thêm hội viên mới';
-    }
-
-    function openAddModal() {
-        modalTitle.innerText = 'Thêm hội viên mới';
-        memberId.value = '';
-        memberForm.reset();
-        memberModal.style.display = 'flex';
-    }
+    // Đóng modal
+    document.getElementById('closeDetailModalBtn')?.addEventListener('click', () => detailModal.style.display = 'none');
+    document.getElementById('closeDetailBtn')?.addEventListener('click', () => detailModal.style.display = 'none');
+    window.onclick = (e) => {
+        if (e.target === detailModal) detailModal.style.display = 'none';
+    };
 
     // Lọc và reset
     searchNameInput.addEventListener('input', () => renderMembersList());
@@ -793,16 +619,10 @@
         renderMembersList();
     });
 
-    addMemberBtn.addEventListener('click', openAddModal);
-    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-    document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
-    document.getElementById('closeDetailModalBtn').addEventListener('click', () => detailModal.style.display = 'none');
-    document.getElementById('closeDetailBtn').addEventListener('click', () => detailModal.style.display = 'none');
-    memberForm.addEventListener('submit', window.submitMemberForm);
-    window.onclick = (e) => {
-        if (e.target === memberModal) closeModal();
-        if (e.target === detailModal) detailModal.style.display = 'none';
-    };
+    // Thêm hội viên - Mở file hoivien.html (không có id là thêm mới)
+    addMemberBtn.addEventListener('click', () => {
+        window.location.href = 'hoivien.html';
+    });
 
     logoutBtn.addEventListener('click', async () => {
         await signOut(auth);
