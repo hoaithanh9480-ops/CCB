@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Dashboard - Quản lý Hội viên</title>
+    <title>Dashboard - Hội CCB</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
@@ -16,186 +16,252 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #e9f0fc 0%, #d9e4f5 100%);
+            background: #f1f5f9;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        .dashboard-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .dashboard-header {
+        /* Header */
+        .top-bar {
             background: white;
-            border-radius: 28px;
-            padding: 20px 30px;
-            margin-bottom: 25px;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .logo-area h1 {
-            font-size: 1.6rem;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: #2563eb;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
             color: #1e293b;
         }
 
-        .logo-area p {
+        .logo p {
+            font-size: 0.7rem;
             color: #64748b;
-            font-size: 0.85rem;
         }
 
-        .user-info {
-            background: #f1f5f9;
-            padding: 12px 20px;
-            border-radius: 40px;
+        .user-menu {
             display: flex;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .user-email {
-            font-weight: 500;
-            color: #2563eb;
+            font-size: 0.85rem;
+            color: #334155;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 40px;
         }
 
         .logout-btn {
             background: #ef4444;
             border: none;
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 40px;
             color: white;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover {
             background: #dc2626;
         }
 
-        .message {
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: none;
-            animation: slideDown 0.3s ease;
+        /* Main Content */
+        .main-content {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .message.success {
-            background: #dcfce7;
-            color: #166534;
-            border-left: 4px solid #22c55e;
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
-        .message.error {
-            background: #fee2e2;
-            color: #991b1b;
-            border-left: 4px solid #ef4444;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .button-group {
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
         }
 
-        .add-member-btn, .export-btn, .import-btn, .download-sample-btn {
-            border: none;
-            padding: 12px 24px;
+        .stat-info h3 {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 4px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #eef2ff;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 1.4rem;
+        }
+
+        /* Action Buttons */
+        .action-bar {
+            background: white;
+            border-radius: 16px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
             border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: 0.2s;
+            gap: 6px;
+            transition: all 0.2s;
+            border: none;
         }
 
-        .add-member-btn {
+        .btn-primary {
             background: #2563eb;
             color: white;
         }
 
-        .add-member-btn:hover {
+        .btn-primary:hover {
             background: #1d4ed8;
         }
 
-        .export-btn {
+        .btn-success {
             background: #10b981;
             color: white;
         }
 
-        .export-btn:hover {
+        .btn-success:hover {
             background: #059669;
         }
 
-        .import-btn {
+        .btn-purple {
             background: #8b5cf6;
             color: white;
         }
 
-        .import-btn:hover {
+        .btn-purple:hover {
             background: #7c3aed;
         }
 
-        .download-sample-btn {
+        .btn-warning {
             background: #f59e0b;
             color: white;
         }
 
-        .download-sample-btn:hover {
+        .btn-warning:hover {
             background: #d97706;
         }
 
-        #fileInput {
-            display: none;
+        .btn-outline {
+            background: #f1f5f9;
+            color: #475569;
         }
 
-        .filters-card {
+        .btn-outline:hover {
+            background: #e2e8f0;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
             background: white;
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 25px;
+            border-radius: 16px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            align-items: flex-end;
+            border: 1px solid #e2e8f0;
         }
 
         .filter-group {
             flex: 1;
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .filter-group label {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: #64748b;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             text-transform: uppercase;
         }
 
         .filter-group input, .filter-group select {
             width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            background: white;
         }
 
         .filter-group input:focus, .filter-group select:focus {
@@ -203,90 +269,95 @@
             border-color: #2563eb;
         }
 
-        .reset-filter {
-            background: #f1f5f9;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 500;
-            align-self: flex-end;
-        }
-
-        .members-table-container {
+        /* Table */
+        .table-wrapper {
             background: white;
-            border-radius: 24px;
-            overflow-x: auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
 
         .members-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
         }
 
         .members-table th {
             background: #f8fafc;
-            padding: 16px;
+            padding: 12px 16px;
             text-align: left;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: #1e293b;
-            border-bottom: 2px solid #e2e8f0;
+            color: #64748b;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .members-table td {
-            padding: 14px 16px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
             border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
         }
 
         .members-table tr:hover {
             background: #faf5ff;
         }
 
+        .member-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
         .action-buttons {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 6px;
         }
 
-        .btn-view {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
+        .action-btn {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 0.75rem;
+            border: none;
+            transition: all 0.2s;
         }
 
-        .btn-edit {
-            background: #eab308;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.75rem;
+        .action-view {
+            background: #e0f2fe;
+            color: #0284c7;
         }
+        .action-view:hover { background: #bae6fd; }
 
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.75rem;
+        .action-edit {
+            background: #fef3c7;
+            color: #d97706;
         }
+        .action-edit:hover { background: #fde68a; }
+
+        .action-delete {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .action-delete:hover { background: #fecaca; }
 
         .empty-row td {
             text-align: center;
-            padding: 40px;
+            padding: 48px;
             color: #94a3b8;
         }
 
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -302,79 +373,72 @@
 
         .modal-content {
             background: white;
-            border-radius: 28px;
+            border-radius: 20px;
             width: 90%;
-            max-width: 550px;
-            max-height: 85vh;
+            max-width: 500px;
+            max-height: 80vh;
             overflow-y: auto;
-            padding: 28px;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            padding: 24px;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
             border-bottom: 1px solid #e2e8f0;
         }
 
         .modal-header h2 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: #1e293b;
         }
 
         .close-modal {
             background: none;
             border: none;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             cursor: pointer;
             color: #94a3b8;
         }
 
-        .detail-info {
-            line-height: 1.8;
-        }
-
         .detail-info p {
-            margin: 10px 0;
-            padding: 8px;
+            margin: 8px 0;
+            padding: 8px 12px;
             background: #f8fafc;
-            border-radius: 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
         }
 
-        .badge {
+        .detail-info strong {
+            color: #475569;
+            width: 120px;
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
         }
 
         .btn-cancel {
             background: #f1f5f9;
-            color: #475569;
-            flex: 1;
-            padding: 12px;
             border: none;
+            padding: 8px 20px;
             border-radius: 40px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .progress-modal {
+            text-align: center;
         }
 
         .progress-bar {
-            width: 100%;
             height: 4px;
             background: #e2e8f0;
             border-radius: 2px;
             overflow: hidden;
-            margin-top: 10px;
+            margin: 16px 0;
         }
 
         .progress-fill {
@@ -384,581 +448,418 @@
             transition: width 0.3s;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            color: #64748b;
-            font-size: 0.8rem;
+        #fileInput {
+            display: none;
         }
 
+        .message {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 10px 20px;
+            border-radius: 40px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .message.success { border-left: 3px solid #22c55e; }
+        .message.error { border-left: 3px solid #ef4444; }
+
         @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .filters-card {
-                flex-direction: column;
-            }
-            .action-buttons {
-                flex-direction: column;
-            }
-            .button-group {
-                justify-content: center;
-            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .top-bar { padding: 0 16px; }
+            .main-content { padding: 16px; }
+            .action-bar { flex-direction: column; align-items: stretch; }
+            .btn-group { justify-content: center; }
         }
     </style>
 </head>
 <body>
-<div class="dashboard-wrapper">
-    <div class="dashboard-header">
-        <div class="logo-area">
-            <h1><i class="fas fa-users"></i> Hội Cựu Chiến Binh</h1>
-            <p>Quản lý danh sách hội viên</p>
+    <div class="top-bar">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-users"></i></div>
+            <div>
+                <h1>Hội CCB</h1>
+                <p>Quản lý hội viên</p>
+            </div>
         </div>
-        <div class="user-info">
-            <i class="fas fa-user-circle"></i>
+        <div class="user-menu">
             <span class="user-email" id="userEmail">Đang tải...</span>
-            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Thoát</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Tổng hội viên</h3>
+                    <div class="stat-number" id="totalMembers">0</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Khu vực</h3>
+                    <div class="stat-number" id="totalAreas">0</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Nam</h3>
+                    <div class="stat-number" id="totalMale">0</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-mars"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Nữ</h3>
+                    <div class="stat-number" id="totalFemale">0</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-venus"></i></div>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="btn-group">
+                <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Thêm</button>
+                <button class="btn btn-success" id="exportBtn"><i class="fas fa-file-excel"></i> Xuất</button>
+                <button class="btn btn-purple" id="importBtn"><i class="fas fa-file-import"></i> Import</button>
+                <button class="btn btn-warning" id="downloadSampleBtn"><i class="fas fa-download"></i> Mẫu</button>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label><i class="fas fa-search"></i> Tìm kiếm</label>
+                <input type="text" id="searchName" placeholder="Họ tên, số điện thoại...">
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
+                <select id="searchArea">
+                    <option value="">Tất cả</option>
+                </select>
+            </div>
+            <button class="btn btn-outline" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Reset</button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table class="members-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ và tên</th>
+                        <th>Năm sinh</th>
+                        <th>Khu vực</th>
+                        <th>Điện thoại</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="membersList">
+                    <tr class="empty-row">
+                        <td colspan="6">Đang tải...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Detail -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2>
+                <button class="close-modal" id="closeDetailModalBtn">&times;</button>
+            </div>
+            <div id="detailContent" class="detail-info"></div>
+            <button class="btn-cancel" id="closeDetailBtn">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div id="importProgress" class="modal">
+        <div class="modal-content progress-modal">
+            <h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Đang xử lý...</p>
         </div>
     </div>
 
     <div id="messageBox" class="message"></div>
-
-    <div class="button-group">
-        <button class="add-member-btn" id="addMemberBtn">
-            <i class="fas fa-plus-circle"></i> Thêm hội viên
-        </button>
-        <button class="export-btn" id="exportBtn">
-            <i class="fas fa-file-excel"></i> Xuất Excel
-        </button>
-        <button class="import-btn" id="importBtn">
-            <i class="fas fa-file-import"></i> Import Excel
-        </button>
-        <button class="download-sample-btn" id="downloadSampleBtn">
-            <i class="fas fa-download"></i> Tải file mẫu
-        </button>
-    </div>
-
     <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
 
-    <div class="filters-card">
-        <div class="filter-group">
-            <label><i class="fas fa-search"></i> Tìm theo tên</label>
-            <input type="text" id="searchName" placeholder="Nhập tên hội viên...">
-        </div>
-        <div class="filter-group">
-            <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
-            <select id="searchArea">
-                <option value="">Tất cả khu vực</option>
-            </select>
-        </div>
-        <button class="reset-filter" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Đặt lại</button>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, remove, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    <div class="members-table-container">
-        <table class="members-table">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Họ và tên</th>
-                    <th>Năm sinh</th>
-                    <th>Khu vực</th>
-                    <th>Số điện thoại</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="membersList">
-                <tr class="empty-row">
-                    <td colspan="6">Đang tải danh sách hội viên...</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <footer>
-        <i class="fas fa-shield-alt"></i> Dữ liệu được bảo mật theo từng tài khoản
-    </footer>
-</div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
+            authDomain: "hoi-ccb.firebaseapp.com",
+            databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoi-ccb",
+            storageBucket: "hoi-ccb.firebasestorage.app",
+            messagingSenderId: "344971473549",
+            appId: "1:344971473549:web:7d4db3d5d328401164e8c4"
+        };
 
-<div id="detailModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Chi tiết hội viên</h2>
-            <button class="close-modal" id="closeDetailModalBtn">&times;</button>
-        </div>
-        <div id="detailContent" class="detail-info"></div>
-        <div class="modal-buttons" style="display: flex; gap: 12px; margin-top: 20px;">
-            <button type="button" class="btn-cancel" id="closeDetailBtn">Đóng</button>
-        </div>
-    </div>
-</div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
 
-<div id="importProgress" class="modal" style="display: none;">
-    <div class="modal-content" style="text-align: center;">
-        <h3><i class="fas fa-spinner fa-pulse"></i> Đang import dữ liệu...</h3>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <p id="progressText">Đang xử lý...</p>
-    </div>
-</div>
+        let currentUser = null;
+        let allMembers = [];
+        let customAreas = [];
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, get, remove, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        const elements = {
+            membersList: document.getElementById('membersList'),
+            userEmail: document.getElementById('userEmail'),
+            messageBox: document.getElementById('messageBox'),
+            searchName: document.getElementById('searchName'),
+            searchArea: document.getElementById('searchArea'),
+            totalMembers: document.getElementById('totalMembers'),
+            totalAreas: document.getElementById('totalAreas'),
+            totalMale: document.getElementById('totalMale'),
+            totalFemale: document.getElementById('totalFemale')
+        };
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
-        authDomain: "hoi-ccb.firebaseapp.com",
-        databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "hoi-ccb",
-        storageBucket: "hoi-ccb.firebasestorage.app",
-        messagingSenderId: "344971473549",
-        appId: "1:344971473549:web:7d4db3d5d328401164e8c4"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const database = getDatabase(app);
-
-    let currentUser = null;
-    let allMembers = [];
-    let customAreas = [];
-
-    const membersList = document.getElementById('membersList');
-    const userEmailSpan = document.getElementById('userEmail');
-    const messageBox = document.getElementById('messageBox');
-    const searchNameInput = document.getElementById('searchName');
-    const searchAreaSelect = document.getElementById('searchArea');
-    const resetFilterBtn = document.getElementById('resetFilterBtn');
-    const addMemberBtn = document.getElementById('addMemberBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const importBtn = document.getElementById('importBtn');
-    const downloadSampleBtn = document.getElementById('downloadSampleBtn');
-    const fileInput = document.getElementById('fileInput');
-    const detailModal = document.getElementById('detailModal');
-    const importProgress = document.getElementById('importProgress');
-
-    function showMessage(text, type = 'success') {
-        messageBox.textContent = text;
-        messageBox.className = `message ${type}`;
-        messageBox.style.display = 'block';
-        setTimeout(() => {
-            messageBox.style.display = 'none';
-        }, 3000);
-    }
-
-    // Hàm chuyển đổi định dạng ngày tháng - xử lý đồng nhất cho tất cả các trường
-    function formatDateToISO(dateString) {
-        if (!dateString || dateString === '') return '';
-        
-        // Loại bỏ khoảng trắng
-        dateString = String(dateString).trim();
-        
-        // Kiểm tra nếu chỉ là năm (4 chữ số)
-        if (/^\d{4}$/.test(dateString)) {
-            return `${dateString}-01-01`;
+        function showMessage(text, type = 'success') {
+            const msg = elements.messageBox;
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'flex';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
         }
-        
-        // Kiểm tra định dạng dd/mm/yyyy hoặc d/m/yyyy
-        const patterns = [
-            /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,  // dd/mm/yyyy hoặc d/m/yyyy
-            /^(\d{1,2})-(\d{1,2})-(\d{4})$/,    // dd-mm-yyyy
-            /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/,  // yyyy/mm/dd
-            /^(\d{4})-(\d{1,2})-(\d{1,2})$/     // yyyy-mm-dd
-        ];
-        
-        for (const pattern of patterns) {
-            const match = dateString.match(pattern);
-            if (match) {
-                let day, month, year;
-                
-                if (pattern.source.includes('dd/mm') || pattern.source.includes('dd-mm')) {
-                    day = match[1].padStart(2, '0');
-                    month = match[2].padStart(2, '0');
-                    year = match[3];
-                } else if (pattern.source.includes('yyyy/mm') || pattern.source.includes('yyyy-mm')) {
-                    year = match[1];
-                    month = match[2].padStart(2, '0');
-                    day = match[3].padStart(2, '0');
-                } else {
-                    continue;
-                }
-                
-                const date = new Date(year, month - 1, day);
-                if (date.getFullYear() == year && date.getMonth() == month - 1 && date.getDate() == day) {
+
+        function formatDateToISO(dateString) {
+            if (!dateString || dateString === '') return '';
+            dateString = String(dateString).trim();
+            if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
+            
+            const patterns = [
+                /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
+                /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
+                /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/,
+                /^(\d{4})-(\d{1,2})-(\d{1,2})$/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = dateString.match(pattern);
+                if (match) {
+                    let day, month, year;
+                    if (pattern.source.includes('dd/mm') || pattern.source.includes('dd-mm')) {
+                        day = match[1].padStart(2, '0');
+                        month = match[2].padStart(2, '0');
+                        year = match[3];
+                    } else {
+                        year = match[1];
+                        month = match[2].padStart(2, '0');
+                        day = match[3].padStart(2, '0');
+                    }
                     return `${year}-${month}-${day}`;
                 }
             }
+            return dateString;
         }
-        
-        // Thử parse bằng Date
-        const parsed = new Date(dateString);
-        if (!isNaN(parsed.getTime())) {
-            const year = parsed.getFullYear();
-            const month = String(parsed.getMonth() + 1).padStart(2, '0');
-            const day = String(parsed.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        
-        return dateString;
-    }
 
-    async function loadAreas() {
-        if (!currentUser) return;
-        try {
-            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
-            const snapshot = await get(areaRef);
-            if (snapshot.exists()) {
-                customAreas = Object.values(snapshot.val());
-            } else {
-                customAreas = [];
-            }
+        async function loadAreas() {
+            if (!currentUser) return;
+            const snapshot = await get(ref(database, `users/${currentUser.uid}/custom_data/areas`));
+            customAreas = snapshot.exists() ? Object.values(snapshot.val()) : [];
             
-            searchAreaSelect.innerHTML = '<option value="">Tất cả khu vực</option>';
+            elements.searchArea.innerHTML = '<option value="">Tất cả</option>';
             customAreas.forEach(area => {
                 const option = document.createElement('option');
                 option.value = area;
                 option.textContent = area;
-                searchAreaSelect.appendChild(option);
+                elements.searchArea.appendChild(option);
             });
-        } catch (error) {
-            console.error("Lỗi tải khu vực:", error);
+            elements.totalAreas.textContent = customAreas.length;
         }
-    }
 
-    async function loadMembers() {
-        if (!currentUser) return;
-        try {
-            const membersRef = ref(database, `users/${currentUser.uid}/members`);
-            const snapshot = await get(membersRef);
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                allMembers = Object.entries(data).map(([id, member]) => ({
-                    id,
-                    ...member
-                }));
-            } else {
-                allMembers = [];
-            }
+        async function loadMembers() {
+            if (!currentUser) return;
+            const snapshot = await get(ref(database, `users/${currentUser.uid}/members`));
+            allMembers = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, m]) => ({ id, ...m })) : [];
             renderMembersList();
-        } catch (error) {
-            console.error("Lỗi tải danh sách:", error);
-            showMessage("Lỗi tải danh sách: " + error.message, 'error');
-        }
-    }
-
-    function renderMembersList() {
-        const searchName = searchNameInput.value.toLowerCase().trim();
-        const searchArea = searchAreaSelect.value;
-
-        let filtered = allMembers.filter(member => {
-            let match = true;
-            if (searchName && !member.fullName?.toLowerCase().includes(searchName)) match = false;
-            if (searchArea && member.area !== searchArea) match = false;
-            return match;
-        });
-
-        if (filtered.length === 0) {
-            membersList.innerHTML = '<tr class="empty-row"><td colspan="6">Không có hội viên nào. Hãy thêm mới!</td></tr>';
-            return;
+            updateStats();
         }
 
-        membersList.innerHTML = filtered.map((member, index) => `
-            <tr>
-                <td>${index + 1}</td>
-                <td><strong>${member.fullName || 'Chưa có tên'}</strong></td>
-                <td>${member.birthYear || '---'}</td>
-                <td><span class="badge" style="background:#e0f2fe;">${member.area || '---'}</span></td>
-                <td>${member.phone || '---'}</td>
-                <td class="action-buttons">
-                    <button class="btn-view" onclick="window.viewMemberDetail('${member.id}')"><i class="fas fa-eye"></i> Xem</button>
-                    <button class="btn-edit" onclick="window.editMember('${member.id}')"><i class="fas fa-pen"></i> Sửa</button>
-                    <button class="btn-delete" onclick="window.deleteMember('${member.id}')"><i class="fas fa-trash"></i> Xóa</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    window.viewMemberDetail = function(id) {
-        const member = allMembers.find(m => m.id === id);
-        if (!member) return;
-        const detailContent = document.getElementById('detailContent');
-        detailContent.innerHTML = `
-            <p><strong>👤 Họ tên:</strong> ${member.fullName || '---'}</p>
-            <p><strong>📅 Năm sinh:</strong> ${member.birthYear || '---'}</p>
-            <p><strong>📍 Khu vực:</strong> ${member.area || '---'}</p>
-            <p><strong>📞 Số điện thoại:</strong> ${member.phone || '---'}</p>
-            <p><strong>🏠 Địa chỉ:</strong> ${member.address || '---'}</p>
-            <p><strong>📝 Ghi chú:</strong> ${member.note || '---'}</p>
-            <p><strong>🕒 Ngày tạo:</strong> ${member.createdAt ? new Date(member.createdAt).toLocaleString() : '---'}</p>
-            <p><strong>🔄 Cập nhật:</strong> ${member.updatedAt ? new Date(member.updatedAt).toLocaleString() : '---'}</p>
-        `;
-        detailModal.style.display = 'flex';
-    };
-
-    window.editMember = function(id) {
-        window.location.href = `hoivien.html?id=${id}`;
-    };
-
-    window.deleteMember = async function(id) {
-        if (!confirm("Bạn có chắc chắn muốn xóa hội viên này?")) return;
-        try {
-            await remove(ref(database, `users/${currentUser.uid}/members/${id}`));
-            showMessage("Đã xóa hội viên!", 'success');
-            await loadMembers();
-        } catch (error) {
-            showMessage("Lỗi xóa: " + error.message, 'error');
-        }
-    };
-
-    function exportToExcel() {
-        const searchName = searchNameInput.value.toLowerCase().trim();
-        const searchArea = searchAreaSelect.value;
-        
-        let filtered = allMembers.filter(member => {
-            let match = true;
-            if (searchName && !member.fullName?.toLowerCase().includes(searchName)) match = false;
-            if (searchArea && member.area !== searchArea) match = false;
-            return match;
-        });
-
-        if (filtered.length === 0) {
-            showMessage("Không có dữ liệu để xuất!", 'error');
-            return;
+        function updateStats() {
+            elements.totalMembers.textContent = allMembers.length;
+            elements.totalMale.textContent = allMembers.filter(m => m.gender === 'Nam').length;
+            elements.totalFemale.textContent = allMembers.filter(m => m.gender === 'Nữ').length;
         }
 
-        const exportData = filtered.map((member, index) => ({
-            'STT': index + 1,
-            'ID hội viên': member.memberId || '',
-            'Họ và tên': member.fullName || '',
-            'Bí danh': member.alias || '',
-            'Dân tộc': member.ethnicity || '',
-            'Tôn giáo': member.religion || '',
-            'Năm sinh': member.birthYear || '',
-            'Trình độ văn hóa': member.educationLevel || '',
-            'Chuyên môn': member.specialization || '',
-            'Giới tính': member.gender || '',
-            'CCCD/CMND': member.cccd || '',
-            'Trình độ LLCT': member.politicalTheory || '',
-            'Ngoại ngữ': member.foreignLanguage || '',
-            'Ngày cấp CCCD': member.issueDate || '',
-            'Nơi cấp': member.issuePlace || '',
-            'Tin học': member.itSkill || '',
-            'Khu vực': member.area || '',
-            'Quê quán': member.hometown || '',
-            'Địa chỉ': member.address || '',
-            'Chức vụ': member.position || '',
-            'Ngày tham gia CM': member.revolutionDate || '',
-            'Ngày nhập ngũ': member.militaryJoinDate || '',
-            'Ngày xuất ngũ': member.militaryReleaseDate || '',
-            'Dự bị': member.reserveStatus || '',
-            'Chính thức': member.officialStatus || '',
-            'Ngày kết nạp Hội': member.associationJoinDate || '',
-            'Số thẻ Hội viên': member.memberCardNumber || '',
-            'Chuyên ngành': member.trainingMajor || '',
-            'Ghi chú': member.note || ''
-        }));
+        function renderMembersList() {
+            const keyword = elements.searchName.value.toLowerCase().trim();
+            const area = elements.searchArea.value;
+            let filtered = allMembers.filter(m => {
+                if (keyword && !(m.fullName?.toLowerCase().includes(keyword) || m.phone?.includes(keyword))) return false;
+                if (area && m.area !== area) return false;
+                return true;
+            });
 
-        const ws = XLSX.utils.json_to_sheet(exportData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Danh_sach_hoi_vien');
-        
-        const fileName = `danh_sach_hoi_vien_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`;
-        XLSX.writeFile(wb, fileName);
-        showMessage(`Đã xuất ${filtered.length} hội viên thành công!`, 'success');
-    }
-
-    function downloadSampleFile() {
-        const sampleData = [{
-            'Họ và tên': 'Nguyễn Văn A',
-            'Bí danh': 'Ba A',
-            'Dân tộc': 'Kinh',
-            'Tôn giáo': 'Không',
-            'Năm sinh': '15/05/1960',
-            'Trình độ văn hóa': '12/12',
-            'Chuyên môn': 'Kỹ sư',
-            'Giới tính': 'Nam',
-            'CCCD/CMND': '012345678912',
-            'Trình độ LLCT': 'Cao cấp',
-            'Ngoại ngữ': 'Anh',
-            'Ngày cấp CCCD': '01/01/2020',
-            'Nơi cấp': 'Công an TP.HCM',
-            'Tin học': 'Cơ bản',
-            'Khu vực': 'Quận 1',
-            'Quê quán': 'Hà Nội',
-            'Địa chỉ': '123 Đường ABC, Phường XYZ, Quận 1',
-            'Chức vụ': 'Chủ tịch Hội',
-            'Ngày tham gia CM': '30/04/1975',
-            'Ngày nhập ngũ': '01/01/1978',
-            'Ngày xuất ngũ': '31/12/1982',
-            'Dự bị': '01/01/1983',
-            'Chính thức': '01/06/1983',
-            'Ngày kết nạp Hội': '01/01/1990',
-            'Số thẻ Hội viên': 'HV001',
-            'Chuyên ngành': 'Cơ khí',
-            'Ghi chú': 'Ghi chú mẫu - Có thể nhập năm sinh dạng dd/mm/yyyy hoặc chỉ năm (1960)'
-        }];
-
-        const ws = XLSX.utils.json_to_sheet(sampleData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'File_mau');
-        XLSX.writeFile(wb, 'file_mau_hoi_vien.xlsx');
-        showMessage('Đã tải file mẫu! Hãy điền dữ liệu theo mẫu này.', 'success');
-    }
-
-    async function importExcel(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const rows = XLSX.utils.sheet_to_json(firstSheet);
-                resolve(rows);
-            };
-            reader.onerror = reject;
-            reader.readAsArrayBuffer(file);
-        });
-    }
-
-    async function processImport(rows) {
-        importProgress.style.display = 'flex';
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        
-        let successCount = 0;
-        let errorCount = 0;
-        
-        const fieldMapping = {
-            'Ngày cấp CCCD': 'issueDate',
-            'Ngày tham gia CM': 'revolutionDate',
-            'Ngày nhập ngũ': 'militaryJoinDate',
-            'Ngày xuất ngũ': 'militaryReleaseDate',
-            'Dự bị': 'reserveStatus',
-            'Chính thức': 'officialStatus',
-            'Ngày kết nạp Hội': 'associationJoinDate'
-        };
-        
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const percent = ((i + 1) / rows.length) * 100;
-            progressFill.style.width = `${percent}%`;
-            progressText.textContent = `Đang xử lý ${i + 1}/${rows.length}...`;
-            
-            try {
-                let memberData = {
-                    fullName: row['Họ và tên'] || row['Họ tên'] || '',
-                    alias: row['Bí danh'] || '',
-                    ethnicity: row['Dân tộc'] || '',
-                    religion: row['Tôn giáo'] || '',
-                    birthYear: formatDateToISO(row['Năm sinh'] || ''),
-                    educationLevel: row['Trình độ văn hóa'] || '',
-                    specialization: row['Chuyên môn'] || '',
-                    gender: row['Giới tính'] || '',
-                    cccd: row['CCCD/CMND'] || row['CCCD'] || '',
-                    politicalTheory: row['Trình độ LLCT'] || '',
-                    foreignLanguage: row['Ngoại ngữ'] || '',
-                    issuePlace: row['Nơi cấp'] || '',
-                    itSkill: row['Tin học'] || '',
-                    area: row['Khu vực'] || '',
-                    hometown: row['Quê quán'] || '',
-                    address: row['Địa chỉ'] || '',
-                    position: row['Chức vụ'] || '',
-                    memberCardNumber: row['Số thẻ Hội viên'] || '',
-                    trainingMajor: row['Chuyên ngành'] || '',
-                    note: row['Ghi chú'] || '',
-                    phone: row['Số điện thoại'] || row['Điện thoại'] || '',
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                // Xử lý các trường ngày tháng
-                for (const [excelField, dbField] of Object.entries(fieldMapping)) {
-                    const rawValue = row[excelField] || '';
-                    memberData[dbField] = formatDateToISO(rawValue);
-                }
-                
-                if (!memberData.fullName) {
-                    errorCount++;
-                    continue;
-                }
-                
-                const membersRef = ref(database, `users/${currentUser.uid}/members`);
-                const newRef = push(membersRef);
-                memberData.id = newRef.key;
-                memberData.memberId = `HV-${Date.now()}-${i}`;
-                await set(newRef, memberData);
-                successCount++;
-                
-                await new Promise(resolve => setTimeout(resolve, 50));
-            } catch (error) {
-                console.error('Lỗi import dòng:', error);
-                errorCount++;
+            if (filtered.length === 0) {
+                elements.membersList.innerHTML = '<tr class="empty-row"><td colspan="6">Không có dữ liệu</td></tr>';
+                return;
             }
-        }
-        
-        importProgress.style.display = 'none';
-        await loadMembers();
-        await loadAreas();
-        showMessage(`Import hoàn tất! Thành công: ${successCount}, Thất bại: ${errorCount}`, successCount > 0 ? 'success' : 'error');
-    }
 
-    fileInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+            elements.membersList.innerHTML = filtered.map((m, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td><span class="member-name">${m.fullName || '---'}</span></td>
+                    <td>${m.birthYear?.slice(0,4) || '---'}</td>
+                    <td><span class="badge">${m.area || '---'}</span></td>
+                    <td>${m.phone || '---'}</td>
+                    <td class="action-buttons">
+                        <button class="action-btn action-view" onclick="window.viewDetail('${m.id}')"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn action-edit" onclick="window.editMember('${m.id}')"><i class="fas fa-pen"></i></button>
+                        <button class="action-btn action-delete" onclick="window.deleteMember('${m.id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.viewDetail = function(id) {
+            const m = allMembers.find(x => x.id === id);
+            if (!m) return;
+            document.getElementById('detailContent').innerHTML = `
+                <p><strong>👤 Họ tên:</strong> ${m.fullName || '---'}</p>
+                <p><strong>📅 Năm sinh:</strong> ${m.birthYear?.slice(0,4) || '---'}</p>
+                <p><strong>📍 Khu vực:</strong> ${m.area || '---'}</p>
+                <p><strong>📞 Điện thoại:</strong> ${m.phone || '---'}</p>
+                <p><strong>🏠 Địa chỉ:</strong> ${m.address || '---'}</p>
+                <p><strong>📝 Ghi chú:</strong> ${m.note || '---'}</p>
+                <p><strong>🕒 Cập nhật:</strong> ${m.updatedAt ? new Date(m.updatedAt).toLocaleString() : '---'}</p>
+            `;
+            document.getElementById('detailModal').style.display = 'flex';
+        };
+
+        window.editMember = (id) => window.location.href = `hoivien.html?id=${id}`;
         
-        try {
-            const rows = await importExcel(file);
+        window.deleteMember = async (id) => {
+            if (!confirm('Xóa hội viên này?')) return;
+            await remove(ref(database, `users/${currentUser.uid}/members/${id}`));
+            showMessage('Đã xóa!', 'success');
+            await loadMembers();
+        };
+
+        function exportToExcel() {
+            const keyword = elements.searchName.value.toLowerCase().trim();
+            const area = elements.searchArea.value;
+            let filtered = allMembers.filter(m => {
+                if (keyword && !(m.fullName?.toLowerCase().includes(keyword) || m.phone?.includes(keyword))) return false;
+                if (area && m.area !== area) return false;
+                return true;
+            });
+            if (!filtered.length) return showMessage('Không có dữ liệu!', 'error');
+            
+            const data = filtered.map((m, i) => ({
+                'STT': i + 1, 'Họ và tên': m.fullName, 'Năm sinh': m.birthYear?.slice(0,4), 'Khu vực': m.area,
+                'Điện thoại': m.phone, 'Địa chỉ': m.address, 'Ghi chú': m.note
+            }));
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Hoi_vien');
+            XLSX.writeFile(wb, `hoi_vien_${new Date().toISOString().slice(0,10)}.xlsx`);
+            showMessage(`Xuất ${filtered.length} hội viên!`);
+        }
+
+        function downloadSample() {
+            const sample = [{ 'Họ và tên': 'Nguyễn Văn A', 'Năm sinh': '15/05/1960', 'Khu vực': 'Quận 1', 'Điện thoại': '0901234567', 'Địa chỉ': '123 Đường ABC', 'Ghi chú': '' }];
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sample), 'Mau');
+            XLSX.writeFile(wb, 'file_mau_hoi_vien.xlsx');
+            showMessage('Đã tải file mẫu!');
+        }
+
+        async function importExcel(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                    resolve(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]));
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        async function processImport(rows) {
+            const progress = document.getElementById('importProgress');
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            progress.style.display = 'flex';
+            
+            let success = 0, fail = 0;
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                fill.style.width = `${((i + 1) / rows.length) * 100}%`;
+                text.textContent = `${i + 1}/${rows.length}`;
+                
+                if (!row['Họ và tên']) { fail++; continue; }
+                
+                const data = {
+                    fullName: row['Họ và tên'], birthYear: formatDateToISO(row['Năm sinh']),
+                    area: row['Khu vực'] || '', phone: row['Điện thoại'] || '',
+                    address: row['Địa chỉ'] || '', note: row['Ghi chú'] || '',
+                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+                };
+                const newRef = push(ref(database, `users/${currentUser.uid}/members`));
+                data.id = newRef.key;
+                data.memberId = `HV-${Date.now()}-${i}`;
+                await set(newRef, data);
+                success++;
+                await new Promise(r => setTimeout(r, 20));
+            }
+            progress.style.display = 'none';
+            await loadMembers();
+            showMessage(`Hoàn tất! +${success}, lỗi ${fail}`);
+        }
+
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            if (!e.target.files[0]) return;
+            const rows = await importExcel(e.target.files[0]);
             await processImport(rows);
-        } catch (error) {
-            console.error('Lỗi import:', error);
-            showMessage('Lỗi import file: ' + error.message, 'error');
-        } finally {
-            fileInput.value = '';
-        }
-    });
+            e.target.value = '';
+        });
 
-    importBtn.addEventListener('click', () => fileInput.click());
-    exportBtn.addEventListener('click', exportToExcel);
-    downloadSampleBtn.addEventListener('click', downloadSampleFile);
-
-    document.getElementById('closeDetailModalBtn')?.addEventListener('click', () => detailModal.style.display = 'none');
-    document.getElementById('closeDetailBtn')?.addEventListener('click', () => detailModal.style.display = 'none');
-    window.onclick = (e) => {
-        if (e.target === detailModal) detailModal.style.display = 'none';
-        if (e.target === importProgress) importProgress.style.display = 'none';
-    };
-
-    searchNameInput.addEventListener('input', () => renderMembersList());
-    searchAreaSelect.addEventListener('change', () => renderMembersList());
-    resetFilterBtn.addEventListener('click', () => {
-        searchNameInput.value = '';
-        searchAreaSelect.value = '';
-        renderMembersList();
-    });
-
-    addMemberBtn.addEventListener('click', () => {
-        window.location.href = 'hoivien.html';
-    });
-
-    logoutBtn.addEventListener('click', async () => {
-        await signOut(auth);
-        window.location.href = "index.html";
-    });
-
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
+        document.getElementById('addMemberBtn').onclick = () => window.location.href = 'hoivien.html';
+        document.getElementById('exportBtn').onclick = exportToExcel;
+        document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
+        document.getElementById('downloadSampleBtn').onclick = downloadSample;
+        document.getElementById('resetFilterBtn').onclick = () => { elements.searchName.value = ''; elements.searchArea.value = ''; renderMembersList(); };
+        elements.searchName.oninput = () => renderMembersList();
+        elements.searchArea.onchange = () => renderMembersList();
+        
+        document.getElementById('closeDetailModalBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
+        document.getElementById('closeDetailBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
+        document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); window.location.href = 'index.html'; };
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) return window.location.href = 'index.html';
             currentUser = user;
-            userEmailSpan.textContent = user.email;
+            elements.userEmail.textContent = user.email;
             await loadAreas();
             await loadMembers();
-        } else {
-            window.location.href = "index.html";
-        }
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
