@@ -17,7 +17,7 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(145deg, #e9f0fc 0%, #d9e4f5 100%);
             min-height: 100vh;
-            padding: 30px 20px;
+            padding: 20px;
         }
 
         .form-container {
@@ -28,48 +28,52 @@
         /* Header */
         .form-header {
             background: white;
-            border-radius: 24px;
-            padding: 20px 30px;
-            margin-bottom: 25px;
+            border-radius: 20px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
 
         .header-title h1 {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             color: #1e293b;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .header-title p {
             color: #64748b;
-            font-size: 0.85rem;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            margin-top: 4px;
         }
 
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .btn-back {
-            background: #f1f5f9;
-            border: none;
-            padding: 10px 24px;
+        .btn-back, .btn-submit {
+            padding: 8px 20px;
             border-radius: 40px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #475569;
             transition: 0.2s;
+            border: none;
+            font-size: 0.85rem;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
         }
 
         .btn-back:hover {
@@ -78,16 +82,7 @@
 
         .btn-submit {
             background: #2563eb;
-            border: none;
-            padding: 10px 28px;
-            border-radius: 40px;
-            font-weight: 600;
             color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
         }
 
         .btn-submit:hover {
@@ -98,16 +93,16 @@
         /* Form Card */
         .form-card {
             background: white;
-            border-radius: 28px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 24px;
+            padding: 20px 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         /* Grid 4 cột */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px 25px;
+            gap: 12px 20px;
         }
 
         .form-group {
@@ -119,100 +114,147 @@
             grid-column: span 4;
         }
 
+        .form-group.half-width {
+            grid-column: span 2;
+        }
+
         .form-group label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             color: #64748b;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .form-group label i {
-            margin-right: 5px;
-            width: 18px;
+            margin-right: 4px;
+            width: 14px;
             color: #3b82f6;
+            font-size: 0.7rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .input-wrapper input,
+        .input-wrapper select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            background: #fafcff;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 10px 14px;
+            padding: 8px 12px;
             border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: 10px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.2s;
             background: #fafcff;
         }
 
         .form-group input:focus,
         .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .input-wrapper input:focus,
+        .input-wrapper select:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
             background: white;
         }
 
-        .form-group input::placeholder {
+        .form-group input::placeholder,
+        .input-wrapper input::placeholder {
             color: #cbd5e1;
+            font-size: 0.75rem;
+        }
+
+        /* Nút thêm + nhỏ */
+        .small-add-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            color: #475569;
             font-size: 0.8rem;
+        }
+
+        .small-add-btn:hover {
+            background: #3b82f6;
+            color: white;
         }
 
         /* Radio group cho giới tính */
         .radio-group {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
-            height: 42px;
+            height: 36px;
         }
 
         .radio-group label {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             font-weight: normal;
             text-transform: none;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #334155;
             cursor: pointer;
         }
 
         .radio-group input[type="radio"] {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             cursor: pointer;
         }
 
         /* Section Divider */
         .section-divider {
             grid-column: span 4;
-            margin: 15px 0 5px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e2e8f0;
+            margin: 10px 0 5px 0;
+            padding-bottom: 6px;
+            border-bottom: 1.5px solid #e2e8f0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .section-divider i {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             color: #2563eb;
         }
 
         .section-divider span {
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: #1e293b;
         }
 
         .section-divider small {
             font-weight: normal;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #94a3b8;
-            margin-left: 8px;
+            margin-left: 6px;
         }
 
         /* Thông báo */
@@ -220,16 +262,17 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 14px 24px;
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 40px;
             background: white;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             z-index: 1000;
             transform: translateX(400px);
             transition: transform 0.3s ease;
+            font-size: 0.85rem;
         }
 
         .message.show {
@@ -237,11 +280,51 @@
         }
 
         .message.success {
-            border-left: 4px solid #22c55e;
+            border-left: 3px solid #22c55e;
         }
 
         .message.error {
-            border-left: 4px solid #ef4444;
+            border-left: 3px solid #ef4444;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Required star */
+        .required:after {
+            content: " *";
+            color: #ef4444;
+        }
+
+        /* Placeholder mờ */
+        input::placeholder, select:invalid {
+            color: #cbd5e1;
+            opacity: 0.7;
         }
 
         /* Responsive */
@@ -271,46 +354,8 @@
                 grid-column: span 1;
             }
             .form-card {
-                padding: 20px;
+                padding: 15px;
             }
-            .form-header {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* Loading */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            display: none;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top-color: #2563eb;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Required star */
-        .required:after {
-            content: " *";
-            color: #ef4444;
         }
     </style>
 </head>
@@ -374,7 +419,12 @@
 
                 <div class="form-group">
                     <label><i class="fas fa-graduation-cap"></i> Trình độ văn hóa</label>
-                    <input type="text" id="educationLevel" placeholder="12/12, Cử nhân, ...">
+                    <div class="input-wrapper">
+                        <select id="educationLevel">
+                            <option value="">-- Chọn hoặc thêm mới --</option>
+                        </select>
+                        <button type="button" class="small-add-btn" id="addEducationBtn" title="Thêm trình độ mới">+</button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -409,7 +459,7 @@
                 <!-- === HÀNG 4 === -->
                 <div class="form-group">
                     <label><i class="fas fa-calendar-day"></i> Ngày cấp CCCD</label>
-                    <input type="date" id="issueDate">
+                    <input type="date" id="issueDate" placeholder="dd/mm/yyyy">
                 </div>
 
                 <div class="form-group">
@@ -424,27 +474,12 @@
 
                 <div class="form-group">
                     <label><i class="fas fa-map-pin"></i> Khu vực</label>
-                    <select id="area">
-                        <option value="">Chọn khu vực</option>
-                        <option value="Quận 1">Quận 1</option>
-                        <option value="Quận 2">Quận 2</option>
-                        <option value="Quận 3">Quận 3</option>
-                        <option value="Quận 4">Quận 4</option>
-                        <option value="Quận 5">Quận 5</option>
-                        <option value="Quận 6">Quận 6</option>
-                        <option value="Quận 7">Quận 7</option>
-                        <option value="Quận 8">Quận 8</option>
-                        <option value="Quận 9">Quận 9</option>
-                        <option value="Quận 10">Quận 10</option>
-                        <option value="Quận 11">Quận 11</option>
-                        <option value="Quận 12">Quận 12</option>
-                        <option value="Bình Thạnh">Bình Thạnh</option>
-                        <option value="Tân Bình">Tân Bình</option>
-                        <option value="Tân Phú">Tân Phú</option>
-                        <option value="Gò Vấp">Gò Vấp</option>
-                        <option value="Phú Nhuận">Phú Nhuận</option>
-                        <option value="Thủ Đức">Thủ Đức</option>
-                    </select>
+                    <div class="input-wrapper">
+                        <select id="area">
+                            <option value="">-- Chọn hoặc thêm mới --</option>
+                        </select>
+                        <button type="button" class="small-add-btn" id="addAreaBtn" title="Thêm khu vực mới">+</button>
+                    </div>
                 </div>
 
                 <!-- === HÀNG 5: Quê quán và địa chỉ === -->
@@ -454,12 +489,12 @@
                     <small>Thông tin nơi ở và nơi sinh</small>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group half-width">
                     <label><i class="fas fa-tree"></i> Quê quán</label>
                     <input type="text" id="hometown" placeholder="Tỉnh/Thành phố quê quán">
                 </div>
 
-                <div class="form-group full-width">
+                <div class="form-group half-width">
                     <label><i class="fas fa-address-card"></i> Địa chỉ thường trú</label>
                     <input type="text" id="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành">
                 </div>
@@ -473,38 +508,38 @@
 
                 <div class="form-group">
                     <label><i class="fas fa-user-tie"></i> Chức vụ trong Hội</label>
-                    <input type="text" id="position" placeholder="Chủ tịch, Phó chủ tịch, Ủy viên,...">
+                    <input type="text" id="position" placeholder="Chủ tịch, Phó chủ tịch, ...">
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-calendar-check"></i> Ngày tham gia CM</label>
-                    <input type="date" id="revolutionDate">
+                    <input type="date" id="revolutionDate" placeholder="dd/mm/yyyy">
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-calendar-alt"></i> Ngày nhập ngũ</label>
-                    <input type="date" id="militaryJoinDate">
+                    <input type="date" id="militaryJoinDate" placeholder="dd/mm/yyyy">
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-calendar-alt"></i> Ngày xuất ngũ</label>
-                    <input type="date" id="militaryReleaseDate">
+                    <input type="date" id="militaryReleaseDate" placeholder="dd/mm/yyyy">
                 </div>
 
                 <!-- === HÀNG 7 === -->
                 <div class="form-group">
                     <label><i class="fas fa-clock"></i> Dự bị</label>
-                    <input type="text" id="reserveStatus" placeholder="Tình trạng dự bị">
+                    <input type="date" id="reserveStatus" placeholder="dd/mm/yyyy">
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-check-circle"></i> Chính thức</label>
-                    <input type="text" id="officialStatus" placeholder="Ngày chính thức">
+                    <input type="date" id="officialStatus" placeholder="dd/mm/yyyy">
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-handshake"></i> Ngày kết nạp Hội</label>
-                    <input type="date" id="associationJoinDate">
+                    <input type="date" id="associationJoinDate" placeholder="dd/mm/yyyy">
                 </div>
 
                 <div class="form-group">
@@ -520,7 +555,7 @@
 
                 <div class="form-group full-width">
                     <label><i class="fas fa-sticky-note"></i> Ghi chú</label>
-                    <textarea id="note" rows="3" placeholder="Ghi chú thêm về hội viên..."></textarea>
+                    <textarea id="note" rows="2" placeholder="Ghi chú thêm về hội viên..."></textarea>
                 </div>
             </div>
         </form>
@@ -534,7 +569,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, set, get, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, set, get, push, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
@@ -552,13 +587,127 @@
 
     let currentUser = null;
     let editMemberId = null;
+    let customAreas = [];
+    let customEducations = [];
 
     // DOM Elements
     const form = document.getElementById('memberForm');
     const saveBtn = document.getElementById('saveBtn');
     const backBtn = document.getElementById('backBtn');
     const loading = document.getElementById('loading');
-    
+    const areaSelect = document.getElementById('area');
+    const educationSelect = document.getElementById('educationLevel');
+    const addAreaBtn = document.getElementById('addAreaBtn');
+    const addEducationBtn = document.getElementById('addEducationBtn');
+
+    // Tải danh sách khu vực và trình độ từ Firebase (không có mặc định)
+    async function loadCustomData() {
+        if (!currentUser) return;
+        
+        try {
+            // Tải khu vực tùy chỉnh
+            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
+            const areaSnapshot = await get(areaRef);
+            if (areaSnapshot.exists()) {
+                customAreas = Object.values(areaSnapshot.val());
+            } else {
+                customAreas = []; // Không có mặc định
+            }
+            
+            // Tải trình độ văn hóa tùy chỉnh
+            const eduRef = ref(database, `users/${currentUser.uid}/custom_data/educations`);
+            const eduSnapshot = await get(eduRef);
+            if (eduSnapshot.exists()) {
+                customEducations = Object.values(eduSnapshot.val());
+            } else {
+                customEducations = []; // Không có mặc định
+            }
+            
+            updateAreaSelect();
+            updateEducationSelect();
+        } catch (error) {
+            console.error("Lỗi tải dữ liệu tùy chỉnh:", error);
+        }
+    }
+
+    // Cập nhật dropdown khu vực
+    function updateAreaSelect() {
+        const currentValue = areaSelect.value;
+        areaSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
+        customAreas.forEach(area => {
+            const option = document.createElement('option');
+            option.value = area;
+            option.textContent = area;
+            if (currentValue === area) option.selected = true;
+            areaSelect.appendChild(option);
+        });
+    }
+
+    // Cập nhật dropdown trình độ văn hóa
+    function updateEducationSelect() {
+        const currentValue = educationSelect.value;
+        educationSelect.innerHTML = '<option value="">-- Chọn hoặc thêm mới --</option>';
+        customEducations.forEach(edu => {
+            const option = document.createElement('option');
+            option.value = edu;
+            option.textContent = edu;
+            if (currentValue === edu) option.selected = true;
+            educationSelect.appendChild(option);
+        });
+    }
+
+    // Thêm khu vực mới
+    async function addNewArea() {
+        const newArea = prompt("Nhập tên khu vực mới:", "");
+        if (!newArea || !newArea.trim()) return;
+        
+        const areaName = newArea.trim();
+        if (customAreas.includes(areaName)) {
+            alert("Khu vực này đã tồn tại!");
+            return;
+        }
+        
+        loading.style.display = 'flex';
+        try {
+            customAreas.push(areaName);
+            const areaRef = ref(database, `users/${currentUser.uid}/custom_data/areas`);
+            await set(areaRef, customAreas);
+            updateAreaSelect();
+            areaSelect.value = areaName;
+            showMessage("Đã thêm khu vực mới!", "success");
+        } catch (error) {
+            showMessage("Lỗi: " + error.message, "error");
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    // Thêm trình độ văn hóa mới
+    async function addNewEducation() {
+        const newEdu = prompt("Nhập trình độ văn hóa mới:", "");
+        if (!newEdu || !newEdu.trim()) return;
+        
+        const eduName = newEdu.trim();
+        if (customEducations.includes(eduName)) {
+            alert("Trình độ này đã tồn tại!");
+            return;
+        }
+        
+        loading.style.display = 'flex';
+        try {
+            customEducations.push(eduName);
+            const eduRef = ref(database, `users/${currentUser.uid}/custom_data/educations`);
+            await set(eduRef, customEducations);
+            updateEducationSelect();
+            educationSelect.value = eduName;
+            showMessage("Đã thêm trình độ mới!", "success");
+        } catch (error) {
+            showMessage("Lỗi: " + error.message, "error");
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
     // Helper hiển thị thông báo
     function showMessage(text, type = 'success') {
         const existingMsg = document.querySelector('.message');
@@ -585,7 +734,7 @@
             ethnicity: document.getElementById('ethnicity').value.trim(),
             religion: document.getElementById('religion').value.trim(),
             birthYear: document.getElementById('birthYear').value,
-            educationLevel: document.getElementById('educationLevel').value.trim(),
+            educationLevel: educationSelect.value,
             specialization: document.getElementById('specialization').value.trim(),
             gender: genderRadio ? genderRadio.value : '',
             cccd: document.getElementById('cccd').value.trim(),
@@ -594,15 +743,15 @@
             issueDate: document.getElementById('issueDate').value,
             issuePlace: document.getElementById('issuePlace').value.trim(),
             itSkill: document.getElementById('itSkill').value.trim(),
-            area: document.getElementById('area').value,
+            area: areaSelect.value,
             hometown: document.getElementById('hometown').value.trim(),
             address: document.getElementById('address').value.trim(),
             position: document.getElementById('position').value.trim(),
             revolutionDate: document.getElementById('revolutionDate').value,
             militaryJoinDate: document.getElementById('militaryJoinDate').value,
             militaryReleaseDate: document.getElementById('militaryReleaseDate').value,
-            reserveStatus: document.getElementById('reserveStatus').value.trim(),
-            officialStatus: document.getElementById('officialStatus').value.trim(),
+            reserveStatus: document.getElementById('reserveStatus').value,
+            officialStatus: document.getElementById('officialStatus').value,
             associationJoinDate: document.getElementById('associationJoinDate').value,
             memberCardNumber: document.getElementById('memberCardNumber').value.trim(),
             trainingMajor: document.getElementById('trainingMajor').value.trim(),
@@ -619,7 +768,7 @@
         document.getElementById('ethnicity').value = data.ethnicity || '';
         document.getElementById('religion').value = data.religion || '';
         document.getElementById('birthYear').value = data.birthYear || '';
-        document.getElementById('educationLevel').value = data.educationLevel || '';
+        if (data.educationLevel) educationSelect.value = data.educationLevel;
         document.getElementById('specialization').value = data.specialization || '';
         if (data.gender) {
             const radio = document.querySelector(`input[name="gender"][value="${data.gender}"]`);
@@ -631,7 +780,7 @@
         document.getElementById('issueDate').value = data.issueDate || '';
         document.getElementById('issuePlace').value = data.issuePlace || '';
         document.getElementById('itSkill').value = data.itSkill || '';
-        document.getElementById('area').value = data.area || '';
+        if (data.area) areaSelect.value = data.area;
         document.getElementById('hometown').value = data.hometown || '';
         document.getElementById('address').value = data.address || '';
         document.getElementById('position').value = data.position || '';
@@ -666,11 +815,9 @@
             const membersRef = ref(database, `users/${currentUser.uid}/members`);
             
             if (editMemberId) {
-                // Cập nhật
                 await update(ref(database, `users/${currentUser.uid}/members/${editMemberId}`), memberData);
                 showMessage('Cập nhật hội viên thành công!', 'success');
             } else {
-                // Thêm mới - tạo ID tự động
                 const newRef = push(membersRef);
                 memberData.createdAt = new Date().toISOString();
                 memberData.id = newRef.key;
@@ -678,7 +825,6 @@
                 showMessage('Thêm hội viên thành công!', 'success');
             }
             
-            // Chuyển về dashboard sau 1s
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1000);
@@ -691,7 +837,7 @@
         }
     }
 
-    // Kiểm tra URL params để biết là thêm mới hay sửa
+    // Kiểm tra URL params
     function getUrlParams() {
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
@@ -702,7 +848,6 @@
         } else {
             editMemberId = null;
             document.querySelector('.header-title h1').innerHTML = '<i class="fas fa-user-plus"></i> Thêm hội viên mới';
-            // Tạo ID tạm thời
             document.getElementById('memberId').value = 'HV-' + new Date().getTime().toString().slice(-8);
         }
     }
@@ -734,19 +879,14 @@
     backBtn.addEventListener('click', () => {
         window.location.href = 'dashboard.html';
     });
-
-    // Enter key submit
-    form.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-            e.preventDefault();
-            saveMember();
-        }
-    });
+    addAreaBtn.addEventListener('click', addNewArea);
+    addEducationBtn.addEventListener('click', addNewEducation);
 
     // Auth state
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
+            await loadCustomData();
             getUrlParams();
         } else {
             window.location.href = 'index.html';
