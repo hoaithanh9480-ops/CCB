@@ -413,14 +413,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label><i class="fas fa-calendar-check"></i> Năm sinh</label>
-                    <input type="date" id="revolutionDate" placeholder="dd/mm/yyyy">
-                </div> 
-                
-               <!-- <div class="form-group">
                     <label><i class="fas fa-calendar-alt"></i> Năm sinh</label>
-                    <input type="number" id="birthYear" placeholder="VD: 1960">
-                </div> -->
+                    <input type="date" id="birthYear" placeholder="dd/mm/yyyy">
+                </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-graduation-cap"></i> Trình độ văn hóa</label>
@@ -574,7 +569,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, set, get, push, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, set, get, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
@@ -616,7 +611,7 @@
             if (areaSnapshot.exists()) {
                 customAreas = Object.values(areaSnapshot.val());
             } else {
-                customAreas = []; // Không có mặc định
+                customAreas = [];
             }
             
             // Tải trình độ văn hóa tùy chỉnh
@@ -625,7 +620,7 @@
             if (eduSnapshot.exists()) {
                 customEducations = Object.values(eduSnapshot.val());
             } else {
-                customEducations = []; // Không có mặc định
+                customEducations = [];
             }
             
             updateAreaSelect();
@@ -738,7 +733,7 @@
             alias: document.getElementById('alias').value.trim(),
             ethnicity: document.getElementById('ethnicity').value.trim(),
             religion: document.getElementById('religion').value.trim(),
-            birthYear: document.getElementById('revolutionDate').value,
+            birthYear: document.getElementById('birthYear').value,
             educationLevel: educationSelect.value,
             specialization: document.getElementById('specialization').value.trim(),
             gender: genderRadio ? genderRadio.value : '',
@@ -772,7 +767,7 @@
         document.getElementById('alias').value = data.alias || '';
         document.getElementById('ethnicity').value = data.ethnicity || '';
         document.getElementById('religion').value = data.religion || '';
-        document.getElementById('revolutionDate').value = data.birthYear || '';
+        document.getElementById('birthYear').value = data.birthYear || '';
         if (data.educationLevel) educationSelect.value = data.educationLevel;
         document.getElementById('specialization').value = data.specialization || '';
         if (data.gender) {
