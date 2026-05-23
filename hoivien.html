@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Thêm/Sửa Hội Viên - Hội CCB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #e9f0fc 0%, #d9e4f5 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .form-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .form-header {
+            background: white;
+            border-radius: 24px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .header-title h1 {
+            font-size: 1.6rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title p {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #475569;
+            transition: 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-submit {
+            background: #2563eb;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #1d4ed8;
+            transform: scale(0.98);
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Grid 4 cột */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 4;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .form-group label i {
+            margin-right: 5px;
+            width: 18px;
+            color: #3b82f6;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background: #fafcff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+            background: white;
+        }
+
+        .form-group input::placeholder {
+            color: #cbd5e1;
+            font-size: 0.8rem;
+        }
+
+        /* Radio group cho giới tính */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            height: 42px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            text-transform: none;
+            font-size: 0.85rem;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            grid-column: span 4;
+            margin: 15px 0 5px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-divider i {
+            font-size: 1.2rem;
+            color: #2563eb;
+        }
+
+        .section-divider span {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .section-divider small {
+            font-weight: normal;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-left: 8px;
+        }
+
+        /* Thông báo */
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            border-radius: 50px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .message.show {
+            transform: translateX(0);
+        }
+
+        .message.success {
+            border-left: 4px solid #22c55e;
+        }
+
+        .message.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .form-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .section-divider {
+                grid-column: span 3;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .section-divider {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-divider {
+                grid-column: span 1;
+            }
+            .form-card {
+                padding: 20px;
+            }
+            .form-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Required star */
+        .required:after {
+            content: " *";
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <div class="form-header">
+        <div class="header-title">
+            <h1><i class="fas fa-user-plus"></i> Quản lý hội viên</h1>
+            <p>Nhập đầy đủ thông tin hội viên Hội Cựu Chiến Binh</p>
+        </div>
+        <div class="header-actions">
+            <button type="button" class="btn-back" id="backBtn">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <button type="button" class="btn-submit" id="saveBtn">
+                <i class="fas fa-save"></i> Lưu hội viên
+            </button>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <form id="memberForm">
+            <div class="form-grid">
+                <!-- === HÀNG 1: Thông tin cơ bản === -->
+                <div class="section-divider">
+                    <i class="fas fa-id-card"></i>
+                    <span>Thông tin cơ bản</span>
+                    <small>Thông tin cá nhân hội viên</small>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-hashtag"></i> ID hội viên</label>
+                    <input type="text" id="memberId" placeholder="HV-2024-001" readonly style="background:#f1f5f9;">
+                </div>
+
+                <div class="form-group">
+                    <label class="required"><i class="fas fa-user"></i> Họ và tên</label>
+                    <input type="text" id="fullName" placeholder="Nguyễn Văn A" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-feather-alt"></i> Bí danh</label>
+                    <input type="text" id="alias" placeholder="Bí danh / Tên thường gọi">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-flag"></i> Dân tộc</label>
+                    <input type="text" id="ethnicity" placeholder="Kinh, Tày, Thái, ...">
+                </div>
+
+                <!-- === HÀNG 2 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-church"></i> Tôn giáo</label>
+                    <input type="text" id="religion" placeholder="Phật giáo, Công giáo, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Năm sinh</label>
+                    <input type="number" id="birthYear" placeholder="VD: 1960">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-graduation-cap"></i> Trình độ văn hóa</label>
+                    <input type="text" id="educationLevel" placeholder="12/12, Cử nhân, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-stethoscope"></i> Chuyên môn</label>
+                    <input type="text" id="specialization" placeholder="Bác sĩ, Kỹ sư, ...">
+                </div>
+
+                <!-- === HÀNG 3 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Giới tính</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="Nam"> Nam</label>
+                        <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> CCCD/CMND</label>
+                    <input type="text" id="cccd" placeholder="Số căn cước công dân">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-landmark"></i> Trình độ LLCT</label>
+                    <input type="text" id="politicalTheory" placeholder="Cao cấp, Trung cấp, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-language"></i> Ngoại ngữ</label>
+                    <input type="text" id="foreignLanguage" placeholder="Anh, Trung, Nga, ...">
+                </div>
+
+                <!-- === HÀNG 4 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-day"></i> Ngày cấp CCCD</label>
+                    <input type="date" id="issueDate">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Nơi cấp</label>
+                    <input type="text" id="issuePlace" placeholder="Công an nơi cấp">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-laptop-code"></i> Tin học</label>
+                    <input type="text" id="itSkill" placeholder="Cơ bản, Văn bằng B, ...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-map-pin"></i> Khu vực</label>
+                    <select id="area">
+                        <option value="">Chọn khu vực</option>
+                        <option value="Quận 1">Quận 1</option>
+                        <option value="Quận 2">Quận 2</option>
+                        <option value="Quận 3">Quận 3</option>
+                        <option value="Quận 4">Quận 4</option>
+                        <option value="Quận 5">Quận 5</option>
+                        <option value="Quận 6">Quận 6</option>
+                        <option value="Quận 7">Quận 7</option>
+                        <option value="Quận 8">Quận 8</option>
+                        <option value="Quận 9">Quận 9</option>
+                        <option value="Quận 10">Quận 10</option>
+                        <option value="Quận 11">Quận 11</option>
+                        <option value="Quận 12">Quận 12</option>
+                        <option value="Bình Thạnh">Bình Thạnh</option>
+                        <option value="Tân Bình">Tân Bình</option>
+                        <option value="Tân Phú">Tân Phú</option>
+                        <option value="Gò Vấp">Gò Vấp</option>
+                        <option value="Phú Nhuận">Phú Nhuận</option>
+                        <option value="Thủ Đức">Thủ Đức</option>
+                    </select>
+                </div>
+
+                <!-- === HÀNG 5: Quê quán và địa chỉ === -->
+                <div class="section-divider">
+                    <i class="fas fa-home"></i>
+                    <span>Địa chỉ & Quê quán</span>
+                    <small>Thông tin nơi ở và nơi sinh</small>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-tree"></i> Quê quán</label>
+                    <input type="text" id="hometown" placeholder="Tỉnh/Thành phố quê quán">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-address-card"></i> Địa chỉ thường trú</label>
+                    <input type="text" id="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành">
+                </div>
+
+                <!-- === HÀNG 6: Thông tin tổ chức === -->
+                <div class="section-divider">
+                    <i class="fas fa-users"></i>
+                    <span>Thông tin tổ chức Hội</span>
+                    <small>Thông tin về Đảng, Hội và quân đội</small>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-user-tie"></i> Chức vụ trong Hội</label>
+                    <input type="text" id="position" placeholder="Chủ tịch, Phó chủ tịch, Ủy viên,...">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-check"></i> Ngày tham gia CM</label>
+                    <input type="date" id="revolutionDate">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Ngày nhập ngũ</label>
+                    <input type="date" id="militaryJoinDate">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Ngày xuất ngũ</label>
+                    <input type="date" id="militaryReleaseDate">
+                </div>
+
+                <!-- === HÀNG 7 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Dự bị</label>
+                    <input type="text" id="reserveStatus" placeholder="Tình trạng dự bị">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-check-circle"></i> Chính thức</label>
+                    <input type="text" id="officialStatus" placeholder="Ngày chính thức">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-handshake"></i> Ngày kết nạp Hội</label>
+                    <input type="date" id="associationJoinDate">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-id-badge"></i> Số thẻ Hội viên</label>
+                    <input type="text" id="memberCardNumber" placeholder="Số thẻ hội viên">
+                </div>
+
+                <!-- === HÀNG 8 === -->
+                <div class="form-group">
+                    <label><i class="fas fa-microscope"></i> Chuyên ngành đào tạo</label>
+                    <input type="text" id="trainingMajor" placeholder="Chuyên ngành được đào tạo">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-sticky-note"></i> Ghi chú</label>
+                    <textarea id="note" rows="3" placeholder="Ghi chú thêm về hội viên..."></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
+        authDomain: "hoi-ccb.firebaseapp.com",
+        databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "hoi-ccb",
+        storageBucket: "hoi-ccb.firebasestorage.app",
+        messagingSenderId: "344971473549",
+        appId: "1:344971473549:web:7d4db3d5d328401164e8c4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    let currentUser = null;
+    let editMemberId = null;
+
+    // DOM Elements
+    const form = document.getElementById('memberForm');
+    const saveBtn = document.getElementById('saveBtn');
+    const backBtn = document.getElementById('backBtn');
+    const loading = document.getElementById('loading');
+    
+    // Helper hiển thị thông báo
+    function showMessage(text, type = 'success') {
+        const existingMsg = document.querySelector('.message');
+        if (existingMsg) existingMsg.remove();
+        
+        const msg = document.createElement('div');
+        msg.className = `message ${type}`;
+        msg.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${text}`;
+        document.body.appendChild(msg);
+        setTimeout(() => msg.classList.add('show'), 10);
+        setTimeout(() => {
+            msg.classList.remove('show');
+            setTimeout(() => msg.remove(), 300);
+        }, 3000);
+    }
+
+    // Lấy dữ liệu từ form
+    function getFormData() {
+        const genderRadio = document.querySelector('input[name="gender"]:checked');
+        return {
+            memberId: document.getElementById('memberId').value,
+            fullName: document.getElementById('fullName').value.trim(),
+            alias: document.getElementById('alias').value.trim(),
+            ethnicity: document.getElementById('ethnicity').value.trim(),
+            religion: document.getElementById('religion').value.trim(),
+            birthYear: document.getElementById('birthYear').value,
+            educationLevel: document.getElementById('educationLevel').value.trim(),
+            specialization: document.getElementById('specialization').value.trim(),
+            gender: genderRadio ? genderRadio.value : '',
+            cccd: document.getElementById('cccd').value.trim(),
+            politicalTheory: document.getElementById('politicalTheory').value.trim(),
+            foreignLanguage: document.getElementById('foreignLanguage').value.trim(),
+            issueDate: document.getElementById('issueDate').value,
+            issuePlace: document.getElementById('issuePlace').value.trim(),
+            itSkill: document.getElementById('itSkill').value.trim(),
+            area: document.getElementById('area').value,
+            hometown: document.getElementById('hometown').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            position: document.getElementById('position').value.trim(),
+            revolutionDate: document.getElementById('revolutionDate').value,
+            militaryJoinDate: document.getElementById('militaryJoinDate').value,
+            militaryReleaseDate: document.getElementById('militaryReleaseDate').value,
+            reserveStatus: document.getElementById('reserveStatus').value.trim(),
+            officialStatus: document.getElementById('officialStatus').value.trim(),
+            associationJoinDate: document.getElementById('associationJoinDate').value,
+            memberCardNumber: document.getElementById('memberCardNumber').value.trim(),
+            trainingMajor: document.getElementById('trainingMajor').value.trim(),
+            note: document.getElementById('note').value.trim(),
+            updatedAt: new Date().toISOString()
+        };
+    }
+
+    // Đổ dữ liệu vào form (khi sửa)
+    function setFormData(data) {
+        document.getElementById('memberId').value = data.memberId || '';
+        document.getElementById('fullName').value = data.fullName || '';
+        document.getElementById('alias').value = data.alias || '';
+        document.getElementById('ethnicity').value = data.ethnicity || '';
+        document.getElementById('religion').value = data.religion || '';
+        document.getElementById('birthYear').value = data.birthYear || '';
+        document.getElementById('educationLevel').value = data.educationLevel || '';
+        document.getElementById('specialization').value = data.specialization || '';
+        if (data.gender) {
+            const radio = document.querySelector(`input[name="gender"][value="${data.gender}"]`);
+            if (radio) radio.checked = true;
+        }
+        document.getElementById('cccd').value = data.cccd || '';
+        document.getElementById('politicalTheory').value = data.politicalTheory || '';
+        document.getElementById('foreignLanguage').value = data.foreignLanguage || '';
+        document.getElementById('issueDate').value = data.issueDate || '';
+        document.getElementById('issuePlace').value = data.issuePlace || '';
+        document.getElementById('itSkill').value = data.itSkill || '';
+        document.getElementById('area').value = data.area || '';
+        document.getElementById('hometown').value = data.hometown || '';
+        document.getElementById('address').value = data.address || '';
+        document.getElementById('position').value = data.position || '';
+        document.getElementById('revolutionDate').value = data.revolutionDate || '';
+        document.getElementById('militaryJoinDate').value = data.militaryJoinDate || '';
+        document.getElementById('militaryReleaseDate').value = data.militaryReleaseDate || '';
+        document.getElementById('reserveStatus').value = data.reserveStatus || '';
+        document.getElementById('officialStatus').value = data.officialStatus || '';
+        document.getElementById('associationJoinDate').value = data.associationJoinDate || '';
+        document.getElementById('memberCardNumber').value = data.memberCardNumber || '';
+        document.getElementById('trainingMajor').value = data.trainingMajor || '';
+        document.getElementById('note').value = data.note || '';
+    }
+
+    // Lưu hội viên
+    async function saveMember() {
+        const fullName = document.getElementById('fullName').value.trim();
+        if (!fullName) {
+            showMessage('Vui lòng nhập họ và tên hội viên', 'error');
+            return;
+        }
+
+        if (!currentUser) {
+            showMessage('Vui lòng đăng nhập lại', 'error');
+            return;
+        }
+
+        loading.style.display = 'flex';
+        
+        try {
+            const memberData = getFormData();
+            const membersRef = ref(database, `users/${currentUser.uid}/members`);
+            
+            if (editMemberId) {
+                // Cập nhật
+                await update(ref(database, `users/${currentUser.uid}/members/${editMemberId}`), memberData);
+                showMessage('Cập nhật hội viên thành công!', 'success');
+            } else {
+                // Thêm mới - tạo ID tự động
+                const newRef = push(membersRef);
+                memberData.createdAt = new Date().toISOString();
+                memberData.id = newRef.key;
+                await set(newRef, memberData);
+                showMessage('Thêm hội viên thành công!', 'success');
+            }
+            
+            // Chuyển về dashboard sau 1s
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+            
+        } catch (error) {
+            console.error('Lỗi:', error);
+            showMessage('Lỗi: ' + error.message, 'error');
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    // Kiểm tra URL params để biết là thêm mới hay sửa
+    function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id) {
+            editMemberId = id;
+            document.querySelector('.header-title h1').innerHTML = '<i class="fas fa-user-edit"></i> Sửa hội viên';
+            loadMemberData(id);
+        } else {
+            editMemberId = null;
+            document.querySelector('.header-title h1').innerHTML = '<i class="fas fa-user-plus"></i> Thêm hội viên mới';
+            // Tạo ID tạm thời
+            document.getElementById('memberId').value = 'HV-' + new Date().getTime().toString().slice(-8);
+        }
+    }
+
+    // Tải dữ liệu hội viên để sửa
+    async function loadMemberData(id) {
+        if (!currentUser) return;
+        
+        loading.style.display = 'flex';
+        try {
+            const memberRef = ref(database, `users/${currentUser.uid}/members/${id}`);
+            const snapshot = await get(memberRef);
+            if (snapshot.exists()) {
+                setFormData(snapshot.val());
+            } else {
+                showMessage('Không tìm thấy dữ liệu hội viên', 'error');
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+            }
+        } catch (error) {
+            console.error('Lỗi:', error);
+            showMessage('Lỗi tải dữ liệu: ' + error.message, 'error');
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    // Event listeners
+    saveBtn.addEventListener('click', saveMember);
+    backBtn.addEventListener('click', () => {
+        window.location.href = 'dashboard.html';
+    });
+
+    // Enter key submit
+    form.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            saveMember();
+        }
+    });
+
+    // Auth state
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            getUrlParams();
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+</script>
+</body>
+</html>
