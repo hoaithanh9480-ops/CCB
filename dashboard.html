@@ -161,6 +161,8 @@
         .btn-purple:hover { background: #7c3aed; }
         .btn-warning { background: #f59e0b; color: white; }
         .btn-warning:hover { background: #d97706; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
         .btn-outline { background: #f1f5f9; color: #475569; }
         .btn-outline:hover { background: #e2e8f0; }
         
@@ -227,6 +229,7 @@
         .detail-info p { margin: 8px 0; padding: 8px 12px; background: #f8fafc; border-radius: 12px; font-size: 0.85rem; }
         .detail-info strong { color: #475569; width: 130px; display: inline-block; }
         .btn-cancel { background: #f1f5f9; border: none; padding: 8px 20px; border-radius: 40px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 16px; }
+        .btn-confirm { background: #ef4444; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 16px; }
         .progress-modal { text-align: center; }
         .progress-bar { height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 16px 0; }
         .progress-fill { width: 0%; height: 100%; background: #2563eb; transition: width 0.3s; }
@@ -241,6 +244,16 @@
         .message.success { border-left: 3px solid #22c55e; }
         .message.error { border-left: 3px solid #ef4444; }
         .date-value { font-family: monospace; font-size: 0.8rem; }
+
+        /* Delete area select modal */
+        .delete-area-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin: 16px 0;
+            font-family: inherit;
+        }
 
         @media (max-width: 768px) {
             .stat-card { min-width: 100px; padding: 10px 12px; }
@@ -279,6 +292,8 @@
                 <button class="btn btn-success" id="exportBtn"><i class="fas fa-file-excel"></i> Xuất</button>
                 <button class="btn btn-purple" id="importBtn"><i class="fas fa-file-import"></i> Import</button>
                 <button class="btn btn-warning" id="downloadSampleBtn"><i class="fas fa-download"></i> Mẫu</button>
+                <button class="btn btn-danger" id="deleteByAreaBtn"><i class="fas fa-trash-alt"></i> Xóa theo KV</button>
+                <button class="btn btn-danger" id="deleteAllBtn"><i class="fas fa-skull-crosswalk"></i> Xóa tất cả</button>
             </div>
         </div>
 
@@ -297,13 +312,19 @@
         <div class="table-wrapper">
             <table class="members-table">
                 <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Thao tác</th></tr></thead>
-                <tbody id="membersList"><tr class="empty-row"><td colspan="6">Đang tải......</td></tr></tbody>
+                <tbody id="membersList"><tr class="empty-row"><td colspan="6">Đang tải......</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
 
+    <!-- Modals -->
     <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2><button class="close-modal" id="closeDetailModalBtn">&times;</button></div><div id="detailContent" class="detail-info"></div><button class="btn-cancel" id="closeDetailBtn">Đóng</button></div></div>
+    
+    <div id="confirmModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="confirmTitle">Xác nhận</h2><button class="close-modal" id="closeConfirmModalBtn">&times;</button></div><div id="confirmMessage" style="margin: 16px 0;"></div><div id="confirmAreaSelect" style="display: none;"><label><i class="fas fa-map-marker-alt"></i> Chọn khu vực cần xóa:</label><select id="areaToDelete" class="delete-area-select"></select></div><button class="btn-cancel" id="cancelConfirmBtn">Hủy</button><button class="btn-confirm" id="confirmActionBtn">Xác nhận</button></div></div>
+    
     <div id="importProgress" class="modal"><div class="modal-content progress-modal"><h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><p id="progressText">Đang xử lý...</p></div></div>
+    
     <div id="messageBox" class="message"></div>
     <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
 
@@ -339,6 +360,8 @@
             statsGrid: document.getElementById('statsGrid')
         };
 
+        let pendingDeleteAction = null;
+
         function showMessage(text, type = 'success') {
             const msg = elements.messageBox;
             msg.textContent = text;
@@ -355,15 +378,11 @@
             return dateString;
         }
 
-        // HÀM CHUYỂN ĐỔI NGÀY THÁNG TỪ NHIỀU ĐỊNH DẠNG SANG YYYY-MM-DD
         function convertToISODate(dateString) {
             if (!dateString || dateString === '') return '';
-            
             dateString = String(dateString).trim();
-            
             if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
             if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
-            
             const dmyPattern = /^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/;
             let match = dateString.match(dmyPattern);
             if (match) {
@@ -375,7 +394,6 @@
                     return `${year}-${month}-${day}`;
                 }
             }
-            
             const ymdPattern = /^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/;
             match = dateString.match(ymdPattern);
             if (match) {
@@ -384,7 +402,6 @@
                 const day = match[3].padStart(2, '0');
                 return `${year}-${month}-${day}`;
             }
-            
             const testDate = new Date(dateString);
             if (!isNaN(testDate.getTime())) {
                 const year = testDate.getFullYear();
@@ -394,17 +411,14 @@
                     return `${year}-${month}-${day}`;
                 }
             }
-            
             return '';
         }
 
-        // Hàm render thống kê với các khu vực động
         function renderStats() {
             const total = allMembers.length;
             const male = allMembers.filter(m => m.gender === 'Nam').length;
             const female = allMembers.filter(m => m.gender === 'Nữ').length;
             
-            // Thống kê theo khu vực
             const areaStats = {};
             allMembers.forEach(m => {
                 const area = m.area || 'Chưa phân loại';
@@ -414,10 +428,8 @@
                 areaStats[area]++;
             });
             
-            // Sắp xếp khu vực theo số lượng giảm dần
             const sortedAreas = Object.entries(areaStats).sort((a, b) => b[1] - a[1]);
             
-            // Tạo HTML cho stats grid
             let statsHtml = `
                 <div class="stat-card total">
                     <div class="stat-info">
@@ -442,11 +454,9 @@
                 </div>
             `;
             
-            // Thêm thống kê từng khu vực
             if (sortedAreas.length > 0) {
                 sortedAreas.forEach(([area, count]) => {
                     let icon = 'fa-map-marker-alt';
-                    let bgColor = '';
                     if (area === 'Chưa phân loại') {
                         icon = 'fa-question-circle';
                     }
@@ -554,6 +564,91 @@
             showMessage('Đã xóa!', 'success');
             await loadMembers();
         };
+
+        // Xóa theo khu vực
+        async function deleteByArea() {
+            const areaToDelete = document.getElementById('areaToDelete').value;
+            if (!areaToDelete) {
+                showMessage('Vui lòng chọn khu vực cần xóa', 'error');
+                return;
+            }
+            
+            const membersToDelete = allMembers.filter(m => (m.area || 'Chưa phân loại') === areaToDelete);
+            if (membersToDelete.length === 0) {
+                showMessage(`Không có hội viên nào ở khu vực "${areaToDelete}"`, 'error');
+                document.getElementById('confirmModal').style.display = 'none';
+                return;
+            }
+            
+            let deleted = 0;
+            for (const member of membersToDelete) {
+                await remove(ref(database, `users/${currentUser.uid}/members/${member.id}`));
+                deleted++;
+            }
+            showMessage(`Đã xóa ${deleted} hội viên ở khu vực "${areaToDelete}"`, 'success');
+            document.getElementById('confirmModal').style.display = 'none';
+            await loadMembers();
+        }
+
+        // Xóa tất cả
+        async function deleteAll() {
+            if (allMembers.length === 0) {
+                showMessage('Không có dữ liệu để xóa', 'error');
+                document.getElementById('confirmModal').style.display = 'none';
+                return;
+            }
+            
+            let deleted = 0;
+            for (const member of allMembers) {
+                await remove(ref(database, `users/${currentUser.uid}/members/${member.id}`));
+                deleted++;
+            }
+            showMessage(`Đã xóa toàn bộ ${deleted} hội viên`, 'success');
+            document.getElementById('confirmModal').style.display = 'none';
+            await loadMembers();
+        }
+
+        // Hiển thị modal xác nhận
+        function showConfirmModal(type) {
+            const modal = document.getElementById('confirmModal');
+            const title = document.getElementById('confirmTitle');
+            const message = document.getElementById('confirmMessage');
+            const areaSelectDiv = document.getElementById('confirmAreaSelect');
+            const areaSelect = document.getElementById('areaToDelete');
+            
+            if (type === 'area') {
+                title.innerHTML = '<i class="fas fa-trash-alt"></i> Xóa theo khu vực';
+                message.innerHTML = `Bạn có chắc chắn muốn xóa TẤT CẢ hội viên trong khu vực được chọn?<br><br><strong>Hành động này không thể hoàn tác!</strong>`;
+                
+                // Đổ danh sách khu vực vào select
+                const areaStats = {};
+                allMembers.forEach(m => {
+                    const area = m.area || 'Chưa phân loại';
+                    if (!areaStats[area]) {
+                        areaStats[area] = 0;
+                    }
+                    areaStats[area]++;
+                });
+                
+                areaSelect.innerHTML = '<option value="">-- Chọn khu vực --</option>';
+                Object.entries(areaStats).sort((a, b) => b[1] - a[1]).forEach(([area, count]) => {
+                    const option = document.createElement('option');
+                    option.value = area;
+                    option.textContent = `${area} (${count} hội viên)`;
+                    areaSelect.appendChild(option);
+                });
+                
+                areaSelectDiv.style.display = 'block';
+                pendingDeleteAction = 'area';
+            } else if (type === 'all') {
+                title.innerHTML = '<i class="fas fa-skull-crosswalk"></i> Xóa tất cả dữ liệu';
+                message.innerHTML = `Bạn có chắc chắn muốn xóa TOÀN BỘ ${allMembers.length} hội viên?<br><br><strong style="color: #ef4444;">Hành động này không thể hoàn tác!</strong>`;
+                areaSelectDiv.style.display = 'none';
+                pendingDeleteAction = 'all';
+            }
+            
+            modal.style.display = 'flex';
+        }
 
         function exportToExcel() {
             const keyword = elements.searchKeyword.value.toLowerCase().trim();
@@ -696,6 +791,7 @@
             showMessage(`Import hoàn tất! Thành công: ${success}, Lỗi: ${fail}`);
         }
 
+        // Event listeners
         document.getElementById('fileInput').addEventListener('change', async (e) => {
             if (!e.target.files[0]) return;
             const rows = await importExcel(e.target.files[0]);
@@ -710,8 +806,24 @@
         document.getElementById('resetFilterBtn').onclick = () => { elements.searchKeyword.value = ''; elements.searchArea.value = ''; renderMembersList(); };
         elements.searchKeyword.oninput = () => renderMembersList();
         elements.searchArea.onchange = () => renderMembersList();
+        
+        // Delete buttons
+        document.getElementById('deleteByAreaBtn').onclick = () => showConfirmModal('area');
+        document.getElementById('deleteAllBtn').onclick = () => showConfirmModal('all');
+        
+        // Modal close handlers
         document.getElementById('closeDetailModalBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
         document.getElementById('closeDetailBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
+        document.getElementById('closeConfirmModalBtn').onclick = () => document.getElementById('confirmModal').style.display = 'none';
+        document.getElementById('cancelConfirmBtn').onclick = () => document.getElementById('confirmModal').style.display = 'none';
+        document.getElementById('confirmActionBtn').onclick = () => {
+            if (pendingDeleteAction === 'area') {
+                deleteByArea();
+            } else if (pendingDeleteAction === 'all') {
+                deleteAll();
+            }
+        };
+        
         document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); window.location.href = 'index.html'; };
         
         onAuthStateChanged(auth, async (user) => {
