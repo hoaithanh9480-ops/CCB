@@ -419,7 +419,7 @@
         <div class="filter-bar">
             <div class="filter-group">
                 <label><i class="fas fa-search"></i> Tìm kiếm</label>
-                <input type="text" id="searchKeyword" placeholder="Họ tên hoặc số thẻ...">
+                <input type="text" id="searchKeyword" placeholder="Họ tên, số thẻ hội viên, số điện thoại...">
             </div>
             <div class="filter-group">
                 <label><i class="fas fa-map-marker-alt"></i> Khu vực</label>
@@ -430,7 +430,7 @@
 
         <div class="table-wrapper">
             <table class="members-table">
-                <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Thao tác</th></tr></thead>
+                <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Số điện thoại</th><th>Thao tác</th></tr></thead>
                 <tbody id="membersList"><tr class="empty-row"><td colspan="6">Đang tải......</td></tr>
                 </tbody>
             </table>
@@ -649,6 +649,7 @@
                 if (keyword) {
                     const matchName = m.fullName?.toLowerCase().includes(keyword);
                     const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
+                    const matchPhone = m.phone?.toLowerCase().includes(keyword);
                     if (!matchName && !matchCard) return false;
                 }
                 if (area && m.area !== area) return false;
@@ -656,7 +657,7 @@
             });
 
             if (filtered.length === 0) {
-                elements.membersList.innerHTML = '<tr class="empty-row"><td colspan="6">Không có dữ liệu</td></tr>';
+                elements.membersList.innerHTML = '<tr class="empty-row"><td colspan="7">Không có dữ liệu</td></tr>';
                 return;
             }
 
@@ -667,6 +668,7 @@
                     <td class="date-value">${formatDateToDMY(m.birthYear) || '---'}</td>
                     <td><span class="badge">${escapeHtml(m.area || '---')}</span></td>
                     <td>${escapeHtml(m.memberCardNumber || '---')}</td>
+                    <td>${escapeHtml(m.phone || '---')}</td>
                     <td class="action-buttons">
                         <button class="action-btn action-view" onclick="window.viewDetail('${m.id}')"><i class="fas fa-eye"></i></button>
                         <button class="action-btn action-edit" onclick="window.editMember('${m.id}')"><i class="fas fa-pen"></i></button>
