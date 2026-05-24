@@ -84,7 +84,7 @@
                 <div class="form-group"><label><i class="fas fa-calendar-day"></i> Ngày cấp CCCD</label><input type="date" id="issueDate"></div>
                 <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Nơi cấp</label><input type="text" id="issuePlace" placeholder="Công an nơi cấp"></div>
                 <div class="form-group"><label><i class="fas fa-laptop-code"></i> Tin học</label><input type="text" id="itSkill" placeholder="Cơ bản, Văn bằng B, ..."></div>
-                <div class="form-group"><label><i class="fas fa-map-pin"></i> Khu vực</label><div class="input-wrapper"><select id="area"><option value="">-- Chọn hoặc thêm mới --</option></select><button type="button" class="small-add-btn" id="addAreaBtn" title="Thêm khu vực mới">+</button></div></div>
+                <div class="form-group"><label class="required"><i class="fas fa-map-pin"></i> Khu vực</label><div class="input-wrapper"><select id="area"><option value="">-- Chọn hoặc thêm mới --</option></select><button type="button" class="small-add-btn" id="addAreaBtn" title="Thêm khu vực mới">+</button></div></div>
                 
                 <div class="section-divider"><i class="fas fa-home"></i><span>Địa chỉ & Quê quán</span><small>Thông tin nơi ở và nơi sinh</small></div>
                 <div class="form-group half-width"><label><i class="fas fa-tree"></i> Quê quán</label><input type="text" id="hometown" placeholder="Tỉnh/Thành phố quê quán"></div>
@@ -283,6 +283,10 @@
     async function saveMember() {
         const fullName = document.getElementById('fullName').value.trim();
         if (!fullName) { showMessage('Vui lòng nhập họ và tên hội viên', 'error'); return; }
+
+        const area = areaSelect.value;
+        if (!area) { showMessage('Vui lòng chọn khu vực', 'error'); return; }
+        
         if (!currentUser) { showMessage('Vui lòng đăng nhập lại', 'error'); return; }
         loading.style.display = 'flex';
         try {
