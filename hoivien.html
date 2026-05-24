@@ -355,13 +355,15 @@
             getUrlParams();
         } else { window.location.href = 'index.html'; }
     });
-    / Thêm vào cuối file, trước dấu </script>
+   
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.form-header');
-        if (window.scrollY > 10) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        if (header) {
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         }
     });
 </script>
