@@ -25,7 +25,7 @@
         .logout-btn:hover { background: #dc2626; }
         .main-content { padding: 24px; max-width: 1400px; margin: 0 auto; }
 
-        /* Stats container - scrollable for many areas */
+        /* Stats container - Compact design for many areas */
         .stats-container {
             background: white;
             border-radius: 20px;
@@ -33,10 +33,17 @@
             margin-bottom: 24px;
             overflow: hidden;
         }
-        .stats-title {
+        .stats-header {
             padding: 12px 20px;
             background: #f8fafc;
             border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .stats-title {
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -47,85 +54,160 @@
             margin-right: 6px;
             color: #2563eb;
         }
-        .stats-grid {
+        .stats-controls {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1px;
+            gap: 8px;
+        }
+        .stats-toggle {
+            background: #f1f5f9;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748b;
+        }
+        .stats-toggle.active {
+            background: #2563eb;
+            color: white;
+        }
+        .stats-toggle:hover:not(.active) {
             background: #e2e8f0;
         }
-        .stat-card {
+
+        /* Main stats cards - 3 main cards */
+        .main-stats {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
             background: white;
-            padding: 14px 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .main-stat-card {
             flex: 1;
-            min-width: 120px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transition: all 0.2s;
         }
-        .stat-card:hover {
-            background: #faf5ff;
+        .main-stat-card.total { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
+        .main-stat-card.male { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .main-stat-card.female { background: linear-gradient(135deg, #ec489a 0%, #db2777 100%); }
+        
+        .main-stat-card.total .stat-info h4,
+        .main-stat-card.total .stat-number,
+        .main-stat-card.male .stat-info h4,
+        .main-stat-card.male .stat-number,
+        .main-stat-card.female .stat-info h4,
+        .main-stat-card.female .stat-number {
+            color: white;
         }
-        .stat-info h3 {
-            font-size: 0.65rem;
+        .main-stat-card.total .stat-icon,
+        .main-stat-card.male .stat-icon,
+        .main-stat-card.female .stat-icon {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .main-stat-card .stat-info h4 {
+            font-size: 0.7rem;
             font-weight: 600;
-            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             margin-bottom: 4px;
+            color: #64748b;
         }
-        .stat-number {
-            font-size: 1.5rem;
+        .main-stat-card .stat-number {
+            font-size: 1.8rem;
             font-weight: 700;
+            line-height: 1;
             color: #0f172a;
-            line-height: 1.2;
         }
-        .stat-icon {
-            width: 36px;
-            height: 36px;
+        .main-stat-card .stat-icon {
+            width: 44px;
+            height: 44px;
             background: #eef2ff;
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.2rem;
             color: #2563eb;
-            font-size: 1rem;
         }
-        .stat-card.total {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+
+        /* Area stats - compact grid with scroll */
+        .area-stats-wrapper {
+            position: relative;
         }
-        .stat-card.total .stat-info h3,
-        .stat-card.total .stat-number {
-            color: white;
+        .area-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1px;
+            background: #e2e8f0;
+            max-height: 280px;
+            overflow-y: auto;
         }
-        .stat-card.total .stat-icon {
-            background: rgba(255,255,255,0.2);
-            color: white;
+        .area-stats-grid.collapsed {
+            max-height: none;
         }
-        .stat-card.male {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        .area-stat-item {
+            background: white;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+            cursor: pointer;
         }
-        .stat-card.male .stat-info h3,
-        .stat-card.male .stat-number {
-            color: white;
+        .area-stat-item:hover {
+            background: #faf5ff;
         }
-        .stat-card.male .stat-icon {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-        .stat-card.female {
-            background: linear-gradient(135deg, #ec489a 0%, #db2777 100%);
-        }
-        .stat-card.female .stat-info h3,
-        .stat-card.female .stat-number {
-            color: white;
-        }
-        .stat-card.female .stat-icon {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-        .stat-card.area-card {
+        .area-stat-item.active {
+            background: #eef2ff;
             border-left: 3px solid #2563eb;
+        }
+        .area-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .area-name i {
+            font-size: 0.7rem;
+            color: #10b981;
+            width: 16px;
+        }
+        .area-count {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #2563eb;
+            background: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 30px;
+        }
+        .area-stat-item:hover .area-count {
+            background: #2563eb;
+            color: white;
+        }
+        .show-more-btn {
+            padding: 8px;
+            text-align: center;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.7rem;
+            color: #2563eb;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .show-more-btn:hover {
+            background: #eef2ff;
         }
 
         .action-bar, .filter-bar {
@@ -245,7 +327,6 @@
         .message.error { border-left: 3px solid #ef4444; }
         .date-value { font-family: monospace; font-size: 0.8rem; }
 
-        /* Delete area select modal */
         .delete-area-select {
             width: 100%;
             padding: 10px;
@@ -256,8 +337,11 @@
         }
 
         @media (max-width: 768px) {
-            .stat-card { min-width: 100px; padding: 10px 12px; }
-            .stat-number { font-size: 1.2rem; }
+            .main-stats { flex-direction: column; gap: 8px; }
+            .main-stat-card { padding: 10px 12px; }
+            .main-stat-card .stat-number { font-size: 1.4rem; }
+            .main-stat-card .stat-icon { width: 36px; height: 36px; font-size: 1rem; }
+            .area-stats-grid { grid-template-columns: 1fr; }
             .top-bar { padding: 0 16px; }
             .main-content { padding: 16px; }
             .action-bar { flex-direction: column; align-items: stretch; }
@@ -278,11 +362,46 @@
     </div>
 
     <div class="main-content">
-        <!-- Compact Stats with Areas -->
+        <!-- Compact Stats Container -->
         <div class="stats-container">
-            <div class="stats-title"><i class="fas fa-chart-simple"></i> THỐNG KÊ HỘI VIÊN</div>
-            <div class="stats-grid" id="statsGrid">
-                <!-- Stats will be dynamically inserted here -->
+            <div class="stats-header">
+                <div class="stats-title"><i class="fas fa-chart-simple"></i> THỐNG KÊ HỘI VIÊN</div>
+                <div class="stats-controls">
+                    <button class="stats-toggle active" id="showAllAreasBtn"><i class="fas fa-expand"></i> Tất cả KV</button>
+                    <button class="stats-toggle" id="showTopAreasBtn"><i class="fas fa-chart-line"></i> Top 10</button>
+                </div>
+            </div>
+            
+            <!-- Main 3 stats cards -->
+            <div class="main-stats" id="mainStats">
+                <div class="main-stat-card total">
+                    <div class="stat-info">
+                        <h4><i class="fas fa-users"></i> Tổng số</h4>
+                        <div class="stat-number" id="totalMembers">0</div>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
+                </div>
+                <div class="main-stat-card male">
+                    <div class="stat-info">
+                        <h4><i class="fas fa-mars"></i> Nam</h4>
+                        <div class="stat-number" id="totalMale">0</div>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-mars"></i></div>
+                </div>
+                <div class="main-stat-card female">
+                    <div class="stat-info">
+                        <h4><i class="fas fa-venus"></i> Nữ</h4>
+                        <div class="stat-number" id="totalFemale">0</div>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-venus"></i></div>
+                </div>
+            </div>
+            
+            <!-- Area stats grid with scroll -->
+            <div class="area-stats-wrapper">
+                <div class="area-stats-grid" id="areaStatsGrid">
+                    <!-- Area stats will be dynamically inserted here -->
+                </div>
             </div>
         </div>
 
@@ -350,6 +469,7 @@
         let currentUser = null;
         let allMembers = [];
         let customAreas = [];
+        let showAllAreas = true; // true: show all, false: show top 10
 
         const elements = {
             membersList: document.getElementById('membersList'),
@@ -357,10 +477,11 @@
             messageBox: document.getElementById('messageBox'),
             searchKeyword: document.getElementById('searchKeyword'),
             searchArea: document.getElementById('searchArea'),
-            statsGrid: document.getElementById('statsGrid')
+            totalMembers: document.getElementById('totalMembers'),
+            totalMale: document.getElementById('totalMale'),
+            totalFemale: document.getElementById('totalFemale'),
+            areaStatsGrid: document.getElementById('areaStatsGrid')
         };
-
-        let pendingDeleteAction = null;
 
         function showMessage(text, type = 'success') {
             const msg = elements.messageBox;
@@ -414,11 +535,7 @@
             return '';
         }
 
-        function renderStats() {
-            const total = allMembers.length;
-            const male = allMembers.filter(m => m.gender === 'Nam').length;
-            const female = allMembers.filter(m => m.gender === 'Nữ').length;
-            
+        function renderAreaStats() {
             const areaStats = {};
             allMembers.forEach(m => {
                 const area = m.area || 'Chưa phân loại';
@@ -428,52 +545,74 @@
                 areaStats[area]++;
             });
             
-            const sortedAreas = Object.entries(areaStats).sort((a, b) => b[1] - a[1]);
+            let sortedAreas = Object.entries(areaStats).sort((a, b) => b[1] - a[1]);
+            let displayAreas = showAllAreas ? sortedAreas : sortedAreas.slice(0, 10);
             
-            let statsHtml = `
-                <div class="stat-card total">
-                    <div class="stat-info">
-                        <h3><i class="fas fa-users"></i> Tổng số</h3>
-                        <div class="stat-number">${total}</div>
-                    </div>
-                    <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
-                </div>
-                <div class="stat-card male">
-                    <div class="stat-info">
-                        <h3><i class="fas fa-mars"></i> Nam</h3>
-                        <div class="stat-number">${male}</div>
-                    </div>
-                    <div class="stat-icon"><i class="fas fa-mars"></i></div>
-                </div>
-                <div class="stat-card female">
-                    <div class="stat-info">
-                        <h3><i class="fas fa-venus"></i> Nữ</h3>
-                        <div class="stat-number">${female}</div>
-                    </div>
-                    <div class="stat-icon"><i class="fas fa-venus"></i></div>
-                </div>
-            `;
-            
-            if (sortedAreas.length > 0) {
-                sortedAreas.forEach(([area, count]) => {
-                    let icon = 'fa-map-marker-alt';
-                    if (area === 'Chưa phân loại') {
-                        icon = 'fa-question-circle';
-                    }
-                    statsHtml += `
-                        <div class="stat-card area-card" style="border-left-color: #10b981;">
-                            <div class="stat-info">
-                                <h3><i class="fas ${icon}"></i> ${area.length > 20 ? area.substring(0, 20) + '...' : area}</h3>
-                                <div class="stat-number">${count}</div>
-                            </div>
-                            <div class="stat-icon" style="background: #dcfce7; color: #059669;"><i class="fas ${icon}"></i></div>
-                        </div>
-                    `;
-                });
+            if (displayAreas.length === 0) {
+                elements.areaStatsGrid.innerHTML = '<div style="padding: 20px; text-align: center; color: #94a3b8;">Chưa có dữ liệu khu vực</div>';
+                return;
             }
             
-            elements.statsGrid.innerHTML = statsHtml;
+            let html = '';
+            displayAreas.forEach(([area, count]) => {
+                let icon = 'fa-map-marker-alt';
+                if (area === 'Chưa phân loại') {
+                    icon = 'fa-question-circle';
+                }
+                html += `
+                    <div class="area-stat-item" onclick="window.filterByArea('${escapeHtml(area)}')">
+                        <div class="area-name">
+                            <i class="fas ${icon}"></i>
+                            <span>${escapeHtml(area.length > 25 ? area.substring(0, 25) + '...' : area)}</span>
+                        </div>
+                        <div class="area-count">${count}</div>
+                    </div>
+                `;
+            });
+            
+            if (!showAllAreas && sortedAreas.length > 10) {
+                html += `
+                    <div class="show-more-btn" id="showMoreAreasBtn">
+                        <i class="fas fa-chevron-down"></i> Hiển thị tất cả (${sortedAreas.length} khu vực)
+                    </div>
+                `;
+            } else if (showAllAreas && sortedAreas.length > 10) {
+                html += `
+                    <div class="show-more-btn" id="showTopAreasFromBtn">
+                        <i class="fas fa-chevron-up"></i> Chỉ hiển thị Top 10
+                    </div>
+                `;
+            }
+            
+            elements.areaStatsGrid.innerHTML = html;
+            
+            // Gắn sự kiện cho các nút show more
+            const showMoreBtn = document.getElementById('showMoreAreasBtn');
+            if (showMoreBtn) {
+                showMoreBtn.onclick = () => {
+                    showAllAreas = true;
+                    document.getElementById('showAllAreasBtn').classList.add('active');
+                    document.getElementById('showTopAreasBtn').classList.remove('active');
+                    renderAreaStats();
+                };
+            }
+            const showTopBtn = document.getElementById('showTopAreasFromBtn');
+            if (showTopBtn) {
+                showTopBtn.onclick = () => {
+                    showAllAreas = false;
+                    document.getElementById('showTopAreasBtn').classList.add('active');
+                    document.getElementById('showAllAreasBtn').classList.remove('active');
+                    renderAreaStats();
+                };
+            }
         }
+
+        window.filterByArea = function(area) {
+            elements.searchArea.value = area;
+            renderMembersList();
+            // Cuộn đến bảng
+            document.querySelector('.table-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
 
         async function loadAreas() {
             if (!currentUser) return;
@@ -492,8 +631,15 @@
             if (!currentUser) return;
             const snapshot = await get(ref(database, `users/${currentUser.uid}/members`));
             allMembers = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, m]) => ({ id, ...m })) : [];
+            updateMainStats();
+            renderAreaStats();
             renderMembersList();
-            renderStats();
+        }
+
+        function updateMainStats() {
+            elements.totalMembers.textContent = allMembers.length;
+            elements.totalMale.textContent = allMembers.filter(m => m.gender === 'Nam').length;
+            elements.totalFemale.textContent = allMembers.filter(m => m.gender === 'Nữ').length;
         }
 
         function renderMembersList() {
@@ -565,7 +711,8 @@
             await loadMembers();
         };
 
-        // Xóa theo khu vực
+        let pendingDeleteAction = null;
+
         async function deleteByArea() {
             const areaToDelete = document.getElementById('areaToDelete').value;
             if (!areaToDelete) {
@@ -590,7 +737,6 @@
             await loadMembers();
         }
 
-        // Xóa tất cả
         async function deleteAll() {
             if (allMembers.length === 0) {
                 showMessage('Không có dữ liệu để xóa', 'error');
@@ -608,7 +754,6 @@
             await loadMembers();
         }
 
-        // Hiển thị modal xác nhận
         function showConfirmModal(type) {
             const modal = document.getElementById('confirmModal');
             const title = document.getElementById('confirmTitle');
@@ -620,7 +765,6 @@
                 title.innerHTML = '<i class="fas fa-trash-alt"></i> Xóa theo khu vực';
                 message.innerHTML = `Bạn có chắc chắn muốn xóa TẤT CẢ hội viên trong khu vực được chọn?<br><br><strong>Hành động này không thể hoàn tác!</strong>`;
                 
-                // Đổ danh sách khu vực vào select
                 const areaStats = {};
                 allMembers.forEach(m => {
                     const area = m.area || 'Chưa phân loại';
@@ -810,6 +954,20 @@
         // Delete buttons
         document.getElementById('deleteByAreaBtn').onclick = () => showConfirmModal('area');
         document.getElementById('deleteAllBtn').onclick = () => showConfirmModal('all');
+        
+        // Area view toggle buttons
+        document.getElementById('showAllAreasBtn').onclick = () => {
+            showAllAreas = true;
+            document.getElementById('showAllAreasBtn').classList.add('active');
+            document.getElementById('showTopAreasBtn').classList.remove('active');
+            renderAreaStats();
+        };
+        document.getElementById('showTopAreasBtn').onclick = () => {
+            showAllAreas = false;
+            document.getElementById('showTopAreasBtn').classList.add('active');
+            document.getElementById('showAllAreasBtn').classList.remove('active');
+            renderAreaStats();
+        };
         
         // Modal close handlers
         document.getElementById('closeDetailModalBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
