@@ -25,46 +25,107 @@
         .logout-btn:hover { background: #dc2626; }
         .main-content { padding: 24px; max-width: 1400px; margin: 0 auto; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+        /* Stats container - scrollable for many areas */
+        .stats-container {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
             margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .stats-title {
+            padding: 12px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+        .stats-title i {
+            margin-right: 6px;
+            color: #2563eb;
+        }
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1px;
+            background: #e2e8f0;
         }
         .stat-card {
             background: white;
-            border-radius: 20px;
-            padding: 16px 20px;
+            padding: 14px 20px;
+            flex: 1;
+            min-width: 120px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .stat-card:hover {
+            background: #faf5ff;
         }
         .stat-info h3 {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
         }
         .stat-number {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #0f172a;
             line-height: 1.2;
-            margin-top: 4px;
         }
         .stat-icon {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             background: #eef2ff;
-            border-radius: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #2563eb;
-            font-size: 1.3rem;
+            font-size: 1rem;
+        }
+        .stat-card.total {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+        .stat-card.total .stat-info h3,
+        .stat-card.total .stat-number {
+            color: white;
+        }
+        .stat-card.total .stat-icon {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .stat-card.male {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        .stat-card.male .stat-info h3,
+        .stat-card.male .stat-number {
+            color: white;
+        }
+        .stat-card.male .stat-icon {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .stat-card.female {
+            background: linear-gradient(135deg, #ec489a 0%, #db2777 100%);
+        }
+        .stat-card.female .stat-info h3,
+        .stat-card.female .stat-number {
+            color: white;
+        }
+        .stat-card.female .stat-icon {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .stat-card.area-card {
+            border-left: 3px solid #2563eb;
         }
 
         .action-bar, .filter-bar {
@@ -182,7 +243,8 @@
         .date-value { font-family: monospace; font-size: 0.8rem; }
 
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: 1fr; gap: 12px; }
+            .stat-card { min-width: 100px; padding: 10px 12px; }
+            .stat-number { font-size: 1.2rem; }
             .top-bar { padding: 0 16px; }
             .main-content { padding: 16px; }
             .action-bar { flex-direction: column; align-items: stretch; }
@@ -203,18 +265,11 @@
     </div>
 
     <div class="main-content">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info"><h3>Tổng hội viên</h3><div class="stat-number" id="totalMembers">0</div></div>
-                <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info"><h3>Nam</h3><div class="stat-number" id="totalMale">0</div></div>
-                <div class="stat-icon"><i class="fas fa-mars"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info"><h3>Nữ</h3><div class="stat-number" id="totalFemale">0</div></div>
-                <div class="stat-icon"><i class="fas fa-venus"></i></div>
+        <!-- Compact Stats with Areas -->
+        <div class="stats-container">
+            <div class="stats-title"><i class="fas fa-chart-simple"></i> THỐNG KÊ HỘI VIÊN</div>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats will be dynamically inserted here -->
             </div>
         </div>
 
@@ -242,7 +297,7 @@
         <div class="table-wrapper">
             <table class="members-table">
                 <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Thao tác</th></tr></thead>
-                <tbody id="membersList"><tr class="empty-row"><td colspan="6">Đang tải...</td></tr></tbody>
+                <tbody id="membersList"><tr class="empty-row"><td colspan="6">Đang tải......</td></tr></tbody>
             </table>
         </div>
     </div>
@@ -281,9 +336,7 @@
             messageBox: document.getElementById('messageBox'),
             searchKeyword: document.getElementById('searchKeyword'),
             searchArea: document.getElementById('searchArea'),
-            totalMembers: document.getElementById('totalMembers'),
-            totalMale: document.getElementById('totalMale'),
-            totalFemale: document.getElementById('totalFemale')
+            statsGrid: document.getElementById('statsGrid')
         };
 
         function showMessage(text, type = 'success') {
@@ -308,27 +361,21 @@
             
             dateString = String(dateString).trim();
             
-            // Nếu đã đúng định dạng YYYY-MM-DD
             if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
-            
-            // Nếu chỉ có năm (YYYY)
             if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
             
-            // Xử lý các định dạng DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY
             const dmyPattern = /^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/;
             let match = dateString.match(dmyPattern);
             if (match) {
                 const day = match[1].padStart(2, '0');
                 const month = match[2].padStart(2, '0');
                 const year = match[3];
-                // Kiểm tra ngày hợp lệ
                 const testDate = new Date(`${year}-${month}-${day}`);
                 if (!isNaN(testDate.getTime()) && testDate.getFullYear() == year) {
                     return `${year}-${month}-${day}`;
                 }
             }
             
-            // Xử lý định dạng YYYY/MM/DD, YYYY-MM-DD, YYYY.MM.DD
             const ymdPattern = /^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/;
             match = dateString.match(ymdPattern);
             if (match) {
@@ -338,20 +385,84 @@
                 return `${year}-${month}-${day}`;
             }
             
-            // Thử tạo Date object
             const testDate = new Date(dateString);
             if (!isNaN(testDate.getTime())) {
                 const year = testDate.getFullYear();
                 const month = String(testDate.getMonth() + 1).padStart(2, '0');
                 const day = String(testDate.getDate()).padStart(2, '0');
-                // Kiểm tra năm hợp lý (không quá xa)
                 if (year > 1900 && year < 2100) {
                     return `${year}-${month}-${day}`;
                 }
             }
             
-            console.warn(`Không thể parse ngày: ${dateString}`);
             return '';
+        }
+
+        // Hàm render thống kê với các khu vực động
+        function renderStats() {
+            const total = allMembers.length;
+            const male = allMembers.filter(m => m.gender === 'Nam').length;
+            const female = allMembers.filter(m => m.gender === 'Nữ').length;
+            
+            // Thống kê theo khu vực
+            const areaStats = {};
+            allMembers.forEach(m => {
+                const area = m.area || 'Chưa phân loại';
+                if (!areaStats[area]) {
+                    areaStats[area] = 0;
+                }
+                areaStats[area]++;
+            });
+            
+            // Sắp xếp khu vực theo số lượng giảm dần
+            const sortedAreas = Object.entries(areaStats).sort((a, b) => b[1] - a[1]);
+            
+            // Tạo HTML cho stats grid
+            let statsHtml = `
+                <div class="stat-card total">
+                    <div class="stat-info">
+                        <h3><i class="fas fa-users"></i> Tổng số</h3>
+                        <div class="stat-number">${total}</div>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
+                </div>
+                <div class="stat-card male">
+                    <div class="stat-info">
+                        <h3><i class="fas fa-mars"></i> Nam</h3>
+                        <div class="stat-number">${male}</div>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-mars"></i></div>
+                </div>
+                <div class="stat-card female">
+                    <div class="stat-info">
+                        <h3><i class="fas fa-venus"></i> Nữ</h3>
+                        <div class="stat-number">${female}</div>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-venus"></i></div>
+                </div>
+            `;
+            
+            // Thêm thống kê từng khu vực
+            if (sortedAreas.length > 0) {
+                sortedAreas.forEach(([area, count]) => {
+                    let icon = 'fa-map-marker-alt';
+                    let bgColor = '';
+                    if (area === 'Chưa phân loại') {
+                        icon = 'fa-question-circle';
+                    }
+                    statsHtml += `
+                        <div class="stat-card area-card" style="border-left-color: #10b981;">
+                            <div class="stat-info">
+                                <h3><i class="fas ${icon}"></i> ${area.length > 20 ? area.substring(0, 20) + '...' : area}</h3>
+                                <div class="stat-number">${count}</div>
+                            </div>
+                            <div class="stat-icon" style="background: #dcfce7; color: #059669;"><i class="fas ${icon}"></i></div>
+                        </div>
+                    `;
+                });
+            }
+            
+            elements.statsGrid.innerHTML = statsHtml;
         }
 
         async function loadAreas() {
@@ -372,13 +483,7 @@
             const snapshot = await get(ref(database, `users/${currentUser.uid}/members`));
             allMembers = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, m]) => ({ id, ...m })) : [];
             renderMembersList();
-            updateStats();
-        }
-
-        function updateStats() {
-            elements.totalMembers.textContent = allMembers.length;
-            elements.totalMale.textContent = allMembers.filter(m => m.gender === 'Nam').length;
-            elements.totalFemale.textContent = allMembers.filter(m => m.gender === 'Nữ').length;
+            renderStats();
         }
 
         function renderMembersList() {
