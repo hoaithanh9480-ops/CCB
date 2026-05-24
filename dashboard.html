@@ -11,7 +11,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f1f5f9; min-height: 100vh; }
 
-        /* Layout */
         .top-bar {
             background: white; border-bottom: 1px solid #e2e8f0; padding: 0 24px; height: 64px;
             display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
@@ -26,7 +25,6 @@
         .logout-btn:hover { background: #dc2626; }
         .main-content { padding: 24px; max-width: 1400px; margin: 0 auto; }
 
-        /* Stats - Compact */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -42,7 +40,6 @@
             justify-content: space-between;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
-            transition: all 0.2s;
         }
         .stat-info h3 {
             font-size: 0.7rem;
@@ -70,7 +67,6 @@
             font-size: 1.3rem;
         }
 
-        /* Action & Filters */
         .action-bar, .filter-bar {
             background: white;
             border-radius: 20px;
@@ -113,15 +109,14 @@
         .filter-group input, .filter-group select { width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-family: inherit; font-size: 0.85rem; background: white; }
         .filter-group input:focus, .filter-group select:focus { outline: none; border-color: #2563eb; }
 
-        /* Table */
         .table-wrapper {
             background: white;
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            overflow-x: auto;
         }
-        .members-table { width: 100%; border-collapse: collapse; }
+        .members-table { width: 100%; border-collapse: collapse; min-width: 600px; }
         .members-table th {
             background: #f8fafc;
             padding: 12px 16px;
@@ -146,7 +141,6 @@
         .action-delete:hover { background: #fecaca; }
         .empty-row td { text-align: center; padding: 48px; color: #94a3b8; }
 
-        /* Modals */
         .modal {
             display: none;
             position: fixed;
@@ -177,7 +171,6 @@
         .progress-fill { width: 0%; height: 100%; background: #2563eb; transition: width 0.3s; }
         #fileInput { display: none; }
         
-        /* Message */
         .message {
             position: fixed; bottom: 24px; right: 24px; padding: 10px 20px; border-radius: 40px;
             background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;
@@ -210,7 +203,6 @@
     </div>
 
     <div class="main-content">
-        <!-- Compact Stats -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-info"><h3>Tổng hội viên</h3><div class="stat-number" id="totalMembers">0</div></div>
@@ -226,7 +218,6 @@
             </div>
         </div>
 
-        <!-- Action Bar -->
         <div class="action-bar">
             <div class="btn-group">
                 <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Thêm</button>
@@ -236,7 +227,6 @@
             </div>
         </div>
 
-        <!-- Filter Bar -->
         <div class="filter-bar">
             <div class="filter-group">
                 <label><i class="fas fa-search"></i> Tìm kiếm</label>
@@ -249,7 +239,6 @@
             <button class="btn btn-outline" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Reset</button>
         </div>
 
-        <!-- Table -->
         <div class="table-wrapper">
             <table class="members-table">
                 <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Thao tác</th></tr></thead>
@@ -258,7 +247,6 @@
         </div>
     </div>
 
-    <!-- Modals -->
     <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2><button class="close-modal" id="closeDetailModalBtn">&times;</button></div><div id="detailContent" class="detail-info"></div><button class="btn-cancel" id="closeDetailBtn">Đóng</button></div></div>
     <div id="importProgress" class="modal"><div class="modal-content progress-modal"><h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><p id="progressText">Đang xử lý...</p></div></div>
     <div id="messageBox" class="message"></div>
@@ -314,33 +302,56 @@
             return dateString;
         }
 
-        function formatDateToISO(dateString) {
+        // HÀM CHUYỂN ĐỔI NGÀY THÁNG TỪ NHIỀU ĐỊNH DẠNG SANG YYYY-MM-DD
+        function convertToISODate(dateString) {
             if (!dateString || dateString === '') return '';
+            
             dateString = String(dateString).trim();
+            
+            // Nếu đã đúng định dạng YYYY-MM-DD
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
+            
+            // Nếu chỉ có năm (YYYY)
             if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
-            const patterns = [
-                /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
-                /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
-                /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/,
-                /^(\d{4})-(\d{1,2})-(\d{1,2})$/
-            ];
-            for (const pattern of patterns) {
-                const match = dateString.match(pattern);
-                if (match) {
-                    let day, month, year;
-                    if (pattern.source.includes('dd/mm') || pattern.source.includes('dd-mm')) {
-                        day = match[1].padStart(2, '0');
-                        month = match[2].padStart(2, '0');
-                        year = match[3];
-                    } else {
-                        year = match[1];
-                        month = match[2].padStart(2, '0');
-                        day = match[3].padStart(2, '0');
-                    }
+            
+            // Xử lý các định dạng DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY
+            const dmyPattern = /^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/;
+            let match = dateString.match(dmyPattern);
+            if (match) {
+                const day = match[1].padStart(2, '0');
+                const month = match[2].padStart(2, '0');
+                const year = match[3];
+                // Kiểm tra ngày hợp lệ
+                const testDate = new Date(`${year}-${month}-${day}`);
+                if (!isNaN(testDate.getTime()) && testDate.getFullYear() == year) {
                     return `${year}-${month}-${day}`;
                 }
             }
-            return dateString;
+            
+            // Xử lý định dạng YYYY/MM/DD, YYYY-MM-DD, YYYY.MM.DD
+            const ymdPattern = /^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/;
+            match = dateString.match(ymdPattern);
+            if (match) {
+                const year = match[1];
+                const month = match[2].padStart(2, '0');
+                const day = match[3].padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            // Thử tạo Date object
+            const testDate = new Date(dateString);
+            if (!isNaN(testDate.getTime())) {
+                const year = testDate.getFullYear();
+                const month = String(testDate.getMonth() + 1).padStart(2, '0');
+                const day = String(testDate.getDate()).padStart(2, '0');
+                // Kiểm tra năm hợp lý (không quá xa)
+                if (year > 1900 && year < 2100) {
+                    return `${year}-${month}-${day}`;
+                }
+            }
+            
+            console.warn(`Không thể parse ngày: ${dateString}`);
+            return '';
         }
 
         async function loadAreas() {
@@ -391,10 +402,10 @@
             elements.membersList.innerHTML = filtered.map((m, i) => `
                 <tr>
                     <td>${i + 1}</td>
-                    <td><span class="member-name">${m.fullName || '---'}</span></td>
+                    <td><span class="member-name">${escapeHtml(m.fullName || '---')}</span></td>
                     <td class="date-value">${formatDateToDMY(m.birthYear) || '---'}</td>
-                    <td><span class="badge">${m.area || '---'}</span></td>
-                    <td>${m.memberCardNumber || '---'}</td>
+                    <td><span class="badge">${escapeHtml(m.area || '---')}</span></td>
+                    <td>${escapeHtml(m.memberCardNumber || '---')}</td>
                     <td class="action-buttons">
                         <button class="action-btn action-view" onclick="window.viewDetail('${m.id}')"><i class="fas fa-eye"></i></button>
                         <button class="action-btn action-edit" onclick="window.editMember('${m.id}')"><i class="fas fa-pen"></i></button>
@@ -404,17 +415,27 @@
             `).join('');
         }
 
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
         window.viewDetail = function(id) {
             const m = allMembers.find(x => x.id === id);
             if (!m) return;
             document.getElementById('detailContent').innerHTML = `
-                <p><strong>👤 Họ tên:</strong> ${m.fullName || '---'}</p>
-                <p><strong>🆔 Số thẻ HV:</strong> ${m.memberCardNumber || '---'}</p>
+                <p><strong>👤 Họ tên:</strong> ${escapeHtml(m.fullName || '---')}</p>
+                <p><strong>🆔 Số thẻ HV:</strong> ${escapeHtml(m.memberCardNumber || '---')}</p>
                 <p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear) || '---'}</p>
-                <p><strong>📍 Khu vực:</strong> ${m.area || '---'}</p>
-                <p><strong>📞 Điện thoại:</strong> ${m.phone || '---'}</p>
-                <p><strong>🏠 Địa chỉ:</strong> ${m.address || '---'}</p>
-                <p><strong>📝 Ghi chú:</strong> ${m.note || '---'}</p>
+                <p><strong>📍 Khu vực:</strong> ${escapeHtml(m.area || '---')}</p>
+                <p><strong>📞 Điện thoại:</strong> ${escapeHtml(m.phone || '---')}</p>
+                <p><strong>🏠 Địa chỉ:</strong> ${escapeHtml(m.address || '---')}</p>
+                <p><strong>📝 Ghi chú:</strong> ${escapeHtml(m.note || '---')}</p>
                 <p><strong>🕒 Cập nhật:</strong> ${m.updatedAt ? new Date(m.updatedAt).toLocaleString() : '---'}</p>
             `;
             document.getElementById('detailModal').style.display = 'flex';
@@ -486,7 +507,7 @@
                 'Năm sinh': '15/05/1960', 'Trình độ văn hóa': '12/12', 'Chuyên môn': 'Kỹ sư', 'Giới tính': 'Nam',
                 'CCCD/CMND': '012345678912', 'Trình độ LLCT': 'Cao cấp', 'Ngoại ngữ': 'Anh', 'Ngày cấp CCCD': '01/01/2020',
                 'Nơi cấp': 'Công an TP.HCM', 'Tin học': 'Cơ bản', 'Khu vực': 'Quận 1', 'Quê quán': 'Hà Nội',
-                'Địa chỉ': '123 Đường ABC', 'Chức vụ': 'Chủ tịch Hội', 'Ngày tham gia CM': '30/04/1975',
+                'Địa chỉ': '123 Đường ABC, Phường XYZ, Quận 1', 'Chức vụ': 'Chủ tịch Hội', 'Ngày tham gia CM': '30/04/1975',
                 'Ngày nhập ngũ': '01/01/1978', 'Ngày xuất ngũ': '31/12/1982', 'Dự bị': '01/01/1983',
                 'Chính thức': '01/06/1983', 'Ngày kết nạp Hội': '01/01/1990', 'Số thẻ Hội viên': 'HV001',
                 'Chuyên ngành': 'Cơ khí', 'Điện thoại': '0901234567', 'Ghi chú': 'Ghi chú mẫu'
@@ -514,30 +535,51 @@
             const text = document.getElementById('progressText');
             progress.style.display = 'flex';
             let success = 0, fail = 0;
+            
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 fill.style.width = `${((i + 1) / rows.length) * 100}%`;
                 text.textContent = `${i + 1}/${rows.length}`;
-                if (!row['Họ và tên']) { fail++; continue; }
+                
+                if (!row['Họ và tên']) { 
+                    fail++; 
+                    continue; 
+                }
+                
                 const data = {
-                    fullName: row['Họ và tên'], alias: row['Bí danh'] || '', ethnicity: row['Dân tộc'] || '',
-                    religion: row['Tôn giáo'] || '', birthYear: formatDateToISO(row['Năm sinh'] || ''),
-                    educationLevel: row['Trình độ văn hóa'] || '', specialization: row['Chuyên môn'] || '',
-                    gender: row['Giới tính'] || '', cccd: row['CCCD/CMND'] || row['CCCD'] || '',
-                    politicalTheory: row['Trình độ LLCT'] || '', foreignLanguage: row['Ngoại ngữ'] || '',
-                    issueDate: formatDateToISO(row['Ngày cấp CCCD'] || ''), issuePlace: row['Nơi cấp'] || '',
-                    itSkill: row['Tin học'] || '', area: row['Khu vực'] || '', hometown: row['Quê quán'] || '',
-                    address: row['Địa chỉ'] || '', position: row['Chức vụ'] || '',
-                    revolutionDate: formatDateToISO(row['Ngày tham gia CM'] || ''),
-                    militaryJoinDate: formatDateToISO(row['Ngày nhập ngũ'] || ''),
-                    militaryReleaseDate: formatDateToISO(row['Ngày xuất ngũ'] || ''),
-                    reserveStatus: formatDateToISO(row['Dự bị'] || ''),
-                    officialStatus: formatDateToISO(row['Chính thức'] || ''),
-                    associationJoinDate: formatDateToISO(row['Ngày kết nạp Hội'] || ''),
-                    memberCardNumber: row['Số thẻ Hội viên'] || '', trainingMajor: row['Chuyên ngành'] || '',
-                    phone: row['Điện thoại'] || '', note: row['Ghi chú'] || '',
-                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+                    fullName: row['Họ và tên'],
+                    alias: row['Bí danh'] || '',
+                    ethnicity: row['Dân tộc'] || '',
+                    religion: row['Tôn giáo'] || '',
+                    birthYear: convertToISODate(row['Năm sinh'] || ''),
+                    educationLevel: row['Trình độ văn hóa'] || '',
+                    specialization: row['Chuyên môn'] || '',
+                    gender: row['Giới tính'] || '',
+                    cccd: row['CCCD/CMND'] || row['CCCD'] || '',
+                    politicalTheory: row['Trình độ LLCT'] || '',
+                    foreignLanguage: row['Ngoại ngữ'] || '',
+                    issueDate: convertToISODate(row['Ngày cấp CCCD'] || ''),
+                    issuePlace: row['Nơi cấp'] || '',
+                    itSkill: row['Tin học'] || '',
+                    area: row['Khu vực'] || '',
+                    hometown: row['Quê quán'] || '',
+                    address: row['Địa chỉ'] || '',
+                    position: row['Chức vụ'] || '',
+                    revolutionDate: convertToISODate(row['Ngày tham gia CM'] || ''),
+                    militaryJoinDate: convertToISODate(row['Ngày nhập ngũ'] || ''),
+                    militaryReleaseDate: convertToISODate(row['Ngày xuất ngũ'] || ''),
+                    reserveStatus: convertToISODate(row['Dự bị'] || ''),
+                    officialStatus: convertToISODate(row['Chính thức'] || ''),
+                    associationJoinDate: convertToISODate(row['Ngày kết nạp Hội'] || ''),
+                    memberCardNumber: row['Số thẻ Hội viên'] || '',
+                    trainingMajor: row['Chuyên ngành'] || '',
+                    phone: row['Điện thoại'] || '',
+                    note: row['Ghi chú'] || '',
+                    memberId: 'HV-' + new Date().getTime().toString().slice(-8) + '-' + i,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 };
+                
                 const newRef = push(ref(database, `users/${currentUser.uid}/members`));
                 data.id = newRef.key;
                 await set(newRef, data);
