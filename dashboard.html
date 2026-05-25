@@ -13,7 +13,7 @@
 
         .top-bar {
             background: white; border-bottom: 1px solid #e2e8f0; padding: 0 24px; height: 64px;
-            display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 101;
         }
         .logo { display: flex; align-items: center; gap: 12px; }
         .logo-icon { width: 36px; height: 36px; background: #2563eb; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
@@ -24,6 +24,49 @@
         .logout-btn { background: #ef4444; border: none; padding: 6px 16px; border-radius: 40px; color: white; font-weight: 500; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
         .logout-btn:hover { background: #dc2626; }
         .main-content { padding: 24px; max-width: 1600px; margin: 0 auto; }
+
+        /* ĐƯA THANH CÔNG CỤ LÊN TRÊN VÀ CỐ ĐỊNH KHI CUỘN */
+        .action-bar {
+            background: white;
+            border-radius: 20px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 64px; /* Nằm ngay dưới thanh top-bar */
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-purple { background: #8b5cf6; color: white; }
+        .btn-purple:hover { background: #7c3aed; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-warning:hover { background: #d97706; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-outline { background: #f1f5f9; color: #475569; }
+        .btn-outline:hover { background: #e2e8f0; }
 
         /* Stats container - Compact design for many areas */
         .stats-container {
@@ -164,7 +207,7 @@
             transition: all 0.2s;
             cursor: pointer;
             border: 1px solid #e2e8f0;
-            min-width: 0; /* Cho phép thu nhỏ */
+            min-width: 0;
         }
         .area-stat-item:hover {
             background: #eef2ff;
@@ -233,7 +276,6 @@
             background: #eef2ff;
         }
 
-        /* Responsive: giảm số cột trên màn hình nhỏ */
         @media (max-width: 1200px) {
             .area-stats-grid { grid-template-columns: repeat(8, 1fr); }
         }
@@ -246,46 +288,8 @@
         @media (max-width: 400px) {
             .area-stats-grid { grid-template-columns: repeat(3, 1fr); }
         }
-
-        .action-bar, .filter-bar {
-            background: white;
-            border-radius: 20px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            border: 1px solid #e2e8f0;
-        }
-        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn {
-            padding: 7px 14px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            border: none;
-        }
-        .btn-primary { background: #2563eb; color: white; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-success { background: #10b981; color: white; }
-        .btn-success:hover { background: #059669; }
-        .btn-purple { background: #8b5cf6; color: white; }
-        .btn-purple:hover { background: #7c3aed; }
-        .btn-warning { background: #f59e0b; color: white; }
-        .btn-warning:hover { background: #d97706; }
-        .btn-danger { background: #ef4444; color: white; }
-        .btn-danger:hover { background: #dc2626; }
-        .btn-outline { background: #f1f5f9; color: #475569; }
-        .btn-outline:hover { background: #e2e8f0; }
         
-        .filter-bar { gap: 12px; align-items: flex-end; }
+        .filter-bar { gap: 12px; align-items: flex-end; background: white; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border: 1px solid #e2e8f0; }
         .filter-group { flex: 1; min-width: 180px; }
         .filter-group label { display: block; font-size: 0.65rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
         .filter-group input, .filter-group select { width: 100%; padding: 7px 10px; border: 1px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 0.8rem; background: white; }
@@ -380,7 +384,7 @@
             .main-stat-card .stat-icon { width: 32px; height: 32px; font-size: 0.9rem; }
             .top-bar { padding: 0 16px; }
             .main-content { padding: 12px; }
-            .action-bar { flex-direction: column; align-items: stretch; }
+            .action-bar { position: static; flex-direction: column; align-items: stretch; }
             .btn-group { justify-content: center; }
             .area-stats-wrapper { padding: 8px 12px; }
         }
@@ -399,7 +403,17 @@
     </div>
 
     <div class="main-content">
-        <!-- Compact Stats Container -->
+        <div class="action-bar">
+            <div class="btn-group">
+                <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Thêm</button>
+                <button class="btn btn-success" id="exportBtn"><i class="fas fa-file-excel"></i> Xuất</button>
+                <button class="btn btn-purple" id="importBtn"><i class="fas fa-file-import"></i> Import</button>
+                <button class="btn btn-warning" id="downloadSampleBtn"><i class="fas fa-download"></i> Mẫu</button>
+                <button class="btn btn-danger" id="deleteByAreaBtn"><i class="fas fa-trash-alt"></i> Xóa theo KV</button>
+                <button class="btn btn-danger" id="deleteAllBtn"><i class="fas fa-skull-crosswalk"></i> Xóa tất cả</button>
+            </div>
+        </div>
+
         <div class="stats-container">
             <div class="stats-header">
                 <div class="stats-title"><i class="fas fa-chart-simple"></i> THỐNG KÊ HỘI VIÊN THEO KHU VỰC</div>
@@ -409,7 +423,6 @@
                 </div>
             </div>
             
-            <!-- Main 3 stats cards -->
             <div class="main-stats" id="mainStats">
                 <div class="main-stat-card total">
                     <div class="stat-info">
@@ -434,22 +447,9 @@
                 </div>
             </div>
             
-            <!-- Area stats grid - 10 columns -->
             <div class="area-stats-wrapper">
                 <div class="area-stats-grid" id="areaStatsGrid">
-                    <!-- Area stats will be dynamically inserted here -->
-                </div>
-            </div>
-        </div>
-
-        <div class="action-bar">
-            <div class="btn-group">
-                <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Thêm</button>
-                <button class="btn btn-success" id="exportBtn"><i class="fas fa-file-excel"></i> Xuất</button>
-                <button class="btn btn-purple" id="importBtn"><i class="fas fa-file-import"></i> Import</button>
-                <button class="btn btn-warning" id="downloadSampleBtn"><i class="fas fa-download"></i> Mẫu</button>
-                <button class="btn btn-danger" id="deleteByAreaBtn"><i class="fas fa-trash-alt"></i> Xóa theo KV</button>
-                <button class="btn btn-danger" id="deleteAllBtn"><i class="fas fa-skull-crosswalk"></i> Xóa tất cả</button>
+                    </div>
             </div>
         </div>
 
@@ -477,7 +477,6 @@
         </div>
     </div>
 
-    <!-- Modals -->
     <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2><button class="close-modal" id="closeDetailModalBtn">&times;</button></div><div id="detailContent" class="detail-info"></div><button class="btn-cancel" id="closeDetailBtn">Đóng</button></div></div>
     
     <div id="confirmModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="confirmTitle">Xác nhận</h2><button class="close-modal" id="closeConfirmModalBtn">&times;</button></div><div id="confirmMessage" style="margin: 14px 0;"></div><div id="confirmAreaSelect" style="display: none;"><label><i class="fas fa-map-marker-alt"></i> Chọn khu vực cần xóa:</label><select id="areaToDelete" class="delete-area-select"></select></div><button class="btn-cancel" id="cancelConfirmBtn">Hủy</button><button class="btn-confirm" id="confirmActionBtn">Xác nhận</button></div></div>
@@ -647,7 +646,7 @@
             currentFilterArea = area;
             elements.searchArea.value = area;
             renderMembersList();
-            renderAreaStats(); // Refresh để highlight
+            renderAreaStats();
             document.querySelector('.table-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
@@ -856,11 +855,11 @@
             modal.style.display = 'flex';
         }
 
+        /* HÀM XUẤT EXCEL CHÈN DÒNG TIÊU ĐỀ ĐỘNG THEO CẤU TRÚC MẪU */
         function exportToExcel() {
             const keyword = elements.searchKeyword.value.toLowerCase().trim();
             const area = elements.searchArea.value;
             
-            // Lọc dữ liệu dựa trên tìm kiếm và khu vực hiện tại
             let filtered = allMembers.filter(m => {
                 if (keyword) {
                     const matchName = m.fullName?.toLowerCase().includes(keyword);
@@ -873,14 +872,14 @@
             
             if (!filtered.length) return showMessage('Không có dữ liệu để xuất!', 'error');
             
-            // 1. Xác định tiêu đề động dựa theo bộ lọc Khu vực
+            // 1. Tạo Tiêu đề động dựa theo Khu vực
             let titleText = "DANH SÁCH HỘI VIÊN (TẤT CẢ)";
             if (area) {
                 titleText = `DANH SÁCH HỘI VIÊN KHU VỰC ${area.toUpperCase()}`;
             }
 
-            // 2. Định dạng dữ liệu đổ vào các cột giống y hệt file mẫu
-            const excelRows = filtered.map((m, i) => ({
+            // 2. Chuyển đổi dữ liệu tương thích 29 cột file mẫu
+            const dataRows = filtered.map((m, i) => ({
                 'STT': i + 1,
                 'Họ và tên': m.fullName || '',
                 'Bí danh': m.alias || '',
@@ -912,26 +911,25 @@
                 'Ghi chú': m.note || ''
             }));
 
-            // 3. Tạo một Worksheet mới từ mảng dữ liệu mẫu
-            const ws = XLSX.utils.json_to_sheet(excelRows, { origin: "A3" });
+            // 3. Khởi tạo một worksheet trống, ghi dữ liệu từ hàng thứ 3 (A3) để chừa khoảng trống tiêu đề
+            const ws = XLSX.utils.json_to_sheet(dataRows, { origin: "A3" });
 
-            // 4. Chèn tiêu đề động vào ô A1
+            // 4. Thêm text tiêu đề động vào ô A1
             XLSX.utils.sheet_add_aoa(ws, [[titleText]], { origin: "A1" });
 
-            // Gộp các ô từ A1 đến AC1 (29 cột) để tiêu đề nằm giữa đẹp mắt
+            // Gộp các ô từ A1 đến AC1 (Gộp 29 cột tiêu đề hàng số 1)
             if (!ws['!merges']) ws['!merges'] = [];
             ws['!merges'].push({ s: { r: 0, c: 0 }, e: { r: 0, c: 28 } });
 
-            // 5. Tạo Workbook và xuất file Excel
+            // 5. Build workbook và tải file về máy
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Danh_sach');
             
-            // Đặt tên file theo ngày xuất bản
-            const fileName = `Danh_Sach_Hoi_Vien_${new Date().toISOString().slice(0,10)}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-            
-            showMessage(`Đã xuất file Excel mẫu gồm ${filtered.length} hội viên!`);
+            const dateStr = new Date().toISOString().slice(0,10);
+            XLSX.writeFile(wb, `Danh_Sach_Hoi_Vien_${dateStr}.xlsx`);
+            showMessage(`Đã xuất file Excel gồm ${filtered.length} hội viên!`);
         }
+
         function downloadSample() {
             const sample = [{ 
                 'Họ và tên': 'Nguyễn Văn A', 'Bí danh': 'Ba A', 'Dân tộc': 'Kinh', 'Tôn giáo': 'Không',
