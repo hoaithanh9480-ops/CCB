@@ -741,231 +741,150 @@
 
         // HÀM XUẤT EXCEL CẢI TIẾN - CÓ TIÊU ĐỀ ĐỘNG, ĐỊNH DẠNG A4 NGANG, LỀ 1CM, KẺ KHUNG
         function exportToExcel() {
-            const keyword = elements.searchKeyword.value.toLowerCase().trim();
-            const selectedArea = elements.searchArea.value;
-            let filtered = allMembers.filter(m => {
-                if (keyword) {
-                    const matchName = m.fullName?.toLowerCase().includes(keyword);
-                    const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
-                    if (!matchName && !matchCard) return false;
-                }
-                if (selectedArea && m.area !== selectedArea) return false;
-                return true;
-            });
-            
-            if (!filtered.length) {
-                showMessage('Không có dữ liệu để xuất!', 'error');
-                return;
-            }
-            
-            // Tạo tiêu đề động
-            let titleText = '';
-            if (!selectedArea || selectedArea === '') {
-                titleText = 'DANH SÁCH HỘI VIÊN (TẤT CẢ)';
-            } else {
-                const areaDisplayName = formatAreaDisplay(selectedArea);
-                titleText = `DANH SÁCH HỘI VIÊN KHU VỰC ${areaDisplayName}`;
-            }
-            
-            // Chuẩn bị dữ liệu
-            const data = filtered.map((m, i) => ({
-                'STT': i + 1,
-                'Họ và tên': m.fullName || '',
-                'Bí danh': m.alias || '',
-                'Dân tộc': m.ethnicity || '',
-                'Tôn giáo': m.religion || '',
-                'Năm sinh': formatDateToDMY(m.birthYear),
-                'Trình độ văn hóa': m.educationLevel || '',
-                'Chuyên môn': m.specialization || '',
-                'Giới tính': m.gender || '',
-                'CCCD/CMND': m.cccd || '',
-                'Trình độ LLCT': m.politicalTheory || '',
-                'Ngoại ngữ': m.foreignLanguage || '',
-                'Ngày cấp CCCD': formatDateToDMY(m.issueDate),
-                'Nơi cấp': m.issuePlace || '',
-                'Tin học': m.itSkill || '',
-                'Khu vực': m.area || '',
-                'Quê quán': m.hometown || '',
-                'Địa chỉ': m.address || '',
-                'Chức vụ': m.position || '',
-                'Ngày tham gia CM': formatDateToDMY(m.revolutionDate),
-                'Ngày nhập ngũ': formatDateToDMY(m.militaryJoinDate),
-                'Ngày xuất ngũ': formatDateToDMY(m.militaryReleaseDate),
-                'Dự bị': formatDateToDMY(m.reserveStatus),
-                'Chính thức': formatDateToDMY(m.officialStatus),
-                'Ngày kết nạp Hội': formatDateToDMY(m.associationJoinDate),
-                'Số thẻ Hội viên': m.memberCardNumber || '',
-                'Chuyên ngành': m.trainingMajor || '',
-                'Điện thoại': m.phone || '',
-                'Ghi chú': m.note || ''
-            }));
-            
-            // Tạo workbook và worksheet
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.json_to_sheet(data, { skipHeader: false });
-            
-            // Lấy range của worksheet
-            const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:AB1');
-            
-            // === CHÈN TIÊU ĐỀ VÀO DÒNG ĐẦU ===
-            // Chèn 2 dòng tiêu đề: dòng 1 là tiêu đề chính, dòng 2 là ngày xuất
-            const titleRow1 = titleText;
-            const titleRow2 = `Ngày xuất: ${new Date().toLocaleDateString('vi-VN')} - Tổng số: ${filtered.length} hội viên`;
-            
-            // Dịch chuyển dữ liệu xuống dưới 2 dòng
-            for (let row = range.e.r; row >= range.s.r; row--) {
-                for (let col = range.s.c; col <= range.e.c; col++) {
-                    const sourceCell = ws[XLSX.utils.encode_cell({ r: row, c: col })];
-                    if (sourceCell) {
-                        ws[XLSX.utils.encode_cell({ r: row + 2, c: col })] = sourceCell;
-                        delete ws[XLSX.utils.encode_cell({ r: row, c: col })];
-                    }
-                }
-            }
-            
-            // Thêm tiêu đề vào dòng 1
-            const titleCell1 = XLSX.utils.encode_cell({ r: 0, c: 0 });
-            ws[titleCell1] = { t: 's', v: titleRow1 };
-            // Gộp ô cho tiêu đề từ cột A đến cột cuối
-            const lastColLetter = XLSX.utils.encode_col(range.e.c);
-            ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: range.e.c } }];
-            
-            // Thêm dòng ngày xuất vào dòng 2
-            const dateCell = XLSX.utils.encode_cell({ r: 1, c: 0 });
-            ws[dateCell] = { t: 's', v: titleRow2 };
-            // Gộp ô cho dòng ngày xuất
-            ws['!merges'].push({ s: { r: 1, c: 0 }, e: { r: 1, c: range.e.c } });
-            
-            // Cập nhật lại range
-            ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: range.e.r + 2, c: range.e.c } });
-            
-            // === ĐỊNH DẠNG TRANG IN: A4 NGANG, LỀ 1CM ===
-            // 1 cm = khoảng 28.35 points (1 inch = 72 points, 1 cm = 28.3465 points)
-            const marginInCM = 1;
-            const marginInPoints = marginInCM * 28.3465;
-            
-            ws['!pageSetup'] = {
-                paperSize: 9,          // 9 = A4
-                orientation: 'landscape', // Ngang
-                scale: 100,
-                fitToWidth: 1,
-                fitToHeight: 0
-            };
-            
-            ws['!margins'] = {
-                left: marginInPoints,
-                right: marginInPoints,
-                top: marginInPoints,
-                bottom: marginInPoints,
-                header: 0.5 * 28.3465,
-                footer: 0.5 * 28.3465
-            };
-            
-            // === KẺ KHUNG CHO TẤT CẢ Ô DỮ LIỆU (từ dòng 3 trở đi - dòng tiêu đề và dữ liệu) ===
-            const newRange = XLSX.utils.decode_range(ws['!ref']);
-            
-            // Định nghĩa style cho border
-            const borderStyle = {
-                top: { style: 'thin', color: { rgb: '000000' } },
-                bottom: { style: 'thin', color: { rgb: '000000' } },
-                left: { style: 'thin', color: { rgb: '000000' } },
-                right: { style: 'thin', color: { rgb: '000000' } }
-            };
-            
-            // Tạo styles cho các ô
-            // Style cho header (dòng 3 - dòng tiêu đề cột)
-            const headerStyle = {
-                font: { bold: true, sz: 11, name: 'Arial' },
-                alignment: { horizontal: 'center', vertical: 'center' },
-                fill: { patternType: 'solid', fgColor: { rgb: 'D3D3D3' } },
-                border: borderStyle
-            };
-            
-            // Style cho dữ liệu
-            const dataStyle = {
-                font: { sz: 10, name: 'Arial' },
-                alignment: { horizontal: 'left', vertical: 'center', wrapText: true },
-                border: borderStyle
-            };
-            
-            // Style cho tiêu đề chính (dòng 1)
-            const mainTitleStyle = {
-                font: { bold: true, sz: 16, name: 'Arial' },
-                alignment: { horizontal: 'center', vertical: 'center' },
-                border: borderStyle
-            };
-            
-            // Style cho dòng ngày xuất (dòng 2)
-            const dateTitleStyle = {
-                font: { italic: true, sz: 10, name: 'Arial' },
-                alignment: { horizontal: 'center', vertical: 'center' },
-                border: borderStyle
-            };
-            
-            // Áp dụng style cho từng ô
-            for (let row = newRange.s.r; row <= newRange.e.r; row++) {
-                for (let col = newRange.s.c; col <= newRange.e.c; col++) {
-                    const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-                    if (!ws[cellAddress]) {
-                        ws[cellAddress] = { t: 's', v: '' };
-                    }
-                    
-                    if (row === 0) {
-                        // Dòng tiêu đề chính
-                        ws[cellAddress].s = mainTitleStyle;
-                    } else if (row === 1) {
-                        // Dòng ngày xuất
-                        ws[cellAddress].s = dateTitleStyle;
-                    } else if (row === 2) {
-                        // Dòng header cột
-                        ws[cellAddress].s = headerStyle;
-                    } else {
-                        // Dòng dữ liệu
-                        ws[cellAddress].s = dataStyle;
-                    }
-                }
-            }
-            
-            // === TỰ ĐỘNG ĐIỀU CHỈNH ĐỘ RỘNG CỘT ===
-            const colWidths = {};
-            for (let row = newRange.s.r; row <= newRange.e.r; row++) {
-                for (let col = newRange.s.c; col <= newRange.e.c; col++) {
-                    const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-                    const cell = ws[cellAddress];
-                    if (cell && cell.v) {
-                        let cellValue = cell.v.toString();
-                        let cellLength = 0;
-                        // Tính độ dài ký tự (tiếng Việt có thể rộng hơn)
-                        for (let char of cellValue) {
-                            if (char.match(/[A-Za-z0-9]/)) cellLength += 0.8;
-                            else cellLength += 1.2;
-                        }
-                        const currentWidth = colWidths[col] || 0;
-                        colWidths[col] = Math.max(currentWidth, cellLength + 2);
-                    }
-                }
-            }
-            
-            // Giới hạn độ rộng cột tối đa và tối thiểu
-            const cols = [];
-            for (let col = newRange.s.c; col <= newRange.e.c; col++) {
-                let width = colWidths[col] || 12;
-                width = Math.min(Math.max(width, 8), 25);
-                cols.push({ wch: width });
-            }
-            ws['!cols'] = cols;
-            
-            // Đặt chiều cao dòng cho dòng tiêu đề và header
-            ws['!rows'] = [
-                { hpt: 25 },  // dòng 0: tiêu đề chính
-                { hpt: 15 },  // dòng 1: ngày xuất
-                { hpt: 20 }   // dòng 2: header cột
-            ];
-            
-            // Xuất file
-            XLSX.writeFile(wb, `danh_sach_hoi_vien_${new Date().toISOString().slice(0,10)}.xlsx`);
-            showMessage(`Xuất ${filtered.length} hội viên!`, 'success');
+    const keyword = elements.searchKeyword.value.toLowerCase().trim();
+    const selectedArea = elements.searchArea.value;
+    let filtered = allMembers.filter(m => {
+        if (keyword) {
+            const matchName = m.fullName?.toLowerCase().includes(keyword);
+            const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
+            if (!matchName && !matchCard) return false;
         }
+        if (selectedArea && m.area !== selectedArea) return false;
+        return true;
+    });
+    
+    if (!filtered.length) {
+        showMessage('Không có dữ liệu để xuất!', 'error');
+        return;
+    }
+    
+    // Tạo tiêu đề động
+    let titleText = '';
+    if (!selectedArea || selectedArea === '') {
+        titleText = 'DANH SÁCH HỘI VIÊN (TẤT CẢ)';
+    } else {
+        const areaDisplayName = formatAreaDisplay(selectedArea);
+        titleText = `DANH SÁCH HỘI VIÊN KHU VỰC ${areaDisplayName}`;
+    }
+    
+    // Chuẩn bị dữ liệu
+    const dataRows = filtered.map((m, i) => ({
+        'STT': i + 1,
+        'Họ và tên': m.fullName || '',
+        'Bí danh': m.alias || '',
+        'Dân tộc': m.ethnicity || '',
+        'Tôn giáo': m.religion || '',
+        'Năm sinh': formatDateToDMY(m.birthYear),
+        'Trình độ văn hóa': m.educationLevel || '',
+        'Chuyên môn': m.specialization || '',
+        'Giới tính': m.gender || '',
+        'CCCD/CMND': m.cccd || '',
+        'Trình độ LLCT': m.politicalTheory || '',
+        'Ngoại ngữ': m.foreignLanguage || '',
+        'Ngày cấp CCCD': formatDateToDMY(m.issueDate),
+        'Nơi cấp': m.issuePlace || '',
+        'Tin học': m.itSkill || '',
+        'Khu vực': m.area || '',
+        'Quê quán': m.hometown || '',
+        'Địa chỉ': m.address || '',
+        'Chức vụ': m.position || '',
+        'Ngày tham gia CM': formatDateToDMY(m.revolutionDate),
+        'Ngày nhập ngũ': formatDateToDMY(m.militaryJoinDate),
+        'Ngày xuất ngũ': formatDateToDMY(m.militaryReleaseDate),
+        'Dự bị': formatDateToDMY(m.reserveStatus),
+        'Chính thức': formatDateToDMY(m.officialStatus),
+        'Ngày kết nạp Hội': formatDateToDMY(m.associationJoinDate),
+        'Số thẻ Hội viên': m.memberCardNumber || '',
+        'Chuyên ngành': m.trainingMajor || '',
+        'Điện thoại': m.phone || '',
+        'Ghi chú': m.note || ''
+    }));
+    
+    // Tạo workbook và worksheet
+    const wb = XLSX.utils.book_new();
+    
+    // Tạo mảng dữ liệu với 2 dòng tiêu đề phía trên
+    const sheetData = [];
+    
+    // Dòng 1: Tiêu đề chính
+    sheetData.push([titleText]);
+    
+    // Dòng 2: Ngày xuất và tổng số
+    sheetData.push([`Ngày xuất: ${new Date().toLocaleDateString('vi-VN')} - Tổng số: ${filtered.length} hội viên`]);
+    
+    // Dòng 3: Header các cột
+    const headers = Object.keys(dataRows[0]);
+    sheetData.push(headers);
+    
+    // Dòng 4 trở đi: Dữ liệu
+    dataRows.forEach(row => {
+        sheetData.push(headers.map(h => row[h]));
+    });
+    
+    // Tạo worksheet từ mảng dữ liệu
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    
+    // Gộp ô cho tiêu đề (dòng 1: từ cột A đến cột cuối)
+    const lastColIndex = headers.length - 1;
+    const lastColLetter = XLSX.utils.encode_col(lastColIndex);
+    if (!ws['!merges']) ws['!merges'] = [];
+    ws['!merges'].push({ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } });
+    ws['!merges'].push({ s: { r: 1, c: 0 }, e: { r: 1, c: lastColIndex } });
+    
+    // Đặt chiều rộng cột
+    const colWidths = {};
+    for (let row = 0; row < sheetData.length; row++) {
+        for (let col = 0; col < headers.length; col++) {
+            let cellValue = sheetData[row][col] || '';
+            let cellLength = cellValue.toString().length;
+            // Ưu tiên độ rộng từ header
+            if (row === 2) cellLength += 5;
+            colWidths[col] = Math.max(colWidths[col] || 0, Math.min(cellLength, 30));
+        }
+    }
+    
+    ws['!cols'] = [];
+    for (let col = 0; col < headers.length; col++) {
+        ws['!cols'].push({ wch: Math.max(colWidths[col] || 10, 8) });
+    }
+    
+    // Thiết lập trang in: A4 ngang, lề 1cm
+    // Lưu ý: Các thuộc tính này sẽ được lưu vào file, khi mở Excel sẽ tự động áp dụng
+    ws['!pageSetup'] = {
+        paperSize: 9,           // 9 = A4
+        orientation: 'landscape', // Trang ngang
+        scale: 100,
+        fitToWidth: 1,
+        fitToHeight: 0
+    };
+    
+    // Lề 1cm = 28.35 points
+    const marginPoints = 28.35;
+    ws['!margins'] = {
+        left: marginPoints,
+        right: marginPoints,
+        top: marginPoints,
+        bottom: marginPoints,
+        header: 14.17,   // 0.5cm
+        footer: 14.17    // 0.5cm
+    };
+    
+    // Thêm worksheet vào workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Danh sách hội viên');
+    
+    // Tạo tên file
+    let fileName = '';
+    if (!selectedArea || selectedArea === '') {
+        fileName = `danh_sach_hoi_vien_tat_ca_${new Date().toISOString().slice(0,10)}.xlsx`;
+    } else {
+        const areaDisplayName = formatAreaDisplay(selectedArea).replace(/\s/g, '_');
+        fileName = `danh_sach_hoi_vien_${areaDisplayName}_${new Date().toISOString().slice(0,10)}.xlsx`;
+    }
+    
+    // Xuất file
+    XLSX.writeFile(wb, fileName);
+    showMessage(`Đã xuất ${filtered.length} hội viên!`, 'success');
+}
 
         function downloadSample() {
             const sample = [{ 
