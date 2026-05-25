@@ -859,6 +859,8 @@
         function exportToExcel() {
             const keyword = elements.searchKeyword.value.toLowerCase().trim();
             const area = elements.searchArea.value;
+            
+            // Lọc dữ liệu dựa trên tìm kiếm và khu vực hiện tại
             let filtered = allMembers.filter(m => {
                 if (keyword) {
                     const matchName = m.fullName?.toLowerCase().includes(keyword);
@@ -868,11 +870,19 @@
                 if (area && m.area !== area) return false;
                 return true;
             });
-            if (!filtered.length) return showMessage('Không có dữ liệu!', 'error');
             
-            const data = filtered.map((m, i) => ({
+            if (!filtered.length) return showMessage('Không có dữ liệu để xuất!', 'error');
+            
+            // 1. Xác định tiêu đề động dựa theo bộ lọc Khu vực
+            let titleText = "DANH SÁCH HỘI VIÊN (TẤT CẢ)";
+            if (area) {
+                titleText = `DANH SÁCH HỘI VIÊN KHU VỰC ${area.toUpperCase()}`;
+            }
+
+            // 2. Định dạng dữ liệu đổ vào các cột giống y hệt file mẫu
+            const excelRows = filtered.map((m, i) => ({
                 'STT': i + 1,
-                'Họ và tên': m.fullName,
+                'Họ và tên': m.fullName || '',
                 'Bí danh': m.alias || '',
                 'Dân tộc': m.ethnicity || '',
                 'Tôn giáo': m.religion || '',
@@ -901,12 +911,27 @@
                 'Điện thoại': m.phone || '',
                 'Ghi chú': m.note || ''
             }));
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Hoi_vien');
-            XLSX.writeFile(wb, `hoi_vien_${new Date().toISOString().slice(0,10)}.xlsx`);
-            showMessage(`Xuất ${filtered.length} hội viên!`);
-        }
 
+            // 3. Tạo một Worksheet mới từ mảng dữ liệu mẫu
+            const ws = XLSX.utils.json_to_sheet(excelRows, { origin: "A3" });
+
+            // 4. Chèn tiêu đề động vào ô A1
+            XLSX.utils.sheet_add_aoa(ws, [[titleText]], { origin: "A1" });
+
+            // Gộp các ô từ A1 đến AC1 (29 cột) để tiêu đề nằm giữa đẹp mắt
+            if (!ws['!merges']) ws['!merges'] = [];
+            ws['!merges'].push({ s: { r: 0, c: 0 }, e: { r: 0, c: 28 } });
+
+            // 5. Tạo Workbook và xuất file Excel
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Danh_sach');
+            
+            // Đặt tên file theo ngày xuất bản
+            const fileName = `Danh_Sach_Hoi_Vien_${new Date().toISOString().slice(0,10)}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            showMessage(`Đã xuất file Excel mẫu gồm ${filtered.length} hội viên!`);
+        }
         function downloadSample() {
             const sample = [{ 
                 'Họ và tên': 'Nguyễn Văn A', 'Bí danh': 'Ba A', 'Dân tộc': 'Kinh', 'Tôn giáo': 'Không',
