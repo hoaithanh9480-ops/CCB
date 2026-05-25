@@ -146,10 +146,10 @@
         }
         .area-stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1px;
             background: #e2e8f0;
-            max-height: 280px;
+            max-height: 320px;
             overflow-y: auto;
         }
         .area-stats-grid.collapsed {
@@ -157,57 +157,68 @@
         }
         .area-stat-item {
             background: white;
-            padding: 8px 12px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transition: all 0.2s;
             cursor: pointer;
+            border-left: 3px solid transparent;
         }
         .area-stat-item:hover {
             background: #faf5ff;
+            border-left-color: #8b5cf6;
         }
         .area-stat-item.active {
             background: #eef2ff;
-            border-left: 3px solid #2563eb;
+            border-left-color: #2563eb;
         }
         .area-name {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #334155;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
         .area-name i {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #10b981;
-            width: 16px;
+            width: 18px;
+        }
+        .area-name .area-display {
+            font-family: 'Inter', monospace;
+            letter-spacing: 0.3px;
         }
         .area-count {
             font-size: 0.85rem;
             font-weight: 700;
             color: #2563eb;
             background: #eef2ff;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 30px;
+            min-width: 48px;
+            text-align: center;
         }
         .area-stat-item:hover .area-count {
             background: #2563eb;
             color: white;
+            transform: scale(1.05);
         }
         .show-more-btn {
-            padding: 8px;
+            padding: 10px;
             text-align: center;
             background: #f8fafc;
             border-top: 1px solid #e2e8f0;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #2563eb;
             cursor: pointer;
             font-weight: 500;
+            transition: all 0.2s;
         }
         .show-more-btn:hover {
             background: #eef2ff;
+            color: #1d4ed8;
         }
 
         .action-bar, .filter-bar {
@@ -365,7 +376,7 @@
         <!-- Compact Stats Container -->
         <div class="stats-container">
             <div class="stats-header">
-                <div class="stats-title"><i class="fas fa-chart-simple"></i> THỐNG KÊ HỘI VIÊN</div>
+                <div class="stats-title"><i class="fas fa-chart-simple"></i> THỐNG KÊ HỘI VIÊN THEO KHU VỰC</div>
                 <div class="stats-controls">
                     <button class="stats-toggle active" id="showAllAreasBtn"><i class="fas fa-expand"></i> Tất cả KV</button>
                     <button class="stats-toggle" id="showTopAreasBtn"><i class="fas fa-chart-line"></i> Top 10</button>
@@ -430,8 +441,19 @@
 
         <div class="table-wrapper">
             <table class="members-table">
-                <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Số điện thoại</th><th>Thao tác</th></tr></thead>
-                <tbody id="membersList"><tr class="empty-row"><td colspan="6">Đang tải......</td></tr>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ và tên</th>
+                        <th>Năm sinh</th>
+                        <th>Khu vực</th>
+                        <th>Số thẻ HV</th>
+                        <th>Số điện thoại</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="membersList">
+                    <tr class="empty-row"><td colspan="7">Đang tải...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -491,79 +513,79 @@
             setTimeout(() => { msg.style.display = 'none'; }, 3000);
         }
 
-        function formatDateToDMY(dateString) {
-            if (!dateString || dateString === '') return '---';
-            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
-            const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-            if (match) return `${match[3]}/${match[2]}/${match[1]}`;
-            return dateString;
+        // Hàm trích xuất số thứ tự từ tên khu vực để sắp xếp
+        function extractAreaNumber(areaName) {
+            if (!areaName || areaName === 'Chưa phân loại') return Infinity;
+            // Tìm số đầu tiên trong chuỗi
+            const match = areaName.match(/(\d+)/);
+            if (match) {
+                return parseInt(match[1]);
+            }
+            return Infinity;
         }
 
-        function convertToISODate(dateString) {
-            if (!dateString || dateString === '') return '';
-            dateString = String(dateString).trim();
-            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
-            if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
-            const dmyPattern = /^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/;
-            let match = dateString.match(dmyPattern);
+        // Hàm định dạng hiển thị khu vực ngắn gọn
+        function formatAreaDisplay(areaName) {
+            if (!areaName || areaName === 'Chưa phân loại') return 'Chưa phân loại';
+            // Nếu đã có định dạng KV X thì giữ nguyên
+            if (areaName.match(/^KV\s+\d+/i)) {
+                return areaName;
+            }
+            // Nếu chỉ là số (ví dụ: "1", "2", "5a")
+            if (areaName.match(/^\d+[a-z]?$/i)) {
+                return `KV ${areaName}`;
+            }
+            // Nếu có dạng "Khu vực X" hoặc "Khu vực X - Tên gì đó"
+            const match = areaName.match(/(?:khu\s*vực\s*)?(\d+[a-z]?)/i);
             if (match) {
-                const day = match[1].padStart(2, '0');
-                const month = match[2].padStart(2, '0');
-                const year = match[3];
-                const testDate = new Date(`${year}-${month}-${day}`);
-                if (!isNaN(testDate.getTime()) && testDate.getFullYear() == year) {
-                    return `${year}-${month}-${day}`;
-                }
+                return `KV ${match[1]}`;
             }
-            const ymdPattern = /^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/;
-            match = dateString.match(ymdPattern);
-            if (match) {
-                const year = match[1];
-                const month = match[2].padStart(2, '0');
-                const day = match[3].padStart(2, '0');
-                return `${year}-${month}-${day}`;
+            // Quá dài thì cắt bớt
+            if (areaName.length > 20) {
+                return areaName.substring(0, 18) + '...';
             }
-            const testDate = new Date(dateString);
-            if (!isNaN(testDate.getTime())) {
-                const year = testDate.getFullYear();
-                const month = String(testDate.getMonth() + 1).padStart(2, '0');
-                const day = String(testDate.getDate()).padStart(2, '0');
-                if (year > 1900 && year < 2100) {
-                    return `${year}-${month}-${day}`;
-                }
-            }
-            return '';
+            return areaName;
         }
 
         function renderAreaStats() {
             const areaStats = {};
             allMembers.forEach(m => {
-                const area = m.area || 'Chưa phân loại';
+                let area = m.area || 'Chưa phân loại';
                 if (!areaStats[area]) {
                     areaStats[area] = 0;
                 }
                 areaStats[area]++;
             });
             
-            let sortedAreas = Object.entries(areaStats).sort((a, b) => b[1] - a[1]);
+            // Chuyển đổi thành mảng và sắp xếp theo số thứ tự từ nhỏ đến lớn
+            let sortedAreas = Object.entries(areaStats).sort((a, b) => {
+                const numA = extractAreaNumber(a[0]);
+                const numB = extractAreaNumber(b[0]);
+                if (numA === numB) return a[0].localeCompare(b[0]);
+                return numA - numB;
+            });
+            
             let displayAreas = showAllAreas ? sortedAreas : sortedAreas.slice(0, 10);
             
             if (displayAreas.length === 0) {
-                elements.areaStatsGrid.innerHTML = '<div style="padding: 20px; text-align: center; color: #94a3b8;">Chưa có dữ liệu khu vực</div>';
+                elements.areaStatsGrid.innerHTML = '<div style="padding: 20px; text-align: center; color: #94a3b8;"><i class="fas fa-inbox"></i> Chưa có dữ liệu khu vực</div>';
                 return;
             }
             
             let html = '';
             displayAreas.forEach(([area, count]) => {
+                const displayName = formatAreaDisplay(area);
                 let icon = 'fa-map-marker-alt';
                 if (area === 'Chưa phân loại') {
                     icon = 'fa-question-circle';
                 }
+                // Thêm tooltip để hiển thị tên đầy đủ nếu bị rút gọn
+                const titleAttr = area !== displayName ? ` title="${escapeHtml(area)}"` : '';
                 html += `
-                    <div class="area-stat-item" onclick="window.filterByArea('${escapeHtml(area)}')">
+                    <div class="area-stat-item" onclick="window.filterByArea('${escapeHtml(area).replace(/'/g, "\\'")}')"${titleAttr}>
                         <div class="area-name">
                             <i class="fas ${icon}"></i>
-                            <span>${escapeHtml(area.length > 25 ? area.substring(0, 25) + '...' : area)}</span>
+                            <span class="area-display">${escapeHtml(displayName)}</span>
                         </div>
                         <div class="area-count">${count}</div>
                     </div>
@@ -589,7 +611,8 @@
             // Gắn sự kiện cho các nút show more
             const showMoreBtn = document.getElementById('showMoreAreasBtn');
             if (showMoreBtn) {
-                showMoreBtn.onclick = () => {
+                showMoreBtn.onclick = (e) => {
+                    e.stopPropagation();
                     showAllAreas = true;
                     document.getElementById('showAllAreasBtn').classList.add('active');
                     document.getElementById('showTopAreasBtn').classList.remove('active');
@@ -598,7 +621,8 @@
             }
             const showTopBtn = document.getElementById('showTopAreasFromBtn');
             if (showTopBtn) {
-                showTopBtn.onclick = () => {
+                showTopBtn.onclick = (e) => {
+                    e.stopPropagation();
                     showAllAreas = false;
                     document.getElementById('showTopAreasBtn').classList.add('active');
                     document.getElementById('showAllAreasBtn').classList.remove('active');
@@ -612,17 +636,30 @@
             renderMembersList();
             // Cuộn đến bảng
             document.querySelector('.table-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Highlight khu vực đang được chọn trong thống kê
+            document.querySelectorAll('.area-stat-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event?.currentTarget?.classList.add('active');
         };
 
         async function loadAreas() {
             if (!currentUser) return;
             const snapshot = await get(ref(database, `users/${currentUser.uid}/custom_data/areas`));
             customAreas = snapshot.exists() ? Object.values(snapshot.val()) : [];
+            // Sắp xếp danh sách khu vực trong dropdown theo số thứ tự
+            customAreas.sort((a, b) => {
+                const numA = extractAreaNumber(a);
+                const numB = extractAreaNumber(b);
+                if (numA === numB) return a.localeCompare(b);
+                return numA - numB;
+            });
             elements.searchArea.innerHTML = '<option value="">Tất cả</option>';
             customAreas.forEach(area => {
                 const option = document.createElement('option');
                 option.value = area;
-                option.textContent = area;
+                option.textContent = formatAreaDisplay(area);
+                option.title = area; // Hiển thị tên đầy đủ khi hover
                 elements.searchArea.appendChild(option);
             });
         }
@@ -650,7 +687,7 @@
                     const matchName = m.fullName?.toLowerCase().includes(keyword);
                     const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
                     const matchPhone = m.phone?.toLowerCase().includes(keyword);
-                    if (!matchName && !matchCard) return false;
+                    if (!matchName && !matchCard && !matchPhone) return false;
                 }
                 if (area && m.area !== area) return false;
                 return true;
@@ -666,7 +703,7 @@
                     <td>${i + 1}</td>
                     <td><span class="member-name">${escapeHtml(m.fullName || '---')}</span></td>
                     <td class="date-value">${formatDateToDMY(m.birthYear) || '---'}</td>
-                    <td><span class="badge">${escapeHtml(m.area || '---')}</span></td>
+                    <td><span class="badge">${escapeHtml(formatAreaDisplay(m.area || '---'))}</span></td>
                     <td>${escapeHtml(m.memberCardNumber || '---')}</td>
                     <td>${escapeHtml(m.phone || '---')}</td>
                     <td class="action-buttons">
@@ -676,6 +713,14 @@
                     </td>
                 </tr>
             `).join('');
+        }
+
+        function formatDateToDMY(dateString) {
+            if (!dateString || dateString === '') return '---';
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+            const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (match) return `${match[3]}/${match[2]}/${match[1]}`;
+            return dateString;
         }
 
         function escapeHtml(str) {
@@ -695,7 +740,7 @@
                 <p><strong>👤 Họ tên:</strong> ${escapeHtml(m.fullName || '---')}</p>
                 <p><strong>🆔 Số thẻ HV:</strong> ${escapeHtml(m.memberCardNumber || '---')}</p>
                 <p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear) || '---'}</p>
-                <p><strong>📍 Khu vực:</strong> ${escapeHtml(m.area || '---')}</p>
+                <p><strong>📍 Khu vực:</strong> ${escapeHtml(formatAreaDisplay(m.area || '---'))} ${m.area && m.area !== formatAreaDisplay(m.area) ? `<span style="font-size:0.7rem; color:#64748b;">(${escapeHtml(m.area)})</span>` : ''}</p>
                 <p><strong>📞 Điện thoại:</strong> ${escapeHtml(m.phone || '---')}</p>
                 <p><strong>🏠 Địa chỉ:</strong> ${escapeHtml(m.address || '---')}</p>
                 <p><strong>📝 Ghi chú:</strong> ${escapeHtml(m.note || '---')}</p>
@@ -734,7 +779,7 @@
                 await remove(ref(database, `users/${currentUser.uid}/members/${member.id}`));
                 deleted++;
             }
-            showMessage(`Đã xóa ${deleted} hội viên ở khu vực "${areaToDelete}"`, 'success');
+            showMessage(`Đã xóa ${deleted} hội viên ở khu vực "${formatAreaDisplay(areaToDelete)}"`, 'success');
             document.getElementById('confirmModal').style.display = 'none';
             await loadMembers();
         }
@@ -776,11 +821,20 @@
                     areaStats[area]++;
                 });
                 
+                // Sắp xếp khu vực theo số thứ tự
+                const sortedAreas = Object.entries(areaStats).sort((a, b) => {
+                    const numA = extractAreaNumber(a[0]);
+                    const numB = extractAreaNumber(b[0]);
+                    if (numA === numB) return a[0].localeCompare(b[0]);
+                    return numA - numB;
+                });
+                
                 areaSelect.innerHTML = '<option value="">-- Chọn khu vực --</option>';
-                Object.entries(areaStats).sort((a, b) => b[1] - a[1]).forEach(([area, count]) => {
+                sortedAreas.forEach(([area, count]) => {
                     const option = document.createElement('option');
                     option.value = area;
-                    option.textContent = `${area} (${count} hội viên)`;
+                    option.textContent = `${formatAreaDisplay(area)} (${count} hội viên)`;
+                    option.title = area;
                     areaSelect.appendChild(option);
                 });
                 
@@ -891,6 +945,42 @@
                     fail++; 
                     continue; 
                 }
+                
+                const convertToISODate = (dateString) => {
+                    if (!dateString || dateString === '') return '';
+                    dateString = String(dateString).trim();
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
+                    if (/^\d{4}$/.test(dateString)) return `${dateString}-01-01`;
+                    const dmyPattern = /^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/;
+                    let match = dateString.match(dmyPattern);
+                    if (match) {
+                        const day = match[1].padStart(2, '0');
+                        const month = match[2].padStart(2, '0');
+                        const year = match[3];
+                        const testDate = new Date(`${year}-${month}-${day}`);
+                        if (!isNaN(testDate.getTime()) && testDate.getFullYear() == year) {
+                            return `${year}-${month}-${day}`;
+                        }
+                    }
+                    const ymdPattern = /^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/;
+                    match = dateString.match(ymdPattern);
+                    if (match) {
+                        const year = match[1];
+                        const month = match[2].padStart(2, '0');
+                        const day = match[3].padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    }
+                    const testDate = new Date(dateString);
+                    if (!isNaN(testDate.getTime())) {
+                        const year = testDate.getFullYear();
+                        const month = String(testDate.getMonth() + 1).padStart(2, '0');
+                        const day = String(testDate.getDate()).padStart(2, '0');
+                        if (year > 1900 && year < 2100) {
+                            return `${year}-${month}-${day}`;
+                        }
+                    }
+                    return '';
+                };
                 
                 const data = {
                     fullName: row['Họ và tên'],
