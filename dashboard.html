@@ -164,7 +164,7 @@
             transition: all 0.2s;
             cursor: pointer;
             border: 1px solid #e2e8f0;
-            min-width: 0;
+            min-width: 0; /* Cho phép thu nhỏ */
         }
         .area-stat-item:hover {
             background: #eef2ff;
@@ -233,6 +233,7 @@
             background: #eef2ff;
         }
 
+        /* Responsive: giảm số cột trên màn hình nhỏ */
         @media (max-width: 1200px) {
             .area-stats-grid { grid-template-columns: repeat(8, 1fr); }
         }
@@ -646,7 +647,7 @@
             currentFilterArea = area;
             elements.searchArea.value = area;
             renderMembersList();
-            renderAreaStats();
+            renderAreaStats(); // Refresh để highlight
             document.querySelector('.table-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
@@ -739,152 +740,172 @@
             });
         }
 
-        // HÀM XUẤT EXCEL CẢI TIẾN - CÓ TIÊU ĐỀ ĐỘNG, ĐỊNH DẠNG A4 NGANG, LỀ 1CM, KẺ KHUNG
+        window.viewDetail = function(id) {
+            const m = allMembers.find(x => x.id === id);
+            if (!m) return;
+            document.getElementById('detailContent').innerHTML = `
+                <p><strong>👤 Họ tên:</strong> ${escapeHtml(m.fullName || '---')}</p>
+                <p><strong>🆔 Số thẻ HV:</strong> ${escapeHtml(m.memberCardNumber || '---')}</p>
+                <p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear) || '---'}</p>
+                <p><strong>📍 Khu vực:</strong> ${escapeHtml(formatAreaDisplay(m.area || '---'))} ${m.area && m.area !== formatAreaDisplay(m.area) ? `<span style="font-size:0.65rem; color:#64748b;">(${escapeHtml(m.area)})</span>` : ''}</p>
+                <p><strong>📞 Điện thoại:</strong> ${escapeHtml(m.phone || '---')}</p>
+                <p><strong>🏠 Địa chỉ:</strong> ${escapeHtml(m.address || '---')}</p>
+                <p><strong>📝 Ghi chú:</strong> ${escapeHtml(m.note || '---')}</p>
+                <p><strong>🕒 Cập nhật:</strong> ${m.updatedAt ? new Date(m.updatedAt).toLocaleString() : '---'}</p>
+            `;
+            document.getElementById('detailModal').style.display = 'flex';
+        };
+
+        window.editMember = (id) => window.location.href = `hoivien.html?id=${id}`;
+        
+        window.deleteMember = async (id) => {
+            if (!confirm('Xóa hội viên này?')) return;
+            await remove(ref(database, `users/${currentUser.uid}/members/${id}`));
+            showMessage('Đã xóa!', 'success');
+            await loadMembers();
+        };
+
+        let pendingDeleteAction = null;
+
+        async function deleteByArea() {
+            const areaToDelete = document.getElementById('areaToDelete').value;
+            if (!areaToDelete) {
+                showMessage('Vui lòng chọn khu vực cần xóa', 'error');
+                return;
+            }
+            
+            const membersToDelete = allMembers.filter(m => (m.area || 'Chưa phân loại') === areaToDelete);
+            if (membersToDelete.length === 0) {
+                showMessage(`Không có hội viên nào ở khu vực "${areaToDelete}"`, 'error');
+                document.getElementById('confirmModal').style.display = 'none';
+                return;
+            }
+            
+            let deleted = 0;
+            for (const member of membersToDelete) {
+                await remove(ref(database, `users/${currentUser.uid}/members/${member.id}`));
+                deleted++;
+            }
+            showMessage(`Đã xóa ${deleted} hội viên ở khu vực "${formatAreaDisplay(areaToDelete)}"`, 'success');
+            document.getElementById('confirmModal').style.display = 'none';
+            await loadMembers();
+        }
+
+        async function deleteAll() {
+            if (allMembers.length === 0) {
+                showMessage('Không có dữ liệu để xóa', 'error');
+                document.getElementById('confirmModal').style.display = 'none';
+                return;
+            }
+            
+            let deleted = 0;
+            for (const member of allMembers) {
+                await remove(ref(database, `users/${currentUser.uid}/members/${member.id}`));
+                deleted++;
+            }
+            showMessage(`Đã xóa toàn bộ ${deleted} hội viên`, 'success');
+            document.getElementById('confirmModal').style.display = 'none';
+            await loadMembers();
+        }
+
+        function showConfirmModal(type) {
+            const modal = document.getElementById('confirmModal');
+            const title = document.getElementById('confirmTitle');
+            const message = document.getElementById('confirmMessage');
+            const areaSelectDiv = document.getElementById('confirmAreaSelect');
+            const areaSelect = document.getElementById('areaToDelete');
+            
+            if (type === 'area') {
+                title.innerHTML = '<i class="fas fa-trash-alt"></i> Xóa theo khu vực';
+                message.innerHTML = `Bạn có chắc chắn muốn xóa TẤT CẢ hội viên trong khu vực được chọn?<br><br><strong>Hành động này không thể hoàn tác!</strong>`;
+                
+                const areaStats = {};
+                allMembers.forEach(m => {
+                    const area = m.area || 'Chưa phân loại';
+                    if (!areaStats[area]) {
+                        areaStats[area] = 0;
+                    }
+                    areaStats[area]++;
+                });
+                
+                const sortedAreas = Object.entries(areaStats).sort((a, b) => {
+                    const numA = extractAreaNumber(a[0]);
+                    const numB = extractAreaNumber(b[0]);
+                    if (numA === numB) return a[0].localeCompare(b[0]);
+                    return numA - numB;
+                });
+                
+                areaSelect.innerHTML = '<option value="">-- Chọn khu vực --</option>';
+                sortedAreas.forEach(([area, count]) => {
+                    const option = document.createElement('option');
+                    option.value = area;
+                    option.textContent = `${formatAreaDisplay(area)} (${count} hội viên)`;
+                    option.title = area;
+                    areaSelect.appendChild(option);
+                });
+                
+                areaSelectDiv.style.display = 'block';
+                pendingDeleteAction = 'area';
+            } else if (type === 'all') {
+                title.innerHTML = '<i class="fas fa-skull-crosswalk"></i> Xóa tất cả dữ liệu';
+                message.innerHTML = `Bạn có chắc chắn muốn xóa TOÀN BỘ ${allMembers.length} hội viên?<br><br><strong style="color: #ef4444;">Hành động này không thể hoàn tác!</strong>`;
+                areaSelectDiv.style.display = 'none';
+                pendingDeleteAction = 'all';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
         function exportToExcel() {
-    const keyword = elements.searchKeyword.value.toLowerCase().trim();
-    const selectedArea = elements.searchArea.value;
-    let filtered = allMembers.filter(m => {
-        if (keyword) {
-            const matchName = m.fullName?.toLowerCase().includes(keyword);
-            const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
-            if (!matchName && !matchCard) return false;
+            const keyword = elements.searchKeyword.value.toLowerCase().trim();
+            const area = elements.searchArea.value;
+            let filtered = allMembers.filter(m => {
+                if (keyword) {
+                    const matchName = m.fullName?.toLowerCase().includes(keyword);
+                    const matchCard = m.memberCardNumber?.toLowerCase().includes(keyword);
+                    if (!matchName && !matchCard) return false;
+                }
+                if (area && m.area !== area) return false;
+                return true;
+            });
+            if (!filtered.length) return showMessage('Không có dữ liệu!', 'error');
+            
+            const data = filtered.map((m, i) => ({
+                'STT': i + 1,
+                'Họ và tên': m.fullName,
+                'Bí danh': m.alias || '',
+                'Dân tộc': m.ethnicity || '',
+                'Tôn giáo': m.religion || '',
+                'Năm sinh': formatDateToDMY(m.birthYear),
+                'Trình độ văn hóa': m.educationLevel || '',
+                'Chuyên môn': m.specialization || '',
+                'Giới tính': m.gender || '',
+                'CCCD/CMND': m.cccd || '',
+                'Trình độ LLCT': m.politicalTheory || '',
+                'Ngoại ngữ': m.foreignLanguage || '',
+                'Ngày cấp CCCD': formatDateToDMY(m.issueDate),
+                'Nơi cấp': m.issuePlace || '',
+                'Tin học': m.itSkill || '',
+                'Khu vực': m.area || '',
+                'Quê quán': m.hometown || '',
+                'Địa chỉ': m.address || '',
+                'Chức vụ': m.position || '',
+                'Ngày tham gia CM': formatDateToDMY(m.revolutionDate),
+                'Ngày nhập ngũ': formatDateToDMY(m.militaryJoinDate),
+                'Ngày xuất ngũ': formatDateToDMY(m.militaryReleaseDate),
+                'Dự bị': formatDateToDMY(m.reserveStatus),
+                'Chính thức': formatDateToDMY(m.officialStatus),
+                'Ngày kết nạp Hội': formatDateToDMY(m.associationJoinDate),
+                'Số thẻ Hội viên': m.memberCardNumber || '',
+                'Chuyên ngành': m.trainingMajor || '',
+                'Điện thoại': m.phone || '',
+                'Ghi chú': m.note || ''
+            }));
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Hoi_vien');
+            XLSX.writeFile(wb, `hoi_vien_${new Date().toISOString().slice(0,10)}.xlsx`);
+            showMessage(`Xuất ${filtered.length} hội viên!`);
         }
-        if (selectedArea && m.area !== selectedArea) return false;
-        return true;
-    });
-    
-    if (!filtered.length) {
-        showMessage('Không có dữ liệu để xuất!', 'error');
-        return;
-    }
-    
-    // Tạo tiêu đề động
-    let titleText = '';
-    if (!selectedArea || selectedArea === '') {
-        titleText = 'DANH SÁCH HỘI VIÊN (TẤT CẢ)';
-    } else {
-        const areaDisplayName = formatAreaDisplay(selectedArea);
-        titleText = `DANH SÁCH HỘI VIÊN KHU VỰC ${areaDisplayName}`;
-    }
-    
-    // Chuẩn bị dữ liệu
-    const dataRows = filtered.map((m, i) => ({
-        'STT': i + 1,
-        'Họ và tên': m.fullName || '',
-        'Bí danh': m.alias || '',
-        'Dân tộc': m.ethnicity || '',
-        'Tôn giáo': m.religion || '',
-        'Năm sinh': formatDateToDMY(m.birthYear),
-        'Trình độ văn hóa': m.educationLevel || '',
-        'Chuyên môn': m.specialization || '',
-        'Giới tính': m.gender || '',
-        'CCCD/CMND': m.cccd || '',
-        'Trình độ LLCT': m.politicalTheory || '',
-        'Ngoại ngữ': m.foreignLanguage || '',
-        'Ngày cấp CCCD': formatDateToDMY(m.issueDate),
-        'Nơi cấp': m.issuePlace || '',
-        'Tin học': m.itSkill || '',
-        'Khu vực': m.area || '',
-        'Quê quán': m.hometown || '',
-        'Địa chỉ': m.address || '',
-        'Chức vụ': m.position || '',
-        'Ngày tham gia CM': formatDateToDMY(m.revolutionDate),
-        'Ngày nhập ngũ': formatDateToDMY(m.militaryJoinDate),
-        'Ngày xuất ngũ': formatDateToDMY(m.militaryReleaseDate),
-        'Dự bị': formatDateToDMY(m.reserveStatus),
-        'Chính thức': formatDateToDMY(m.officialStatus),
-        'Ngày kết nạp Hội': formatDateToDMY(m.associationJoinDate),
-        'Số thẻ Hội viên': m.memberCardNumber || '',
-        'Chuyên ngành': m.trainingMajor || '',
-        'Điện thoại': m.phone || '',
-        'Ghi chú': m.note || ''
-    }));
-    
-    // Tạo workbook và worksheet
-    const wb = XLSX.utils.book_new();
-    
-    // Tạo mảng dữ liệu với 2 dòng tiêu đề phía trên
-    const sheetData = [];
-    
-    // Dòng 1: Tiêu đề chính
-    sheetData.push([titleText]);
-    
-    // Dòng 2: Ngày xuất và tổng số
-    sheetData.push([`Ngày xuất: ${new Date().toLocaleDateString('vi-VN')} - Tổng số: ${filtered.length} hội viên`]);
-    
-    // Dòng 3: Header các cột
-    const headers = Object.keys(dataRows[0]);
-    sheetData.push(headers);
-    
-    // Dòng 4 trở đi: Dữ liệu
-    dataRows.forEach(row => {
-        sheetData.push(headers.map(h => row[h]));
-    });
-    
-    // Tạo worksheet từ mảng dữ liệu
-    const ws = XLSX.utils.aoa_to_sheet(sheetData);
-    
-    // Gộp ô cho tiêu đề (dòng 1: từ cột A đến cột cuối)
-    const lastColIndex = headers.length - 1;
-    const lastColLetter = XLSX.utils.encode_col(lastColIndex);
-    if (!ws['!merges']) ws['!merges'] = [];
-    ws['!merges'].push({ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } });
-    ws['!merges'].push({ s: { r: 1, c: 0 }, e: { r: 1, c: lastColIndex } });
-    
-    // Đặt chiều rộng cột
-    const colWidths = {};
-    for (let row = 0; row < sheetData.length; row++) {
-        for (let col = 0; col < headers.length; col++) {
-            let cellValue = sheetData[row][col] || '';
-            let cellLength = cellValue.toString().length;
-            // Ưu tiên độ rộng từ header
-            if (row === 2) cellLength += 5;
-            colWidths[col] = Math.max(colWidths[col] || 0, Math.min(cellLength, 30));
-        }
-    }
-    
-    ws['!cols'] = [];
-    for (let col = 0; col < headers.length; col++) {
-        ws['!cols'].push({ wch: Math.max(colWidths[col] || 10, 8) });
-    }
-    
-    // Thiết lập trang in: A4 ngang, lề 1cm
-    // Lưu ý: Các thuộc tính này sẽ được lưu vào file, khi mở Excel sẽ tự động áp dụng
-    ws['!pageSetup'] = {
-        paperSize: 9,           // 9 = A4
-        orientation: 'landscape', // Trang ngang
-        scale: 100,
-        fitToWidth: 1,
-        fitToHeight: 0
-    };
-    
-    // Lề 1cm = 28.35 points
-    const marginPoints = 28.35;
-    ws['!margins'] = {
-        left: marginPoints,
-        right: marginPoints,
-        top: marginPoints,
-        bottom: marginPoints,
-        header: 14.17,   // 0.5cm
-        footer: 14.17    // 0.5cm
-    };
-    
-    // Thêm worksheet vào workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Danh sách hội viên');
-    
-    // Tạo tên file
-    let fileName = '';
-    if (!selectedArea || selectedArea === '') {
-        fileName = `danh_sach_hoi_vien_tat_ca_${new Date().toISOString().slice(0,10)}.xlsx`;
-    } else {
-        const areaDisplayName = formatAreaDisplay(selectedArea).replace(/\s/g, '_');
-        fileName = `danh_sach_hoi_vien_${areaDisplayName}_${new Date().toISOString().slice(0,10)}.xlsx`;
-    }
-    
-    // Xuất file
-    XLSX.writeFile(wb, fileName);
-    showMessage(`Đã xuất ${filtered.length} hội viên!`, 'success');
-}
 
         function downloadSample() {
             const sample = [{ 
@@ -1010,122 +1031,6 @@
             progress.style.display = 'none';
             await loadMembers();
             showMessage(`Import hoàn tất! Thành công: ${success}, Lỗi: ${fail}`);
-        }
-
-        window.viewDetail = function(id) {
-            const m = allMembers.find(x => x.id === id);
-            if (!m) return;
-            document.getElementById('detailContent').innerHTML = `
-                <p><strong>👤 Họ tên:</strong> ${escapeHtml(m.fullName || '---')}</p>
-                <p><strong>🆔 Số thẻ HV:</strong> ${escapeHtml(m.memberCardNumber || '---')}</p>
-                <p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear) || '---'}</p>
-                <p><strong>📍 Khu vực:</strong> ${escapeHtml(formatAreaDisplay(m.area || '---'))} ${m.area && m.area !== formatAreaDisplay(m.area) ? `<span style="font-size:0.65rem; color:#64748b;">(${escapeHtml(m.area)})</span>` : ''}</p>
-                <p><strong>📞 Điện thoại:</strong> ${escapeHtml(m.phone || '---')}</p>
-                <p><strong>🏠 Địa chỉ:</strong> ${escapeHtml(m.address || '---')}</p>
-                <p><strong>📝 Ghi chú:</strong> ${escapeHtml(m.note || '---')}</p>
-                <p><strong>🕒 Cập nhật:</strong> ${m.updatedAt ? new Date(m.updatedAt).toLocaleString() : '---'}</p>
-            `;
-            document.getElementById('detailModal').style.display = 'flex';
-        };
-
-        window.editMember = (id) => window.location.href = `hoivien.html?id=${id}`;
-        
-        window.deleteMember = async (id) => {
-            if (!confirm('Xóa hội viên này?')) return;
-            await remove(ref(database, `users/${currentUser.uid}/members/${id}`));
-            showMessage('Đã xóa!', 'success');
-            await loadMembers();
-        };
-
-        let pendingDeleteAction = null;
-
-        async function deleteByArea() {
-            const areaToDelete = document.getElementById('areaToDelete').value;
-            if (!areaToDelete) {
-                showMessage('Vui lòng chọn khu vực cần xóa', 'error');
-                return;
-            }
-            
-            const membersToDelete = allMembers.filter(m => (m.area || 'Chưa phân loại') === areaToDelete);
-            if (membersToDelete.length === 0) {
-                showMessage(`Không có hội viên nào ở khu vực "${areaToDelete}"`, 'error');
-                document.getElementById('confirmModal').style.display = 'none';
-                return;
-            }
-            
-            let deleted = 0;
-            for (const member of membersToDelete) {
-                await remove(ref(database, `users/${currentUser.uid}/members/${member.id}`));
-                deleted++;
-            }
-            showMessage(`Đã xóa ${deleted} hội viên ở khu vực "${formatAreaDisplay(areaToDelete)}"`, 'success');
-            document.getElementById('confirmModal').style.display = 'none';
-            await loadMembers();
-        }
-
-        async function deleteAll() {
-            if (allMembers.length === 0) {
-                showMessage('Không có dữ liệu để xóa', 'error');
-                document.getElementById('confirmModal').style.display = 'none';
-                return;
-            }
-            
-            let deleted = 0;
-            for (const member of allMembers) {
-                await remove(ref(database, `users/${currentUser.uid}/members/${member.id}`));
-                deleted++;
-            }
-            showMessage(`Đã xóa toàn bộ ${deleted} hội viên`, 'success');
-            document.getElementById('confirmModal').style.display = 'none';
-            await loadMembers();
-        }
-
-        function showConfirmModal(type) {
-            const modal = document.getElementById('confirmModal');
-            const title = document.getElementById('confirmTitle');
-            const message = document.getElementById('confirmMessage');
-            const areaSelectDiv = document.getElementById('confirmAreaSelect');
-            const areaSelect = document.getElementById('areaToDelete');
-            
-            if (type === 'area') {
-                title.innerHTML = '<i class="fas fa-trash-alt"></i> Xóa theo khu vực';
-                message.innerHTML = `Bạn có chắc chắn muốn xóa TẤT CẢ hội viên trong khu vực được chọn?<br><br><strong>Hành động này không thể hoàn tác!</strong>`;
-                
-                const areaStats = {};
-                allMembers.forEach(m => {
-                    const area = m.area || 'Chưa phân loại';
-                    if (!areaStats[area]) {
-                        areaStats[area] = 0;
-                    }
-                    areaStats[area]++;
-                });
-                
-                const sortedAreas = Object.entries(areaStats).sort((a, b) => {
-                    const numA = extractAreaNumber(a[0]);
-                    const numB = extractAreaNumber(b[0]);
-                    if (numA === numB) return a[0].localeCompare(b[0]);
-                    return numA - numB;
-                });
-                
-                areaSelect.innerHTML = '<option value="">-- Chọn khu vực --</option>';
-                sortedAreas.forEach(([area, count]) => {
-                    const option = document.createElement('option');
-                    option.value = area;
-                    option.textContent = `${formatAreaDisplay(area)} (${count} hội viên)`;
-                    option.title = area;
-                    areaSelect.appendChild(option);
-                });
-                
-                areaSelectDiv.style.display = 'block';
-                pendingDeleteAction = 'area';
-            } else if (type === 'all') {
-                title.innerHTML = '<i class="fas fa-skull-crosswalk"></i> Xóa tất cả dữ liệu';
-                message.innerHTML = `Bạn có chắc chắn muốn xóa TOÀN BỘ ${allMembers.length} hội viên?<br><br><strong style="color: #ef4444;">Hành động này không thể hoàn tác!</strong>`;
-                areaSelectDiv.style.display = 'none';
-                pendingDeleteAction = 'all';
-            }
-            
-            modal.style.display = 'flex';
         }
 
         // Event listeners
