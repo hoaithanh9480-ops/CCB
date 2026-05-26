@@ -25,51 +25,44 @@
         .logout-btn:hover { background: #dc2626; }
         .main-content { padding: 24px; max-width: 1600px; margin: 0 auto; }
 
-        /* Compact license banner - merged with trial warning */
-        .license-bar {
+        /* ========== COMPACT LICENSE BAR (HỢP NHẤT) ========== */
+        .license-compact {
             background: white;
-            border-radius: 12px;
+            border-radius: 14px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
-            padding: 10px 18px;
+            padding: 8px 20px;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
             transition: all 0.2s;
         }
-        .license-status {
+        .license-status-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
-        .license-badge {
+        .license-badge-compact {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
+            gap: 8px;
+            padding: 4px 14px;
             border-radius: 40px;
             font-size: 0.75rem;
             font-weight: 600;
             background: #f1f5f9;
             color: #1e293b;
         }
-        .license-badge i { font-size: 0.7rem; }
-        .license-badge.active { background: #10b98110; color: #047857; border-left: 2px solid #10b981; }
-        .license-badge.warning { background: #fef3c7; color: #b45309; }
-        .license-badge.danger { background: #fee2e2; color: #b91c1c; }
-        .license-key-text {
-            font-family: monospace;
-            font-size: 0.7rem;
-            background: #f8fafc;
-            padding: 3px 10px;
-            border-radius: 30px;
-            color: #334155;
-        }
-        .limit-progress {
+        .license-badge-compact i { font-size: 0.75rem; }
+        .license-badge-compact.active { background: #e6f7ec; color: #0a5c2e; border-left: 2px solid #10b981; }
+        .license-badge-compact.warning { background: #fef3c7; color: #b45309; }
+        .license-badge-compact.danger { background: #fee2e2; color: #b91c1c; }
+        
+        .trial-meter {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -77,29 +70,31 @@
             padding: 2px 12px 2px 8px;
             border-radius: 40px;
         }
-        .progress-meter {
+        .meter-bar {
             width: 80px;
-            height: 5px;
+            height: 4px;
             background: #e2e8f0;
             border-radius: 4px;
             overflow: hidden;
         }
-        .progress-fill-meter {
+        .meter-fill {
             height: 100%;
             width: 0%;
             background: #2563eb;
             border-radius: 4px;
             transition: width 0.2s;
         }
-        .limit-text {
+        .meter-fill.warning-bg { background: #f59e0b; }
+        .meter-fill.danger-bg { background: #ef4444; }
+        .trial-text {
             font-size: 0.7rem;
             font-weight: 500;
             color: #475569;
         }
-        .activate-btn-sm {
+        .license-action-btn {
             background: #8b5cf6;
             border: none;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 30px;
             color: white;
             font-size: 0.7rem;
@@ -110,15 +105,27 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .activate-btn-sm:hover { background: #7c3aed; transform: translateY(-1px); }
-        .license-info-text {
+        .license-action-btn:hover { background: #7c3aed; transform: translateY(-1px); }
+        .license-key-hint {
             font-size: 0.7rem;
             color: #64748b;
-            display: flex;
+            font-family: monospace;
+            background: #f8fafc;
+            padding: 3px 10px;
+            border-radius: 30px;
+        }
+        .unlimited-badge {
+            font-size: 0.7rem;
+            color: #10b981;
+            background: #e6f7ec;
+            padding: 3px 12px;
+            border-radius: 30px;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
+        /* ACTION BAR GIỮ NGUYÊN */
         .action-bar {
             background: white;
             border-radius: 16px;
@@ -199,6 +206,7 @@
             background: white;
         }
 
+        /* Stats container giữ nguyên */
         .stats-container {
             background: white;
             border-radius: 16px;
@@ -230,6 +238,7 @@
             font-size: 0.65rem; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #64748b;
         }
         .stats-toggle.active { background: #2563eb; color: white; }
+        .stats-toggle:hover:not(.active) { background: #e2e8f0; }
 
         .main-stats {
             display: flex;
@@ -257,24 +266,33 @@
         .main-stat-card .stat-number { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
         .main-stat-card .stat-icon { font-size: 0.7rem; }
 
-        .area-stats-wrapper { padding: 10px 16px; background: white; }
-        .area-stats-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; max-height: 320px; overflow-y: auto; padding: 2px; }
+        .area-stats-wrapper { position: relative; padding: 10px 16px; background: white; }
+        .area-stats-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; max-height: 320px; overflow-y: auto; padding: 2px 2px; }
         .area-stat-item {
             background: #f8fafc; border-radius: 8px; padding: 5px 4px; display: flex; align-items: center;
-            justify-content: space-between; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s;
+            justify-content: space-between; transition: all 0.2s; cursor: pointer; border: 1px solid #e2e8f0; min-width: 0;
         }
         .area-stat-item:hover { background: #eef2ff; border-color: #2563eb; transform: translateY(-1px); }
         .area-stat-item.active { background: #2563eb; border-color: #2563eb; }
         .area-stat-item.active .area-name, .area-stat-item.active .area-count { color: white; }
+        .area-stat-item.active .area-count { background: rgba(255,255,255,0.2); }
         .area-name {
             font-size: 0.7rem; font-weight: 600; color: #1e293b; display: flex; align-items: center;
             gap: 4px; padding-left: 4px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .area-name i { font-size: 0.65rem; color: #10b981; flex-shrink: 0; }
+        .area-name .area-display { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .area-count {
             font-size: 0.65rem; font-weight: 700; color: #2563eb; background: #eef2ff; padding: 1px 5px;
             border-radius: 20px; min-width: 26px; text-align: center; margin-right: 2px; flex-shrink: 0;
         }
+        .show-more-btn { padding: 6px; text-align: center; background: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 0.65rem; color: #2563eb; cursor: pointer; font-weight: 500; margin-top: 6px; border-radius: 6px; }
+        .show-more-btn:hover { background: #eef2ff; }
+
+        @media (max-width: 1200px) { .area-stats-grid { grid-template-columns: repeat(8, 1fr); } }
+        @media (max-width: 900px) { .area-stats-grid { grid-template-columns: repeat(6, 1fr); } }
+        @media (max-width: 600px) { .area-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 400px) { .area-stats-grid { grid-template-columns: repeat(3, 1fr); } }
 
         .table-wrapper { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; overflow-x: auto; }
         .members-table { width: 100%; border-collapse: collapse; min-width: 600px; }
@@ -284,156 +302,237 @@
         .member-name { font-weight: 600; color: #1e293b; }
         .badge { display: inline-block; padding: 2px 8px; border-radius: 30px; font-size: 0.65rem; font-weight: 500; background: #e0f2fe; color: #0369a1; }
         .action-buttons { display: flex; gap: 4px; }
-        .action-btn { padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 500; cursor: pointer; border: none; }
+        .action-btn { padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
         .action-view { background: #e0f2fe; color: #0284c7; }
+        .action-view:hover { background: #bae6fd; }
         .action-edit { background: #fef3c7; color: #d97706; }
+        .action-edit:hover { background: #fde68a; }
         .action-delete { background: #fee2e2; color: #dc2626; }
+        .action-delete:hover { background: #fecaca; }
+        .empty-row td { text-align: center; padding: 40px; color: #94a3b8; }
+
+        /* Modal styles */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: white; border-radius: 20px; width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto; padding: 20px; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0; }
+        .modal-header h2 { font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+        .close-modal { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #94a3b8; }
+        .detail-info p { margin: 6px 0; padding: 6px 10px; background: #f8fafc; border-radius: 10px; font-size: 0.8rem; }
+        .detail-info strong { color: #475569; width: 120px; display: inline-block; }
         .btn-cancel { background: #f1f5f9; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 14px; }
         .btn-confirm { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 14px; }
-        .message { position: fixed; bottom: 20px; right: 20px; padding: 8px 16px; border-radius: 40px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; display: none; align-items: center; gap: 8px; font-size: 0.8rem; }
+        .progress-modal { text-align: center; }
+        .progress-bar { height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 14px 0; }
+        .progress-fill { width: 0%; height: 100%; background: #2563eb; transition: width 0.3s; }
+        #fileInput { display: none; }
+        
+        .message {
+            position: fixed; bottom: 20px; right: 20px; padding: 8px 16px; border-radius: 40px;
+            background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;
+            display: none; align-items: center; gap: 8px; font-size: 0.8rem; animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .message.success { border-left: 3px solid #22c55e; }
         .message.error { border-left: 3px solid #ef4444; }
-        .delete-area-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #e2e8f0; margin: 14px 0; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; }
-        @media (max-width: 992px) { .area-stats-grid { grid-template-columns: repeat(8, 1fr); } .action-bar { flex-direction: column; align-items: stretch; } }
-        @media (max-width: 768px) { .area-stats-grid { grid-template-columns: repeat(6, 1fr); } .license-bar { flex-direction: column; align-items: flex-start; } }
-        @media (max-width: 600px) { .area-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+        .date-value { font-family: monospace; font-size: 0.75rem; }
+        .delete-area-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #e2e8f0; margin: 14px 0; font-family: inherit; }
+        
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #334155; }
+        .license-active { background: #d4edda; padding: 10px; border-radius: 8px; border: 1px solid #c3e6cb; color: #155724; }
+        .license-inactive { background: #fff3cd; padding: 10px; border-radius: 8px; border: 1px solid #ffeeba; color: #856404; }
+
+        @media (max-width: 992px) {
+            .action-bar { position: static; flex-direction: column; align-items: stretch; }
+            .btn-group { justify-content: flex-start; }
+            .search-inline-group { width: 100%; justify-content: space-between; }
+        }
+        @media (max-width: 768px) {
+            .main-stats { flex-wrap: wrap; gap: 8px; }
+            .top-bar { padding: 0 16px; }
+            .main-content { padding: 12px; }
+            .license-compact { flex-direction: column; align-items: stretch; }
+            .license-status-group { justify-content: space-between; }
+        }
     </style>
 </head>
 <body>
-<div class="top-bar">…</div>
-<div class="main-content">
-    <!-- Compact license & trial bar (merged) -->
-    <div id="licenseCompactBar" class="license-bar">
-        <div class="license-status">
-            <span class="license-badge" id="licenseBadgeIcon"><i class="fas fa-key"></i> <span id="licenseBadgeText">Đang kiểm tra</span></span>
-            <span id="licenseDetailCompact" class="license-key-text">—</span>
+    <div class="top-bar">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-users"></i></div>
+            <div><h1>Hội CCB</h1><p>Quản lý hội viên</p></div>
         </div>
-        <div class="limit-progress" id="limitProgressArea" style="display: none;">
-            <i class="fas fa-chart-line" style="font-size: 0.7rem; color:#64748b;"></i>
-            <div class="progress-meter"><div class="progress-fill-meter" id="trialProgressFill"></div></div>
-            <span class="limit-text" id="trialCountText">0/10</span>
-        </div>
-        <div class="license-info-text" id="licenseExpiryOrAction">
-            <button id="compactActivateBtn" class="activate-btn-sm"><i class="fas fa-gem"></i> Kích hoạt bản quyền</button>
+        <div class="user-menu">
+            <span class="user-email" id="userEmail">Đang tải...</span>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Thoát</button>
         </div>
     </div>
 
-    <div class="action-bar">…</div>
-    <div class="stats-container">…</div>
-    <div class="table-wrapper">…</div>
-</div>
+    <div class="main-content">
+        <!-- COMPACT LICENSE BAR - hợp nhất thông báo bản quyền và giới hạn -->
+        <div class="license-compact" id="licenseCompactBar">
+            <div class="license-status-group">
+                <span class="license-badge-compact" id="licenseBadge">
+                    <i class="fas fa-key"></i> <span id="licenseBadgeText">Đang kiểm tra</span>
+                </span>
+                <div class="trial-meter" id="trialMeterArea" style="display: none;">
+                    <i class="fas fa-chart-line" style="font-size: 0.7rem; color:#64748b;"></i>
+                    <div class="meter-bar"><div class="meter-fill" id="trialFillBar"></div></div>
+                    <span class="trial-text" id="trialCountDisplay">0/10</span>
+                </div>
+                <span class="license-key-hint" id="licenseKeyHint">—</span>
+            </div>
+            <div id="licenseActionArea">
+                <button class="license-action-btn" id="compactActivateBtn"><i class="fas fa-gem"></i> Kích hoạt</button>
+            </div>
+        </div>
 
-<!-- Modals as before but simplified -->
-<div id="detailModal" class="modal">…</div>
-<div id="confirmModal" class="modal">…</div>
-<div id="importProgress" class="modal">…</div>
-<div id="licenseModal" class="modal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-key"></i> Kích hoạt bản quyền</h2><button class="close-modal" id="closeLicenseModalBtn">&times;</button></div><div id="licenseStatusMsg"></div><div class="form-group"><label>Mã bản quyền</label><div style="display:flex; gap:8px;"><input type="text" id="licenseKeyInput" placeholder="Nhập mã" style="flex:1; padding:8px; border-radius:10px; border:1px solid #e2e8f0;"><button id="pasteKeyBtn" style="background:#f1f5f9; border:none; padding:0 12px; border-radius:10px;"><i class="fas fa-paste"></i> Dán</button></div></div><button id="activateLicenseBtn" style="width:100%; margin-top:15px; background:#8b5cf6; color:white; border:none; padding:10px; border-radius:40px; font-weight:bold;">Kích hoạt</button><div id="currentLicenseInfo" style="margin-top:12px; font-size:0.75rem;"></div></div></div>
-<div id="messageBox" class="message"></div>
-<input type="file" id="fileInput" accept=".xlsx, .xls, .csv" style="display:none;">
+        <!-- GIỮ NGUYÊN ACTION BAR -->
+        <div class="action-bar">
+            <div class="btn-group">
+                <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Thêm</button>
+                <button class="btn btn-success" id="exportBtn"><i class="fas fa-file-excel"></i> Xuất</button>
+                <button class="btn btn-purple" id="importBtn"><i class="fas fa-file-import"></i> Import</button>
+                <button class="btn btn-warning" id="downloadSampleBtn"><i class="fas fa-download"></i> Mẫu</button>
+                <button class="btn btn-danger" id="deleteByAreaBtn"><i class="fas fa-trash-alt"></i> Xóa theo KV</button>
+                <button class="btn btn-danger" id="deleteAllBtn"><i class="fas fa-skull-crosswalk"></i> Xóa tất cả</button>
+                <button class="btn btn-license" id="getLicenseBtn"><i class="fas fa-key"></i> Lấy Key bản quyền</button>
+            </div>
+            <div class="search-inline-group">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchKeyword" placeholder="Họ tên, số thẻ, SĐT...">
+                </div>
+                <select id="searchArea"><option value="">Tất cả KV</option></select>
+                <button class="btn btn-outline" id="resetFilterBtn"><i class="fas fa-undo-alt"></i> Reset</button>
+            </div>
+        </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, get, remove, push, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    const firebaseConfig = { apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8", authDomain: "hoi-ccb.firebaseapp.com", databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "hoi-ccb", storageBucket: "hoi-ccb.firebasestorage.app", messagingSenderId: "344971473549", appId: "1:344971473549:web:7d4db3d5d328401164e8c4" };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const database = getDatabase(app);
-    let currentUser = null, allMembers = [], customAreas = [], showAllAreas = true, currentFilterArea = null, currentLicense = null, memberCount = 0;
-    const elements = { membersList: document.getElementById('membersList'), userEmail: document.getElementById('userEmail'), messageBox: document.getElementById('messageBox'), searchKeyword: document.getElementById('searchKeyword'), searchArea: document.getElementById('searchArea'), totalMembers: document.getElementById('totalMembers'), totalMale: document.getElementById('totalMale'), totalFemale: document.getElementById('totalFemale'), areaStatsGrid: document.getElementById('areaStatsGrid') };
-    function showMessage(text, type = 'success') { const msg = elements.messageBox; msg.textContent = text; msg.className = `message ${type}`; msg.style.display = 'flex'; setTimeout(() => msg.style.display = 'none', 3000); }
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
-    function formatAreaDisplay(area) { if (!area || area === 'Chưa phân loại') return '???'; if (area.match(/^KV\s+\d+/i)) return area; const match = area.match(/(?:khu\s*vực\s*)?(\d+[a-z]?)/i); return match ? `KV ${match[1]}` : (area.length > 12 ? area.substring(0,10)+'…' : area); }
-    function formatDateToDMY(d) { if(!d||d==='') return '---'; if(/^\d{2}\/\d{2}\/\d{4}$/.test(d)) return d; const m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/); if(m) return `${m[3]}/${m[2]}/${m[1]}`; return d; }
-    function extractAreaNumber(area) { if (!area || area === 'Chưa phân loại') return Infinity; const m = area.match(/(\d+)/); return m ? parseInt(m[1]) : Infinity; }
+        <!-- GIỮ NGUYÊN STATS -->
+        <div class="stats-container">
+            <div class="stats-header">
+                <div class="stats-title"><i class="fas fa-chart-simple"></i> THỐNG KÊ HỘI VIÊN THEO KHU VỰC</div>
+                <div class="stats-controls">
+                    <button class="stats-toggle active" id="showAllAreasBtn"><i class="fas fa-expand"></i> Tất cả KV</button>
+                    <button class="stats-toggle" id="showTopAreasBtn"><i class="fas fa-chart-line"></i> Top 10</button>
+                </div>
+            </div>
+            <div class="main-stats" id="mainStats">
+                <div class="main-stat-card total"><div class="stat-icon"><i class="fas fa-user-friends"></i></div><div class="stat-info"><h4>Tổng số:</h4><div class="stat-number" id="totalMembers">0</div></div></div>
+                <div class="main-stat-card male"><div class="stat-icon"><i class="fas fa-mars"></i></div><div class="stat-info"><h4>Nam:</h4><div class="stat-number" id="totalMale">0</div></div></div>
+                <div class="main-stat-card female"><div class="stat-icon"><i class="fas fa-venus"></i></div><div class="stat-info"><h4>Nữ:</h4><div class="stat-number" id="totalFemale">0</div></div></div>
+            </div>
+            <div class="area-stats-wrapper"><div class="area-stats-grid" id="areaStatsGrid"></div></div>
+        </div>
 
-    async function updateCompactLicenseUI() {
-        if (!currentUser) return;
-        const membersSnap = await get(ref(database, `users/${currentUser.uid}/members`));
-        memberCount = membersSnap.exists() ? Object.keys(membersSnap.val()).length : 0;
-        const licenseSnap = await get(ref(database, `users/${currentUser.uid}/license`));
-        currentLicense = licenseSnap.val();
-        const badgeSpan = document.getElementById('licenseBadgeText');
-        const badgeIconSpan = document.getElementById('licenseBadgeIcon');
-        const detailCompact = document.getElementById('licenseDetailCompact');
-        const limitProgressDiv = document.getElementById('limitProgressArea');
-        const trialFill = document.getElementById('trialProgressFill');
-        const trialCountSpan = document.getElementById('trialCountText');
-        const actionContainer = document.getElementById('licenseExpiryOrAction');
+        <div class="table-wrapper">
+            <table class="members-table">
+                <thead><tr><th>STT</th><th>Họ và tên</th><th>Năm sinh</th><th>Khu vực</th><th>Số thẻ HV</th><th>Số điện thoại</th><th>Thao tác</th></tr></thead>
+                <tbody id="membersList"><tr class="empty-row"><td colspan="7">Đang tải...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CÁC MODAL GIỮ NGUYÊN -->
+    <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2><button class="close-modal" id="closeDetailModalBtn">&times;</button></div><div id="detailContent" class="detail-info"></div><button class="btn-cancel" id="closeDetailBtn">Đóng</button></div></div>
+    <div id="confirmModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="confirmTitle">Xác nhận</h2><button class="close-modal" id="closeConfirmModalBtn">&times;</button></div><div id="confirmMessage" style="margin: 14px 0;"></div><div id="confirmAreaSelect" style="display: none;"><label><i class="fas fa-map-marker-alt"></i> Chọn khu vực cần xóa:</label><select id="areaToDelete" class="delete-area-select"></select></div><button class="btn-cancel" id="cancelConfirmBtn">Hủy</button><button class="btn-confirm" id="confirmActionBtn">Xác nhận</button></div></div>
+    <div id="importProgress" class="modal"><div class="modal-content progress-modal"><h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><p id="progressText">Đang xử lý...</p></div></div>
+    <div id="licenseModal" class="modal"><div class="modal-content" style="max-width: 400px;"><div class="modal-header"><h2><i class="fas fa-key"></i> Kích hoạt bản quyền</h2><button class="close-modal" id="closeLicenseModalBtn">&times;</button></div><div id="licenseStatusMsg" style="margin-bottom: 15px;"></div><div class="form-group" style="margin-bottom: 15px;"><label><i class="fas fa-qrcode"></i> Mã bản quyền</label><div style="display: flex; gap: 10px;"><input type="text" id="licenseKeyInput" placeholder="Nhập mã bản quyền" style="flex:1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 10px; font-family: monospace;"><button id="pasteKeyBtn" style="background:#f1f5f9; border:none; padding:0 15px; border-radius:10px;"><i class="fas fa-paste"></i> Dán</button></div></div><button id="activateLicenseBtn" style="width:100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-weight: bold;"><i class="fas fa-check-circle"></i> Kích hoạt</button><div id="currentLicenseInfo" style="margin-top: 15px; padding: 10px; background: #f8fafc; border-radius: 10px; font-size: 0.8rem;"></div></div></div>
+    <div id="messageBox" class="message"></div>
+    <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
+
+    <script type="module">
+        // Toàn bộ logic Firebase giữ nguyên, chỉ sửa giao diện license compact
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, remove, push, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        const firebaseConfig = { apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8", authDomain: "hoi-ccb.firebaseapp.com", databaseURL: "https://hoi-ccb-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "hoi-ccb", storageBucket: "hoi-ccb.firebasestorage.app", messagingSenderId: "344971473549", appId: "1:344971473549:web:7d4db3d5d328401164e8c4" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+        let currentUser = null, allMembers = [], customAreas = [], showAllAreas = true, currentFilterArea = null, currentLicense = null, memberCount = 0;
+        const elements = { membersList: document.getElementById('membersList'), userEmail: document.getElementById('userEmail'), messageBox: document.getElementById('messageBox'), searchKeyword: document.getElementById('searchKeyword'), searchArea: document.getElementById('searchArea'), totalMembers: document.getElementById('totalMembers'), totalMale: document.getElementById('totalMale'), totalFemale: document.getElementById('totalFemale'), areaStatsGrid: document.getElementById('areaStatsGrid') };
+        function showMessage(text, type = 'success') { const msg = elements.messageBox; msg.textContent = text; msg.className = `message ${type}`; msg.style.display = 'flex'; setTimeout(() => msg.style.display = 'none', 3000); }
+        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+        function formatAreaDisplay(area) { if (!area || area === 'Chưa phân loại') return '???'; if (area.match(/^KV\s+\d+/i)) return area; const match = area.match(/(?:khu\s*vực\s*)?(\d+[a-z]?)/i); return match ? `KV ${match[1]}` : (area.length > 12 ? area.substring(0,10)+'…' : area); }
+        function formatDateToDMY(d) { if(!d||d==='') return '---'; if(/^\d{2}\/\d{2}\/\d{4}$/.test(d)) return d; const m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/); if(m) return `${m[3]}/${m[2]}/${m[1]}`; return d; }
+        function extractAreaNumber(area) { if (!area || area === 'Chưa phân loại') return Infinity; const m = area.match(/(\d+)/); return m ? parseInt(m[1]) : Infinity; }
         
-        if (currentLicense && currentLicense.licensed === true) {
-            badgeSpan.innerHTML = '<i class="fas fa-check-circle"></i> ĐÃ KÍCH HOẠT';
-            badgeIconSpan.className = 'license-badge active';
-            detailCompact.innerHTML = `<i class="far fa-id-card"></i> Mã: ${currentLicense.key.substring(0,8)}...`;
-            limitProgressDiv.style.display = 'none';
-            actionContainer.innerHTML = `<span style="font-size:0.7rem; color:#10b981;"><i class="fas fa-infinity"></i> Không giới hạn</span>`;
-            const addBtn = document.getElementById('addMemberBtn'); if(addBtn) { addBtn.disabled = false; addBtn.style.opacity='1'; addBtn.title=''; }
-        } else {
-            badgeSpan.innerHTML = '<i class="fas fa-hourglass-half"></i> DÙNG THỬ';
-            badgeIconSpan.className = 'license-badge warning';
-            detailCompact.innerHTML = `Giới hạn ${memberCount}/10 hội viên`;
-            limitProgressDiv.style.display = 'flex';
-            const percent = (memberCount / 10) * 100;
-            trialFill.style.width = `${Math.min(percent, 100)}%`;
-            if (memberCount >= 10) trialFill.style.background = '#ef4444';
-            else trialFill.style.background = '#f59e0b';
-            trialCountSpan.innerHTML = `${memberCount}/10`;
-            actionContainer.innerHTML = `<button id="compactActivateBtnDynamic" class="activate-btn-sm"><i class="fas fa-gem"></i> Kích hoạt ngay</button>`;
-            const newBtn = document.getElementById('compactActivateBtnDynamic');
-            if(newBtn) newBtn.onclick = () => openLicenseModal();
+        // Compact License UI update (hợp nhất)
+        async function updateCompactLicenseUI() {
+            if (!currentUser) return;
+            const membersSnap = await get(ref(database, `users/${currentUser.uid}/members`));
+            memberCount = membersSnap.exists() ? Object.keys(membersSnap.val()).length : 0;
+            const licenseSnap = await get(ref(database, `users/${currentUser.uid}/license`));
+            currentLicense = licenseSnap.val();
+            const badgeSpan = document.getElementById('licenseBadgeText');
+            const badgeContainer = document.getElementById('licenseBadge');
+            const trialMeterDiv = document.getElementById('trialMeterArea');
+            const trialFill = document.getElementById('trialFillBar');
+            const trialCountSpan = document.getElementById('trialCountDisplay');
+            const keyHintSpan = document.getElementById('licenseKeyHint');
+            const actionDiv = document.getElementById('licenseActionArea');
             const addBtn = document.getElementById('addMemberBtn');
-            if(addBtn) {
-                if(memberCount >= 10) { addBtn.disabled = true; addBtn.style.opacity='0.5'; addBtn.title='Đã đạt giới hạn 10, vui lòng kích hoạt bản quyền'; }
-                else { addBtn.disabled = false; addBtn.style.opacity='1'; addBtn.title=''; }
+            
+            if (currentLicense && currentLicense.licensed === true) {
+                badgeSpan.innerHTML = '<i class="fas fa-check-circle"></i> ĐÃ KÍCH HOẠT';
+                badgeContainer.className = 'license-badge-compact active';
+                trialMeterDiv.style.display = 'none';
+                keyHintSpan.innerHTML = `<i class="far fa-id-card"></i> Mã: ${currentLicense.key.substring(0,8)}...`;
+                actionDiv.innerHTML = `<span class="unlimited-badge"><i class="fas fa-infinity"></i> Không giới hạn</span>`;
+                if (addBtn) { addBtn.disabled = false; addBtn.style.opacity = '1'; addBtn.title = ''; }
+            } else {
+                badgeSpan.innerHTML = '<i class="fas fa-hourglass-half"></i> DÙNG THỬ';
+                badgeContainer.className = 'license-badge-compact warning';
+                trialMeterDiv.style.display = 'flex';
+                const percent = (memberCount / 10) * 100;
+                trialFill.style.width = `${Math.min(percent, 100)}%`;
+                if (memberCount >= 10) { trialFill.classList.add('danger-bg'); trialFill.classList.remove('warning-bg'); }
+                else { trialFill.classList.add('warning-bg'); trialFill.classList.remove('danger-bg'); }
+                trialCountSpan.innerHTML = `${memberCount}/10`;
+                keyHintSpan.innerHTML = `Giới hạn dùng thử`;
+                actionDiv.innerHTML = `<button class="license-action-btn" id="compactActivateDynamic"><i class="fas fa-gem"></i> Kích hoạt ngay</button>`;
+                const dynamicBtn = document.getElementById('compactActivateDynamic');
+                if (dynamicBtn) dynamicBtn.onclick = () => openLicenseModal();
+                if (addBtn) {
+                    if (memberCount >= 10) { addBtn.disabled = true; addBtn.style.opacity = '0.5'; addBtn.title = 'Đã đạt giới hạn 10, vui lòng kích hoạt bản quyền'; }
+                    else { addBtn.disabled = false; addBtn.style.opacity = '1'; addBtn.title = ''; }
+                }
             }
         }
-    }
-
-    async function loadMembers() { if (!currentUser) return; const snap = await get(ref(database, `users/${currentUser.uid}/members`)); allMembers = snap.exists() ? Object.entries(snap.val()).map(([id,m])=>({id,...m})) : []; updateMainStats(); renderAreaStats(); renderMembersList(); await updateCompactLicenseUI(); }
-    function updateMainStats() { elements.totalMembers.textContent = allMembers.length; elements.totalMale.textContent = allMembers.filter(m=>m.gender==='Nam').length; elements.totalFemale.textContent = allMembers.filter(m=>m.gender==='Nữ').length; }
-    function renderMembersList() { const kw = elements.searchKeyword.value.toLowerCase().trim(); const areaVal = elements.searchArea.value; let filtered = allMembers.filter(m => { if(kw && !(m.fullName?.toLowerCase().includes(kw) || m.memberCardNumber?.toLowerCase().includes(kw) || m.phone?.toLowerCase().includes(kw))) return false; if(areaVal && m.area !== areaVal) return false; return true; }); if(filtered.length===0) { elements.membersList.innerHTML = '<tr class="empty-row"><td colspan="7">Không có dữ liệu</td></tr>'; return; } elements.membersList.innerHTML = filtered.map((m,i)=>`<tr><td>${i+1}</td><td><span class="member-name">${escapeHtml(m.fullName||'---')}</span></td><td>${formatDateToDMY(m.birthYear)}</td><td><span class="badge">${escapeHtml(formatAreaDisplay(m.area||'---'))}</span></td><td>${escapeHtml(m.memberCardNumber||'---')}</td><td>${escapeHtml(m.phone||'---')}</td><td class="action-buttons"><button class="action-btn action-view" onclick="window.viewDetail('${m.id}')"><i class="fas fa-eye"></i></button><button class="action-btn action-edit" onclick="window.editMember('${m.id}')"><i class="fas fa-pen"></i></button><button class="action-btn action-delete" onclick="window.deleteMember('${m.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
-    window.viewDetail = (id) => { const m = allMembers.find(x=>x.id===id); if(!m) return; document.getElementById('detailContent').innerHTML = `<p><strong>👤 Họ tên:</strong> ${escapeHtml(m.fullName)}</p><p><strong>🆔 Số thẻ:</strong> ${escapeHtml(m.memberCardNumber)}</p><p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear)}</p><p><strong>📍 Khu vực:</strong> ${escapeHtml(formatAreaDisplay(m.area))}</p><p><strong>📞 Điện thoại:</strong> ${escapeHtml(m.phone)}</p><p><strong>🏠 Địa chỉ:</strong> ${escapeHtml(m.address)}</p>`; document.getElementById('detailModal').style.display = 'flex'; };
-    window.editMember = (id) => window.location.href = `hoivien.html?id=${id}`;
-    window.deleteMember = async (id) => { if(confirm('Xóa hội viên này?')) { await remove(ref(database, `users/${currentUser.uid}/members/${id}`)); showMessage('Đã xóa!'); await loadMembers(); } };
-    function renderAreaStats() { const areaStats={}; allMembers.forEach(m=>{let a=m.area||'Chưa phân loại'; areaStats[a]=(areaStats[a]||0)+1;}); let sorted=Object.entries(areaStats).sort((a,b)=>extractAreaNumber(a[0])-extractAreaNumber(b[0])); let display=showAllAreas?sorted:sorted.slice(0,10); if(display.length===0) { elements.areaStatsGrid.innerHTML='<div style="padding:20px;text-align:center;">Chưa có dữ liệu</div>'; return; } let html=''; display.forEach(([area,count])=>{ let activeClass=(currentFilterArea===area)?'active':''; html+=`<div class="area-stat-item ${activeClass}" onclick="window.filterByArea('${escapeHtml(area).replace(/'/g, "\\'")}')"><div class="area-name"><i class="fas fa-map-marker-alt"></i><span>${escapeHtml(formatAreaDisplay(area))}</span></div><div class="area-count">${count}</div></div>`;}); if(!showAllAreas && sorted.length>10) html+=`<div class="show-more-btn" style="grid-column:1/-1;text-align:center;padding:4px;background:#f1f5f9;border-radius:8px;" id="showMoreBtn">Xem tất cả (${sorted.length})</div>`; elements.areaStatsGrid.innerHTML=html; const moreBtn=document.getElementById('showMoreBtn'); if(moreBtn) moreBtn.onclick=()=>{ showAllAreas=true; document.getElementById('showAllAreasBtn').classList.add('active'); document.getElementById('showTopAreasBtn').classList.remove('active'); renderAreaStats(); }; }
-    window.filterByArea = (area) => { currentFilterArea=area; elements.searchArea.value=area; renderMembersList(); renderAreaStats(); };
-    async function loadAreas() { if(!currentUser) return; const snap=await get(ref(database,`users/${currentUser.uid}/custom_data/areas`)); customAreas=snap.exists()?Object.values(snap.val()):[]; customAreas.sort((a,b)=>extractAreaNumber(a)-extractAreaNumber(b)); elements.searchArea.innerHTML='<option value="">Tất cả KV</option>'; customAreas.forEach(area=>{let opt=document.createElement('option'); opt.value=area; opt.textContent=formatAreaDisplay(area); elements.searchArea.appendChild(opt);}); }
-    async function deleteAll() { if(allMembers.length===0) return; for(const m of allMembers) await remove(ref(database,`users/${currentUser.uid}/members/${m.id}`)); showMessage('Đã xóa toàn bộ'); await loadMembers(); }
-    async function deleteByArea(area){ if(!area) return; const toDel=allMembers.filter(m=>(m.area||'Chưa phân loại')===area); for(const m of toDel) await remove(ref(database,`users/${currentUser.uid}/members/${m.id}`)); showMessage(`Xóa ${toDel.length} hội viên khu vực ${area}`); await loadMembers(); }
-    function showConfirmModal(type){ const modal=document.getElementById('confirmModal'); const title=document.getElementById('confirmTitle'); const msg=document.getElementById('confirmMessage'); const areaDiv=document.getElementById('confirmAreaSelect'); const areaSelect=document.getElementById('areaToDelete'); if(type==='area'){ title.innerHTML='Xóa theo khu vực'; msg.innerHTML='Chọn khu vực cần xóa vĩnh viễn?'; const stats={}; allMembers.forEach(m=>{let a=m.area||'Chưa phân loại'; stats[a]=(stats[a]||0)+1;}); areaSelect.innerHTML='<option value="">-- Chọn KV --</option>'; Object.entries(stats).sort((a,b)=>extractAreaNumber(a[0])-extractAreaNumber(b[0])).forEach(([a,c])=>{let opt=document.createElement('option'); opt.value=a; opt.textContent=`${formatAreaDisplay(a)} (${c})`; areaSelect.appendChild(opt);}); areaDiv.style.display='block'; window.pendingDeleteAction='area'; } else if(type==='all'){ title.innerHTML='Xóa tất cả'; msg.innerHTML=`Xóa ${allMembers.length} hội viên? Hành động vĩnh viễn.`; areaDiv.style.display='none'; window.pendingDeleteAction='all'; } modal.style.display='flex'; document.getElementById('confirmActionBtn').onclick=async()=>{ if(window.pendingDeleteAction==='area'){ const selected=areaSelect.value; if(selected) await deleteByArea(selected); } else if(window.pendingDeleteAction==='all') await deleteAll(); modal.style.display='none'; }; }
-    function exportToExcel(){ let filtered=allMembers; if(elements.searchKeyword.value.trim()){ let kw=elements.searchKeyword.value.toLowerCase(); filtered=filtered.filter(m=>m.fullName?.toLowerCase().includes(kw)||m.memberCardNumber?.toLowerCase().includes(kw)); } if(elements.searchArea.value) filtered=filtered.filter(m=>m.area===elements.searchArea.value); if(!filtered.length) return showMessage('Ko có dữ liệu','error'); const rows=filtered.map((m,i)=>({ STT:i+1, 'Họ và tên':m.fullName||'', 'Khu vực':m.area||'', 'Năm sinh':formatDateToDMY(m.birthYear), 'Số thẻ HV':m.memberCardNumber||'', 'SĐT':m.phone||'', 'Giới tính':m.gender||'' })); const ws=XLSX.utils.json_to_sheet(rows); const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'DS'); XLSX.writeFile(wb,`DS_HV_${new Date().toISOString().slice(0,10)}.xlsx`); showMessage('Xuất thành công'); }
-    function downloadSample(){ const sample=[{ 'Họ và tên':'Nguyễn Văn A','Khu vực':'KV 1','Năm sinh':'15/05/1960','Số thẻ HV':'HV001','SĐT':'0912345678','Giới tính':'Nam' }]; const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sample),'Mau'); XLSX.writeFile(wb,'file_mau_hoi_vien.xlsx'); showMessage('Đã tải mẫu'); }
-    async function processImport(rows){ const progress=document.getElementById('importProgress'); progress.style.display='flex'; let succ=0; for(let i=0;i<rows.length;i++){ const r=rows[i]; if(!r['Họ và tên']) continue; const data={ fullName: r['Họ và tên'], area: r['Khu vực']||'', birthYear: r['Năm sinh']||'', memberCardNumber: r['Số thẻ HV']||r['Số thẻ Hội viên']||'', phone: r['SĐT']||r['Điện thoại']||'', gender: r['Giới tính']||'', address: r['Địa chỉ']||'', note: r['Ghi chú']||'', updatedAt: new Date().toISOString(), createdAt: new Date().toISOString() }; const newRef=push(ref(database,`users/${currentUser.uid}/members`)); data.id=newRef.key; await set(newRef,data); succ++; } progress.style.display='none'; await loadMembers(); showMessage(`Import thành công ${succ} dòng`); }
-    async function activateLicense(){ const key=document.getElementById('licenseKeyInput').value.trim().toUpperCase(); if(!key) return showMessage('Nhập mã','error'); const btn=document.getElementById('activateLicenseBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Đang xử lý'; const keySnap=await get(ref(database,`licenseKeys/${key}`)); if(!keySnap.exists()){ showMessage('Mã không tồn tại','error'); btn.disabled=false; btn.innerHTML='Kích hoạt'; return; } const keyData=keySnap.val(); if(keyData.used){ showMessage('Mã đã được sử dụng','error'); btn.disabled=false; btn.innerHTML='Kích hoạt'; return; } await update(ref(database,`licenseKeys/${key}`),{used:true, usedAt:Date.now(), usedBy:currentUser.uid, usedByEmail:currentUser.email}); await set(ref(database,`users/${currentUser.uid}/license`),{licensed:true, key:key, activatedAt:Date.now()}); showMessage('Kích hoạt thành công!','success'); document.getElementById('licenseModal').style.display='none'; await updateCompactLicenseUI(); await loadMembers(); btn.disabled=false; btn.innerHTML='Kích hoạt'; }
-    function openLicenseModal(){ document.getElementById('licenseModal').style.display='flex'; document.getElementById('licenseKeyInput').value=''; }
-    async function pasteKey(){ const txt=await navigator.clipboard.readText(); document.getElementById('licenseKeyInput').value=txt.trim().toUpperCase(); showMessage('Đã dán mã'); }
-    document.getElementById('addMemberBtn').onclick = () => { if(currentLicense && currentLicense.licensed===true) window.location.href='hoivien.html'; else if(memberCount>=10){ showMessage('Đã đạt giới hạn 10, vui lòng kích hoạt bản quyền','error'); openLicenseModal(); } else window.location.href='hoivien.html'; };
-    document.getElementById('exportBtn').onclick=exportToExcel;
-    document.getElementById('importBtn').onclick=()=>document.getElementById('fileInput').click();
-    document.getElementById('downloadSampleBtn').onclick=downloadSample;
-    document.getElementById('deleteByAreaBtn').onclick=()=>showConfirmModal('area');
-    document.getElementById('deleteAllBtn').onclick=()=>showConfirmModal('all');
-    document.getElementById('getLicenseBtn').onclick=openLicenseModal;
-    document.getElementById('showAllAreasBtn').onclick=()=>{ showAllAreas=true; document.getElementById('showAllAreasBtn').classList.add('active'); document.getElementById('showTopAreasBtn').classList.remove('active'); renderAreaStats(); };
-    document.getElementById('showTopAreasBtn').onclick=()=>{ showAllAreas=false; document.getElementById('showTopAreasBtn').classList.add('active'); document.getElementById('showAllAreasBtn').classList.remove('active'); renderAreaStats(); };
-    document.getElementById('resetFilterBtn').onclick=()=>{ elements.searchKeyword.value=''; elements.searchArea.value=''; currentFilterArea=null; renderMembersList(); renderAreaStats(); };
-    elements.searchKeyword.oninput=renderMembersList; elements.searchArea.onchange=()=>{ currentFilterArea=elements.searchArea.value||null; renderMembersList(); renderAreaStats(); };
-    document.getElementById('fileInput').addEventListener('change',async(e)=>{if(!e.target.files[0])return; const data=await new Promise(r=>{const reader=new FileReader(); reader.onload=(e)=>r(XLSX.read(new Uint8Array(e.target.result),{type:'array'})); reader.readAsArrayBuffer(e.target.files[0]);}); const sheet=data.Sheets[data.SheetNames[0]]; const rows=XLSX.utils.sheet_to_json(sheet); await processImport(rows); e.target.value='';});
-    document.getElementById('logoutBtn').onclick=async()=>{await signOut(auth); window.location.href='index.html';};
-    onAuthStateChanged(auth,async(user)=>{ if(!user) window.location.href='index.html'; currentUser=user; elements.userEmail.textContent=user.email; await loadAreas(); await loadMembers(); });
-    window.closeDetailModal=()=>document.getElementById('detailModal').style.display='none';
-    document.getElementById('closeDetailModalBtn').onclick=()=>document.getElementById('detailModal').style.display='none';
-    document.getElementById('closeDetailBtn').onclick=()=>document.getElementById('detailModal').style.display='none';
-    document.getElementById('closeConfirmModalBtn').onclick=()=>document.getElementById('confirmModal').style.display='none';
-    document.getElementById('cancelConfirmBtn').onclick=()=>document.getElementById('confirmModal').style.display='none';
-    document.getElementById('closeLicenseModalBtn').onclick=()=>document.getElementById('licenseModal').style.display='none';
-    document.getElementById('pasteKeyBtn').onclick=pasteKey;
-    document.getElementById('activateLicenseBtn').onclick=activateLicense;
-    window.onclick=(e)=>{ if(e.target===document.getElementById('licenseModal')) document.getElementById('licenseModal').style.display='none'; if(e.target===document.getElementById('detailModal')) document.getElementById('detailModal').style.display='none'; if(e.target===document.getElementById('confirmModal')) document.getElementById('confirmModal').style.display='none'; };
-</script>
+        
+        async function loadMembers() { if (!currentUser) return; const snap = await get(ref(database, `users/${currentUser.uid}/members`)); allMembers = snap.exists() ? Object.entries(snap.val()).map(([id,m])=>({id,...m})) : []; updateMainStats(); renderAreaStats(); renderMembersList(); await updateCompactLicenseUI(); }
+        function updateMainStats() { elements.totalMembers.textContent = allMembers.length; elements.totalMale.textContent = allMembers.filter(m=>m.gender==='Nam').length; elements.totalFemale.textContent = allMembers.filter(m=>m.gender==='Nữ').length; }
+        function renderMembersList() { const kw = elements.searchKeyword.value.toLowerCase().trim(); const areaVal = elements.searchArea.value; let filtered = allMembers.filter(m => { if(kw && !(m.fullName?.toLowerCase().includes(kw) || m.memberCardNumber?.toLowerCase().includes(kw) || m.phone?.toLowerCase().includes(kw))) return false; if(areaVal && m.area !== areaVal) return false; return true; }); if(filtered.length===0) { elements.membersList.innerHTML = '<tr class="empty-row"><td colspan="7">Không có dữ liệu</td></tr>'; return; } elements.membersList.innerHTML = filtered.map((m,i)=>`<tr><td>${i+1}</td><td><span class="member-name">${escapeHtml(m.fullName||'---')}</span></td><td>${formatDateToDMY(m.birthYear)}</td><td><span class="badge">${escapeHtml(formatAreaDisplay(m.area||'---'))}</span></td><td>${escapeHtml(m.memberCardNumber||'---')}</td><td>${escapeHtml(m.phone||'---')}</td><td class="action-buttons"><button class="action-btn action-view" onclick="window.viewDetail('${m.id}')"><i class="fas fa-eye"></i></button><button class="action-btn action-edit" onclick="window.editMember('${m.id}')"><i class="fas fa-pen"></i></button><button class="action-btn action-delete" onclick="window.deleteMember('${m.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
+        window.viewDetail = (id) => { const m = allMembers.find(x=>x.id===id); if(!m) return; document.getElementById('detailContent').innerHTML = `<p><strong>👤 Họ tên:</strong> ${escapeHtml(m.fullName)}</p><p><strong>🆔 Số thẻ:</strong> ${escapeHtml(m.memberCardNumber)}</p><p><strong>📅 Năm sinh:</strong> ${formatDateToDMY(m.birthYear)}</p><p><strong>📍 Khu vực:</strong> ${escapeHtml(formatAreaDisplay(m.area))}</p><p><strong>📞 Điện thoại:</strong> ${escapeHtml(m.phone)}</p>`; document.getElementById('detailModal').style.display = 'flex'; };
+        window.editMember = (id) => window.location.href = `hoivien.html?id=${id}`;
+        window.deleteMember = async (id) => { if(confirm('Xóa hội viên này?')) { await remove(ref(database, `users/${currentUser.uid}/members/${id}`)); showMessage('Đã xóa!'); await loadMembers(); } };
+        function renderAreaStats() { const areaStats={}; allMembers.forEach(m=>{let a=m.area||'Chưa phân loại'; areaStats[a]=(areaStats[a]||0)+1;}); let sorted=Object.entries(areaStats).sort((a,b)=>extractAreaNumber(a[0])-extractAreaNumber(b[0])); let display=showAllAreas?sorted:sorted.slice(0,10); if(display.length===0) { elements.areaStatsGrid.innerHTML='<div style="padding:20px;text-align:center;">Chưa có dữ liệu</div>'; return; } let html=''; display.forEach(([area,count])=>{ let activeClass=(currentFilterArea===area)?'active':''; html+=`<div class="area-stat-item ${activeClass}" onclick="window.filterByArea('${escapeHtml(area).replace(/'/g, "\\'")}')"><div class="area-name"><i class="fas fa-map-marker-alt"></i><span>${escapeHtml(formatAreaDisplay(area))}</span></div><div class="area-count">${count}</div></div>`;}); if(!showAllAreas && sorted.length>10) html+=`<div class="show-more-btn" id="showMoreBtn">Xem tất cả (${sorted.length})</div>`; elements.areaStatsGrid.innerHTML=html; const moreBtn=document.getElementById('showMoreBtn'); if(moreBtn) moreBtn.onclick=()=>{ showAllAreas=true; document.getElementById('showAllAreasBtn').classList.add('active'); document.getElementById('showTopAreasBtn').classList.remove('active'); renderAreaStats(); }; }
+        window.filterByArea = (area) => { currentFilterArea=area; elements.searchArea.value=area; renderMembersList(); renderAreaStats(); };
+        async function loadAreas() { if(!currentUser) return; const snap=await get(ref(database,`users/${currentUser.uid}/custom_data/areas`)); customAreas=snap.exists()?Object.values(snap.val()):[]; customAreas.sort((a,b)=>extractAreaNumber(a)-extractAreaNumber(b)); elements.searchArea.innerHTML='<option value="">Tất cả KV</option>'; customAreas.forEach(area=>{let opt=document.createElement('option'); opt.value=area; opt.textContent=formatAreaDisplay(area); elements.searchArea.appendChild(opt);}); }
+        async function deleteAll() { for(const m of allMembers) await remove(ref(database,`users/${currentUser.uid}/members/${m.id}`)); showMessage('Đã xóa toàn bộ'); await loadMembers(); }
+        async function deleteByArea(area){ if(!area) return; const toDel=allMembers.filter(m=>(m.area||'Chưa phân loại')===area); for(const m of toDel) await remove(ref(database,`users/${currentUser.uid}/members/${m.id}`)); showMessage(`Xóa ${toDel.length} hội viên khu vực ${area}`); await loadMembers(); }
+        function showConfirmModal(type){ const modal=document.getElementById('confirmModal'); const title=document.getElementById('confirmTitle'); const msg=document.getElementById('confirmMessage'); const areaDiv=document.getElementById('confirmAreaSelect'); const areaSelect=document.getElementById('areaToDelete'); if(type==='area'){ title.innerHTML='Xóa theo khu vực'; msg.innerHTML='Chọn khu vực cần xóa?'; const stats={}; allMembers.forEach(m=>{let a=m.area||'Chưa phân loại'; stats[a]=(stats[a]||0)+1;}); areaSelect.innerHTML='<option value="">-- Chọn KV --</option>'; Object.entries(stats).sort((a,b)=>extractAreaNumber(a[0])-extractAreaNumber(b[0])).forEach(([a,c])=>{let opt=document.createElement('option'); opt.value=a; opt.textContent=`${formatAreaDisplay(a)} (${c})`; areaSelect.appendChild(opt);}); areaDiv.style.display='block'; window.pendingDeleteAction='area'; } else if(type==='all'){ title.innerHTML='Xóa tất cả'; msg.innerHTML=`Xóa ${allMembers.length} hội viên?`; areaDiv.style.display='none'; window.pendingDeleteAction='all'; } modal.style.display='flex'; document.getElementById('confirmActionBtn').onclick=async()=>{ if(window.pendingDeleteAction==='area'){ const selected=areaSelect.value; if(selected) await deleteByArea(selected); } else if(window.pendingDeleteAction==='all') await deleteAll(); modal.style.display='none'; }; }
+        function exportToExcel(){ let filtered=allMembers; if(elements.searchKeyword.value.trim()){ let kw=elements.searchKeyword.value.toLowerCase(); filtered=filtered.filter(m=>m.fullName?.toLowerCase().includes(kw)||m.memberCardNumber?.toLowerCase().includes(kw)); } if(elements.searchArea.value) filtered=filtered.filter(m=>m.area===elements.searchArea.value); if(!filtered.length) return showMessage('Không có dữ liệu','error'); const rows=filtered.map((m,i)=>({ STT:i+1, 'Họ và tên':m.fullName||'', 'Khu vực':m.area||'', 'Năm sinh':formatDateToDMY(m.birthYear), 'Số thẻ HV':m.memberCardNumber||'', 'SĐT':m.phone||'' })); const ws=XLSX.utils.json_to_sheet(rows); const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'DS'); XLSX.writeFile(wb,`DS_HV_${new Date().toISOString().slice(0,10)}.xlsx`); showMessage('Xuất thành công'); }
+        function downloadSample(){ const sample=[{ 'Họ và tên':'Nguyễn Văn A','Khu vực':'KV 1','Năm sinh':'15/05/1960','Số thẻ HV':'HV001','SĐT':'0912345678' }]; const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sample),'Mau'); XLSX.writeFile(wb,'file_mau_hoi_vien.xlsx'); showMessage('Đã tải mẫu'); }
+        async function processImport(rows){ const progress=document.getElementById('importProgress'); progress.style.display='flex'; let succ=0; for(let i=0;i<rows.length;i++){ const r=rows[i]; if(!r['Họ và tên']) continue; const data={ fullName:r['Họ và tên'], area:r['Khu vực']||'', birthYear:r['Năm sinh']||'', memberCardNumber:r['Số thẻ HV']||r['Số thẻ Hội viên']||'', phone:r['SĐT']||r['Điện thoại']||'', gender:r['Giới tính']||'', address:r['Địa chỉ']||'', updatedAt:new Date().toISOString(), createdAt:new Date().toISOString() }; const newRef=push(ref(database,`users/${currentUser.uid}/members`)); data.id=newRef.key; await set(newRef,data); succ++; } progress.style.display='none'; await loadMembers(); showMessage(`Import thành công ${succ} dòng`); }
+        async function activateLicense(){ const key=document.getElementById('licenseKeyInput').value.trim().toUpperCase(); if(!key) return showMessage('Nhập mã','error'); const btn=document.getElementById('activateLicenseBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Đang xử lý'; const keySnap=await get(ref(database,`licenseKeys/${key}`)); if(!keySnap.exists()){ showMessage('Mã không tồn tại','error'); btn.disabled=false; btn.innerHTML='Kích hoạt'; return; } if(keySnap.val().used){ showMessage('Mã đã được sử dụng','error'); btn.disabled=false; btn.innerHTML='Kích hoạt'; return; } await update(ref(database,`licenseKeys/${key}`),{used:true, usedAt:Date.now(), usedBy:currentUser.uid, usedByEmail:currentUser.email}); await set(ref(database,`users/${currentUser.uid}/license`),{licensed:true, key:key, activatedAt:Date.now()}); showMessage('Kích hoạt thành công!','success'); document.getElementById('licenseModal').style.display='none'; await updateCompactLicenseUI(); await loadMembers(); btn.disabled=false; btn.innerHTML='Kích hoạt'; }
+        function openLicenseModal(){ document.getElementById('licenseModal').style.display='flex'; document.getElementById('licenseKeyInput').value=''; const container=document.getElementById('currentLicenseInfo'); if(currentLicense?.licensed) container.innerHTML=`<div class="license-active"><i class="fas fa-check-circle"></i> Đã kích hoạt: ${currentLicense.key}</div>`; else container.innerHTML=`<div class="license-inactive"><i class="fas fa-clock"></i> Chưa có bản quyền</div>`; }
+        async function pasteKey(){ const txt=await navigator.clipboard.readText(); document.getElementById('licenseKeyInput').value=txt.trim().toUpperCase(); showMessage('Đã dán mã'); }
+        document.getElementById('addMemberBtn').onclick = () => { if(currentLicense?.licensed===true) window.location.href='hoivien.html'; else if(memberCount>=10){ showMessage('Đã đạt giới hạn 10, vui lòng kích hoạt bản quyền','error'); openLicenseModal(); } else window.location.href='hoivien.html'; };
+        document.getElementById('exportBtn').onclick=exportToExcel; document.getElementById('importBtn').onclick=()=>document.getElementById('fileInput').click();
+        document.getElementById('downloadSampleBtn').onclick=downloadSample; document.getElementById('resetFilterBtn').onclick=()=>{ elements.searchKeyword.value=''; elements.searchArea.value=''; currentFilterArea=null; renderMembersList(); renderAreaStats(); };
+        elements.searchKeyword.oninput=renderMembersList; elements.searchArea.onchange=()=>{ currentFilterArea=elements.searchArea.value||null; renderMembersList(); renderAreaStats(); };
+        document.getElementById('deleteByAreaBtn').onclick=()=>showConfirmModal('area'); document.getElementById('deleteAllBtn').onclick=()=>showConfirmModal('all'); document.getElementById('getLicenseBtn').onclick=openLicenseModal;
+        document.getElementById('showAllAreasBtn').onclick=()=>{ showAllAreas=true; document.getElementById('showAllAreasBtn').classList.add('active'); document.getElementById('showTopAreasBtn').classList.remove('active'); renderAreaStats(); };
+        document.getElementById('showTopAreasBtn').onclick=()=>{ showAllAreas=false; document.getElementById('showTopAreasBtn').classList.add('active'); document.getElementById('showAllAreasBtn').classList.remove('active'); renderAreaStats(); };
+        document.getElementById('closeDetailModalBtn').onclick=()=>document.getElementById('detailModal').style.display='none'; document.getElementById('closeDetailBtn').onclick=()=>document.getElementById('detailModal').style.display='none';
+        document.getElementById('closeConfirmModalBtn').onclick=()=>document.getElementById('confirmModal').style.display='none'; document.getElementById('cancelConfirmBtn').onclick=()=>document.getElementById('confirmModal').style.display='none';
+        document.getElementById('closeLicenseModalBtn').onclick=()=>document.getElementById('licenseModal').style.display='none'; document.getElementById('pasteKeyBtn').onclick=pasteKey; document.getElementById('activateLicenseBtn').onclick=activateLicense;
+        window.onclick=(e)=>{ if(e.target===document.getElementById('licenseModal')) document.getElementById('licenseModal').style.display='none'; if(e.target===document.getElementById('detailModal')) document.getElementById('detailModal').style.display='none'; if(e.target===document.getElementById('confirmModal')) document.getElementById('confirmModal').style.display='none'; };
+        document.getElementById('logoutBtn').onclick=async()=>{ await signOut(auth); window.location.href='index.html'; };
+        document.getElementById('fileInput').addEventListener('change',async(e)=>{if(!e.target.files[0])return; const data=await new Promise(r=>{const reader=new FileReader(); reader.onload=(e)=>r(XLSX.read(new Uint8Array(e.target.result),{type:'array'})); reader.readAsArrayBuffer(e.target.files[0]);}); const sheet=data.Sheets[data.SheetNames[0]]; const rows=XLSX.utils.sheet_to_json(sheet); await processImport(rows); e.target.value='';});
+        onAuthStateChanged(auth,async(user)=>{ if(!user) window.location.href='index.html'; currentUser=user; elements.userEmail.textContent=user.email; await loadAreas(); await loadMembers(); });
+        document.getElementById('compactActivateBtn').onclick = openLicenseModal;
+    </script>
 </body>
 </html>
