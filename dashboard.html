@@ -522,7 +522,8 @@
         document.getElementById('exportBtn').onclick=exportToExcel; document.getElementById('importBtn').onclick=()=>document.getElementById('fileInput').click();
         document.getElementById('downloadSampleBtn').onclick=downloadSample; document.getElementById('resetFilterBtn').onclick=()=>{ elements.searchKeyword.value=''; elements.searchArea.value=''; currentFilterArea=null; renderMembersList(); renderAreaStats(); };
         elements.searchKeyword.oninput=renderMembersList; elements.searchArea.onchange=()=>{ currentFilterArea=elements.searchArea.value||null; renderMembersList(); renderAreaStats(); };
-        document.getElementById('deleteByAreaBtn').onclick=()=>showConfirmModal('area'); document.getElementById('deleteAllBtn').onclick=()=>showConfirmModal('all'); document.getElementById('getLicenseBtn').onclick=openLicenseModal;
+        document.getElementById('deleteByAreaBtn').onclick=()=>showConfirmModal('area'); document.getElementById('deleteAllBtn').onclick=()=>showConfirmModal('all'); 
+//        document.getElementById('getLicenseBtn').onclick=openLicenseModal;
         document.getElementById('showAllAreasBtn').onclick=()=>{ showAllAreas=true; document.getElementById('showAllAreasBtn').classList.add('active'); document.getElementById('showTopAreasBtn').classList.remove('active'); renderAreaStats(); };
         document.getElementById('showTopAreasBtn').onclick=()=>{ showAllAreas=false; document.getElementById('showTopAreasBtn').classList.add('active'); document.getElementById('showAllAreasBtn').classList.remove('active'); renderAreaStats(); };
         document.getElementById('closeDetailModalBtn').onclick=()=>document.getElementById('detailModal').style.display='none'; document.getElementById('closeDetailBtn').onclick=()=>document.getElementById('detailModal').style.display='none';
