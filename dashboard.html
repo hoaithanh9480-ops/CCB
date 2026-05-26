@@ -25,6 +25,38 @@
         .logout-btn:hover { background: #dc2626; }
         .main-content { padding: 24px; max-width: 1600px; margin: 0 auto; }
 
+        /* License banner */
+        .license-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .license-banner i { margin-right: 8px; }
+        .license-banner .badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+        .limited-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        .limited-warning i { margin-right: 8px; }
+
         /* GOM THANH CÔNG CỤ VÀ TÌM KIẾM VÀO CHUNG MỘT THANH CỐ ĐỊNH */
         .action-bar {
             background: white;
@@ -57,6 +89,7 @@
         }
         .btn-primary { background: #2563eb; color: white; }
         .btn-primary:hover { background: #1d4ed8; }
+        .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; opacity: 0.6; }
         .btn-success { background: #10b981; color: white; }
         .btn-success:hover { background: #059669; }
         .btn-purple { background: #8b5cf6; color: white; }
@@ -295,6 +328,18 @@
     </div>
 
     <div class="main-content">
+        <!-- Banner thông báo bản quyền -->
+        <div id="licenseBanner" class="license-banner" style="display: none;">
+            <div><i class="fas fa-key"></i> <strong id="licenseStatusText">Đang kiểm tra...</strong></div>
+            <div><span class="badge" id="licenseDetail"></span></div>
+        </div>
+
+        <div id="limitedWarning" class="limited-warning" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>⚠️ BẠN ĐANG Ở CHẾ ĐỘ DÙNG THỬ</strong><br>
+            Bạn đã thêm <span id="memberCount">0</span>/10 hội viên. Vui lòng <strong>nhập mã bản quyền</strong> để không giới hạn!
+        </div>
+
         <div class="action-bar">
             <div class="btn-group">
                 <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Thêm</button>
@@ -427,6 +472,8 @@
         let customAreas = [];
         let showAllAreas = true;
         let currentFilterArea = null;
+        let currentLicense = null;
+        let memberAddCount = 0;
 
         const elements = {
             membersList: document.getElementById('membersList'),
@@ -565,6 +612,77 @@
             });
         }
 
+        // Kiểm tra license và giới hạn
+        async function checkLicenseAndLimit() {
+            if (!currentUser) return;
+            
+            const snapshot = await get(ref(database, `users/${currentUser.uid}/license`));
+            currentLicense = snapshot.val();
+            
+            const banner = document.getElementById('licenseBanner');
+            const statusText = document.getElementById('licenseStatusText');
+            const detailSpan = document.getElementById('licenseDetail');
+            const limitedWarning = document.getElementById('limitedWarning');
+            const memberCountSpan = document.getElementById('memberCount');
+            const addBtn = document.getElementById('addMemberBtn');
+            
+            // Đếm số lượng hội viên
+            const membersSnapshot = await get(ref(database, `users/${currentUser.uid}/members`));
+            const members = membersSnapshot.exists() ? Object.keys(membersSnapshot.val()).length : 0;
+            memberAddCount = members;
+            
+            if (currentLicense && currentLicense.licensed === true) {
+                // CÓ BẢN QUYỀN - Vô hạn
+                banner.style.display = 'flex';
+                banner.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                statusText.innerHTML = '<i class="fas fa-check-circle"></i> ĐÃ KÍCH HOẠT BẢN QUYỀN';
+                detailSpan.innerHTML = `Mã: ${currentLicense.key} | Kích hoạt: ${new Date(currentLicense.activatedAt).toLocaleDateString('vi-VN')}`;
+                limitedWarning.style.display = 'none';
+                
+                if (addBtn) {
+                    addBtn.disabled = false;
+                    addBtn.style.opacity = '1';
+                    addBtn.style.cursor = 'pointer';
+                    addBtn.title = '';
+                }
+            } else {
+                // CHƯA CÓ BẢN QUYỀN - Giới hạn 10
+                banner.style.display = 'flex';
+                banner.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+                statusText.innerHTML = '<i class="fas fa-clock"></i> CHƯA CÓ BẢN QUYỀN';
+                detailSpan.innerHTML = `Đã thêm ${members}/10 hội viên (giới hạn dùng thử)`;
+                memberCountSpan.textContent = members;
+                
+                if (members >= 10) {
+                    limitedWarning.style.display = 'block';
+                    limitedWarning.innerHTML = `
+                        <i class="fas fa-lock"></i> 
+                        <strong>🔒 ĐÃ ĐẠT GIỚI HẠN 10 HỘI VIÊN!</strong><br>
+                        Vui lòng <strong>nhập mã bản quyền</strong> để tiếp tục thêm hội viên không giới hạn.
+                    `;
+                    if (addBtn) {
+                        addBtn.disabled = true;
+                        addBtn.style.opacity = '0.5';
+                        addBtn.style.cursor = 'not-allowed';
+                        addBtn.title = 'Bạn đã đạt giới hạn 10 hội viên. Vui lòng nhập mã bản quyền!';
+                    }
+                } else {
+                    limitedWarning.style.display = 'block';
+                    limitedWarning.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>⚠️ BẠN ĐANG Ở CHẾ ĐỘ DÙNG THỬ (${members}/10 hội viên)</strong><br>
+                        Vui lòng <strong>nhập mã bản quyền</strong> để thêm hội viên không giới hạn!
+                    `;
+                    if (addBtn) {
+                        addBtn.disabled = false;
+                        addBtn.style.opacity = '1';
+                        addBtn.style.cursor = 'pointer';
+                        addBtn.title = '';
+                    }
+                }
+            }
+        }
+
         async function loadMembers() {
             if (!currentUser) return;
             const snapshot = await get(ref(database, `users/${currentUser.uid}/members`));
@@ -572,6 +690,7 @@
             updateMainStats();
             renderAreaStats();
             renderMembersList();
+            await checkLicenseAndLimit();
         }
 
         function updateMainStats() {
@@ -982,6 +1101,7 @@
                 keyInput.value = '';
                 document.getElementById('licenseModal').style.display = 'none';
                 await loadCurrentLicense();
+                await checkLicenseAndLimit();
                 
             } catch (error) {
                 console.error('Lỗi khi kích hoạt:', error);
@@ -1012,23 +1132,24 @@
             }
         }
 
-        async function checkLicenseOnLoad() {
-            if (!currentUser) return;
-            const snapshot = await get(ref(database, `users/${currentUser.uid}/license`));
-            const license = snapshot.val();
-            
-            if (!license || license.licensed !== true) {
-                setTimeout(() => {
-                    if (confirm('⚠️ Tài khoản của bạn chưa có bản quyền!\n\nBạn có muốn nhập mã kích hoạt ngay không?')) {
-                        openLicenseModal();
-                    }
-                }, 1000);
-            }
-        }
-
         // ==================== EVENT LISTENERS ====================
         
-        document.getElementById('addMemberBtn').onclick = () => window.location.href = 'hoivien.html';
+        // Xử lý nút Thêm với kiểm tra giới hạn
+        document.getElementById('addMemberBtn').onclick = (e) => {
+            if (currentLicense && currentLicense.licensed === true) {
+                window.location.href = 'hoivien.html';
+            } else {
+                if (memberAddCount >= 10) {
+                    e.preventDefault();
+                    showMessage('🔒 Bạn đã đạt giới hạn 10 hội viên dùng thử! Vui lòng nhập mã bản quyền để tiếp tục.', 'error');
+                    openLicenseModal();
+                    return false;
+                } else {
+                    window.location.href = 'hoivien.html';
+                }
+            }
+        };
+        
         document.getElementById('exportBtn').onclick = exportToExcel;
         document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
         document.getElementById('downloadSampleBtn').onclick = downloadSample;
@@ -1106,7 +1227,6 @@
             elements.userEmail.textContent = user.email;
             await loadAreas();
             await loadMembers();
-            await checkLicenseOnLoad();
         });
     </script>
 </body>
