@@ -67,6 +67,8 @@
         .btn-danger:hover { background: #dc2626; }
         .btn-outline { background: #f1f5f9; color: #475569; padding: 6px 12px; }
         .btn-outline:hover { background: #e2e8f0; }
+        .btn-license { background: #8b5cf6; color: white; }
+        .btn-license:hover { background: #7c3aed; }
 
         /* TÌM KIẾM TRÊN CÙNG THANH CÔNG CỤ */
         .search-inline-group {
@@ -235,6 +237,7 @@
         .action-delete:hover { background: #fecaca; }
         .empty-row td { text-align: center; padding: 40px; color: #94a3b8; }
 
+        /* Modal styles */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: white; border-radius: 20px; width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto; padding: 20px; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0; }
@@ -259,6 +262,11 @@
         .message.error { border-left: 3px solid #ef4444; }
         .date-value { font-family: monospace; font-size: 0.75rem; }
         .delete-area-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #e2e8f0; margin: 14px 0; font-family: inherit; }
+        
+        /* License styles */
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #334155; }
+        .license-active { background: #d4edda; padding: 10px; border-radius: 8px; border: 1px solid #c3e6cb; color: #155724; }
+        .license-inactive { background: #fff3cd; padding: 10px; border-radius: 8px; border: 1px solid #ffeeba; color: #856404; }
 
         @media (max-width: 992px) {
             .action-bar { position: static; flex-direction: column; align-items: stretch; }
@@ -295,6 +303,7 @@
                 <button class="btn btn-warning" id="downloadSampleBtn"><i class="fas fa-download"></i> Mẫu</button>
                 <button class="btn btn-danger" id="deleteByAreaBtn"><i class="fas fa-trash-alt"></i> Xóa theo KV</button>
                 <button class="btn btn-danger" id="deleteAllBtn"><i class="fas fa-skull-crosswalk"></i> Xóa tất cả</button>
+                <button class="btn btn-license" id="getLicenseBtn"><i class="fas fa-key"></i> Lấy Key bản quyền</button>
             </div>
             
             <div class="search-inline-group">
@@ -358,11 +367,38 @@
         </div>
     </div>
 
+    <!-- Modal chi tiết hội viên -->
     <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-info-circle"></i> Chi tiết hội viên</h2><button class="close-modal" id="closeDetailModalBtn">&times;</button></div><div id="detailContent" class="detail-info"></div><button class="btn-cancel" id="closeDetailBtn">Đóng</button></div></div>
     
+    <!-- Modal xác nhận xóa -->
     <div id="confirmModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="confirmTitle">Xác nhận</h2><button class="close-modal" id="closeConfirmModalBtn">&times;</button></div><div id="confirmMessage" style="margin: 14px 0;"></div><div id="confirmAreaSelect" style="display: none;"><label><i class="fas fa-map-marker-alt"></i> Chọn khu vực cần xóa:</label><select id="areaToDelete" class="delete-area-select"></select></div><button class="btn-cancel" id="cancelConfirmBtn">Hủy</button><button class="btn-confirm" id="confirmActionBtn">Xác nhận</button></div></div>
     
+    <!-- Modal Import -->
     <div id="importProgress" class="modal"><div class="modal-content progress-modal"><h3><i class="fas fa-spinner fa-pulse"></i> Đang import...</h3><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><p id="progressText">Đang xử lý...</p></div></div>
+    
+    <!-- Modal kích hoạt bản quyền -->
+    <div id="licenseModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> Kích hoạt bản quyền</h2>
+                <button class="close-modal" id="closeLicenseModalBtn">&times;</button>
+            </div>
+            <div id="licenseStatusMsg" style="margin-bottom: 15px;"></div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label><i class="fas fa-qrcode"></i> Mã bản quyền</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="licenseKeyInput" placeholder="Nhập mã bản quyền" style="flex:1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 10px; font-family: monospace; font-size: 14px;">
+                    <button id="pasteKeyBtn" style="background:#f1f5f9; border:none; padding:0 15px; border-radius:10px; cursor: pointer;">
+                        <i class="fas fa-paste"></i> Dán
+                    </button>
+                </div>
+            </div>
+            <button id="activateLicenseBtn" style="width:100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">
+                <i class="fas fa-check-circle"></i> Kích hoạt
+            </button>
+            <div id="currentLicenseInfo" style="margin-top: 15px; padding: 10px; background: #f8fafc; border-radius: 10px; font-size: 0.8rem;"></div>
+        </div>
+    </div>
     
     <div id="messageBox" class="message"></div>
     <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
@@ -370,7 +406,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get, remove, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, get, remove, push, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBiaG-H9SzpYQqr3YgOODG4SM2WEqmhwb8",
@@ -860,13 +896,138 @@
             showMessage(`Import hoàn tất! Thành công: ${success}, Lỗi: ${fail}`);
         }
 
-        document.getElementById('fileInput').addEventListener('change', async (e) => {
-            if (!e.target.files[0]) return;
-            const rows = await importExcel(e.target.files[0]);
-            await processImport(rows);
-            e.target.value = '';
-        });
+        // ==================== LICENSE MANAGEMENT ====================
+        
+        async function loadCurrentLicense() {
+            if (!currentUser) return;
+            const snapshot = await get(ref(database, `users/${currentUser.uid}/license`));
+            const license = snapshot.val();
+            const container = document.getElementById('currentLicenseInfo');
+            
+            if (license && license.licensed === true) {
+                container.innerHTML = `
+                    <div class="license-active">
+                        <i class="fas fa-check-circle" style="color:#28a745;"></i>
+                        <strong>✅ Đã kích hoạt bản quyền</strong><br>
+                        Mã: <code style="background:white; padding:2px 6px; border-radius:4px;">${license.key}</code><br>
+                        Ngày kích hoạt: ${new Date(license.activatedAt).toLocaleString('vi-VN')}
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="license-inactive">
+                        <i class="fas fa-clock" style="color:#ffc107;"></i>
+                        <strong>⚠️ Chưa có bản quyền</strong><br>
+                        Vui lòng nhập mã bản quyền để kích hoạt.
+                    </div>
+                `;
+            }
+        }
 
+        async function activateLicense() {
+            const keyInput = document.getElementById('licenseKeyInput');
+            const key = keyInput.value.trim().toUpperCase();
+            
+            if (!key) {
+                showMessage('Vui lòng nhập mã bản quyền!', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('activateLicenseBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Đang xử lý...';
+            btn.disabled = true;
+            
+            try {
+                const keySnapshot = await get(ref(database, `licenseKeys/${key}`));
+                if (!keySnapshot.exists()) {
+                    showMessage('❌ Mã bản quyền không tồn tại!', 'error');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                const keyData = keySnapshot.val();
+                
+                if (keyData.used === true) {
+                    showMessage('❌ Mã bản quyền này đã được sử dụng!', 'error');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                const userLicenseSnapshot = await get(ref(database, `users/${currentUser.uid}/license`));
+                const userLicense = userLicenseSnapshot.val();
+                if (userLicense && userLicense.licensed === true) {
+                    showMessage('⚠️ Tài khoản của bạn đã có bản quyền rồi!', 'error');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                await update(ref(database, `licenseKeys/${key}`), {
+                    used: true,
+                    usedAt: Date.now(),
+                    usedBy: currentUser.uid,
+                    usedByEmail: currentUser.email
+                });
+                
+                await set(ref(database, `users/${currentUser.uid}/license`), {
+                    licensed: true,
+                    key: key,
+                    activatedAt: Date.now()
+                });
+                
+                showMessage('🎉 Kích hoạt thành công! Bạn đã có bản quyền sử dụng.', 'success');
+                keyInput.value = '';
+                document.getElementById('licenseModal').style.display = 'none';
+                await loadCurrentLicense();
+                
+            } catch (error) {
+                console.error('Lỗi khi kích hoạt:', error);
+                showMessage('Có lỗi xảy ra: ' + error.message, 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function openLicenseModal() {
+            document.getElementById('licenseModal').style.display = 'flex';
+            loadCurrentLicense();
+            document.getElementById('licenseKeyInput').value = '';
+        }
+
+        function closeLicenseModal() {
+            document.getElementById('licenseModal').style.display = 'none';
+        }
+
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('licenseKeyInput').value = text.trim().toUpperCase();
+                showMessage('Đã dán mã!', 'success');
+            } catch (err) {
+                showMessage('Không thể dán. Vui lòng nhập thủ công.', 'error');
+            }
+        }
+
+        async function checkLicenseOnLoad() {
+            if (!currentUser) return;
+            const snapshot = await get(ref(database, `users/${currentUser.uid}/license`));
+            const license = snapshot.val();
+            
+            if (!license || license.licensed !== true) {
+                setTimeout(() => {
+                    if (confirm('⚠️ Tài khoản của bạn chưa có bản quyền!\n\nBạn có muốn nhập mã kích hoạt ngay không?')) {
+                        openLicenseModal();
+                    }
+                }, 1000);
+            }
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        
         document.getElementById('addMemberBtn').onclick = () => window.location.href = 'hoivien.html';
         document.getElementById('exportBtn').onclick = exportToExcel;
         document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
@@ -887,6 +1048,7 @@
         
         document.getElementById('deleteByAreaBtn').onclick = () => showConfirmModal('area');
         document.getElementById('deleteAllBtn').onclick = () => showConfirmModal('all');
+        document.getElementById('getLicenseBtn').onclick = openLicenseModal;
         
         document.getElementById('showAllAreasBtn').onclick = () => {
             showAllAreas = true;
@@ -901,6 +1063,7 @@
             renderAreaStats();
         };
         
+        // Modal listeners
         document.getElementById('closeDetailModalBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
         document.getElementById('closeDetailBtn').onclick = () => document.getElementById('detailModal').style.display = 'none';
         document.getElementById('closeConfirmModalBtn').onclick = () => document.getElementById('confirmModal').style.display = 'none';
@@ -913,7 +1076,29 @@
             }
         };
         
+        // License modal listeners
+        document.getElementById('closeLicenseModalBtn').onclick = closeLicenseModal;
+        document.getElementById('pasteKeyBtn').onclick = pasteFromClipboard;
+        document.getElementById('activateLicenseBtn').onclick = activateLicense;
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const licenseModal = document.getElementById('licenseModal');
+            const detailModal = document.getElementById('detailModal');
+            const confirmModal = document.getElementById('confirmModal');
+            if (event.target === licenseModal) licenseModal.style.display = 'none';
+            if (event.target === detailModal) detailModal.style.display = 'none';
+            if (event.target === confirmModal) confirmModal.style.display = 'none';
+        };
+        
         document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); window.location.href = 'index.html'; };
+        
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            if (!e.target.files[0]) return;
+            const rows = await importExcel(e.target.files[0]);
+            await processImport(rows);
+            e.target.value = '';
+        });
         
         onAuthStateChanged(auth, async (user) => {
             if (!user) return window.location.href = 'index.html';
@@ -921,6 +1106,7 @@
             elements.userEmail.textContent = user.email;
             await loadAreas();
             await loadMembers();
+            await checkLicenseOnLoad();
         });
     </script>
 </body>
