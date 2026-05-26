@@ -331,6 +331,24 @@
             background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;
             display: none; align-items: center; gap: 8px; font-size: 0.8rem; animation: slideIn 0.3s ease;
         }
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            color: #334155;
+        }
+        .contact-info i {
+            color: #2563eb;
+            font-size: 0.7rem;
+        }
+        .contact-info .separator {
+            color: #cbd5e1;
+            margin: 0 2px;
+        }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .message.success { border-left: 3px solid #22c55e; }
         .message.error { border-left: 3px solid #ef4444; }
@@ -353,6 +371,11 @@
             .license-compact { flex-direction: column; align-items: stretch; }
             .license-status-group { justify-content: space-between; }
         }
+        @media (max-width: 768px) {
+            .contact-info {
+                display: none; /* Ẩn trên mobile nếu quá dài */
+            }
+        }
     </style>
 </head>
 <body>
@@ -360,6 +383,13 @@
         <div class="logo">
             <div class="logo-icon"><i class="fas fa-users"></i></div>
             <div><h1>Hội CCB</h1><p>Quản lý hội viên</p></div>
+        </div>
+         <div class="contact-info">
+        <i class="fas fa-phone-alt"></i>
+        <span>Hotline: 0939.989.818</span>
+        <span class="separator">|</span>
+        <i class="fas fa-zalo"></i>
+        <span>Zalo: 0939.989.818</span>
         </div>
         <div class="user-menu">
             <span class="user-email" id="userEmail">Đang tải...</span>
